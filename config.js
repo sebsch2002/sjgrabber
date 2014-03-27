@@ -8,5 +8,6 @@ module.exports = {
   maxLinkRefetchRetrys: 3,
   rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
   cacheDir: "cache/",
-  cacheFilename: "savedItems.json"
+  cacheFilename: "savedItems.json",
+  rescheduleMS: 1800000
 };

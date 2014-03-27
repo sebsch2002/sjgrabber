@@ -2,6 +2,8 @@ var request = require('request');
 var _ = require('lodash');
 var $ = require('cheerio');
 var zlib = require('zlib');
+var EventEmitter = require("events").EventEmitter;
+var util = require("util");
 
 var savedItems = require("./savedItems");
 var cacheHandler = require("./cacheHandler");
@@ -10,23 +12,59 @@ var config = require("./config");
 
 // runtime...
 
-var uniqueLinks = [];
-var currentUILink = 0;
+var LinkParser = function() {
+  this.uniqueLinks = [];
+  this.currentLinkIndex = 0;
+};
 
-exports.getUploadedLinks = function() {
+util.inherits(LinkParser, EventEmitter);
 
-  var countToFetch = 0;
+LinkParser.prototype.getUploadedLinks = function() {
 
-  uniqueLinks = getUnionedLinksToFetch(config.fetchOnlyFavourites);
-  countToFetch = getCountLinksMissing(config.fetchOnlyFavourites);
+  this.uniqueLinks = getUnionedLinksToFetch(config.fetchOnlyFavourites);
+  this.currentLinkIndex = 0;
 
-  currentUILink = 0;
+  console.log("linkParser:getUploadedLinks (in progress) |" +
+    getCountLinksMissing(config.fetchOnlyFavourites) + " links - " +
+    this.uniqueLinks.length + " sites|");
 
-  console.log("linkParser:getUploadedLinks (attempting to resolve " + countToFetch + " ul links from " + uniqueLinks.length + " sites)");
+  if (getCountLinksMissing(config.fetchOnlyFavourites) === 0) {
+    console.log("linkParser:getUploadedLinks done, nothing to fetch!");
+    this.emit("fetched");
+    return;
+  }
 
   parseURLForULLinks();
-
 };
+
+LinkParser.prototype.nextULParse = function() {
+  console.log(" done.");
+
+  this.currentLinkIndex += 1;
+  if (this.currentLinkIndex >= this.uniqueLinks.length) {
+    // all done!
+    this.currentLinkIndex = 0;
+    console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.fetchOnlyFavourites) + " ul items missing.");
+    // emit event here!!!!!!!!!!!
+
+    this.emit("fetched");
+
+  } else {
+    parseURLForULLinks();
+  }
+};
+
+
+
+var linkParser = new LinkParser();
+module.exports = linkParser;
+
+
+
+//
+// helpers - private functions
+//
+
 
 function getUnionedLinksToFetch(onlyFavourites) {
   if (onlyFavourites) {
@@ -44,31 +82,15 @@ function getCountLinksMissing(onlyFavourites) {
   }
 }
 
-function nextULParse() {
-
-  console.log(" done.");
-
-  currentUILink += 1;
-  if (currentUILink >= uniqueLinks.length) {
-    // all done!
-    currentUILink = 0;
-    console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.fetchOnlyFavourites) + " ul items missing.");
-    // emit event here!!!!!!!!!!!
-
-  } else {
-    parseURLForULLinks();
-  }
-}
-
 function parseURLForULLinks() {
-  var link = uniqueLinks[currentUILink];
+  var link = linkParser.uniqueLinks[linkParser.currentLinkIndex];
   var toParseItems = _.where(savedItems.toJSON(), {
     'link': link,
     'uploadedLink': false
   }),
     linkRequest;
 
-  process.stdout.write("fetching " + uniqueLinks[currentUILink] + " | ");
+  process.stdout.write("fetching " + linkParser.uniqueLinks[linkParser.currentLinkIndex] + " | ");
 
   var ulReq;
 
@@ -104,13 +126,13 @@ function parseURLForULLinks() {
 
       } else {
         console.error("ERROR parsing @" + link + " - " + err);
-        nextULParse();
+        linkParser.nextULParse();
       }
     });
 
   } else {
     // do nothing, all links parsed. - next
-    nextULParse();
+    linkParser.nextULParse();
   }
 }
 
@@ -143,7 +165,7 @@ function parseHTML(html, items) {
 
   // check for links that werent resolved and set a flag for them - maximal resolve.
 
-  nextULParse(); // done fetching!
+  linkParser.nextULParse(); // done fetching!
 }
 
 function incrementRefetchCount(uuid) {

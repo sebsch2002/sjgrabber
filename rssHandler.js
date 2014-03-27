@@ -12,6 +12,7 @@ var config = require("./config");
 var RSSHandler = function() {
   this.newItems = 0;
   this.dismissedItems = 0;
+  this.allItems = 0;
   this.lastTimeFetched = false;
 };
 
@@ -31,6 +32,7 @@ RSSHandler.prototype.fetch = function() {
 
   this.newItems = 0;
   this.dismissedItems = 0;
+  this.allItems = 0;
 
   req.on('error', function(error) {
     console.error("rssHandler:fetch request error: " + error);
@@ -91,6 +93,11 @@ RSSHandler.prototype.fetch = function() {
         //process.stdout.write(".");
       }
 
+      that.allItems += 1;
+
+      process.stdout.cursorTo(32);
+      process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);
+
     }
   });
 
@@ -108,7 +115,7 @@ RSSHandler.prototype.fetch = function() {
 RSSHandler.prototype.status = function() {
   return "new items: " + this.newItems +
     " - dismissed: " + this.dismissedItems +
-    " - total: " + savedItems.length +
+    " - saved: " + savedItems.length +
     " - lastTimeFetched: " + this.lastTimeFetched;
 };
 
