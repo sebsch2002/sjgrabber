@@ -11,7 +11,7 @@ function convertDate(inputFormat) {
 }
 
 module.exports.getPlainHTML = function() {
-  console.log("output:getPlainHTML");
+  //console.log("output:getPlainHTML");
   var i = 0,
     len = savedItems.length,
     returnString = "";
