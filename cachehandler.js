@@ -2,7 +2,7 @@ var EventEmitter = require("events").EventEmitter;
 var util = require("util");
 var fs = require('fs');
 var _ = require('lodash');
-var moment = require("moment"); // might take out!
+var moment = require("moment"); // might take out, was only needed for migration.
 var mkdirp = require("mkdirp");
 
 var savedItems = require("./savedItems");

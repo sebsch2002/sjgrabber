@@ -1,9 +1,14 @@
 var cacheHandler = require("./cachehandler");
-var parser = require("./parser");
+var linkParser = require("./linkParser");
 var rssHandler = require("./rssHandler");
 
-cacheHandler.once("loaded", function () {
-  
+(function startup() {
+  // start by loading old items into our cache
+  cacheHandler.once("loaded", cacheLoaded);
+  cacheHandler.load();
+}());
+
+function cacheLoaded() {
   rssHandler.on("fetched", function () {
     
     cacheHandler.save();
@@ -14,12 +19,8 @@ cacheHandler.once("loaded", function () {
     //   // schedule next rerequest...
     //   rssHandler.fetch();
     // }
-    parser.getUploadedLinks();
+    linkParser.getUploadedLinks();
   });
 
   rssHandler.fetch();
-
-});
-
-// start by loading old items into our cache
-cacheHandler.load();
+}
