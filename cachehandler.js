@@ -3,13 +3,12 @@ var util = require("util");
 var fs = require('fs');
 var _ = require('lodash');
 var moment = require("moment"); // might take out!
+var mkdirp = require("mkdirp");
 
 var savedItems = require("./savedItems");
-
-var FILENAME_STAGED = 'stagedItems.json';
+var config = require("./config");
 
 var CacheHandler = function() {
-  this.startup = new Date();
   this.lastLoaded = false;
   this.lastSaved = false;
 };
@@ -17,34 +16,41 @@ var CacheHandler = function() {
 util.inherits(CacheHandler, EventEmitter);
 
 CacheHandler.prototype.save = function() {
-  console.log("CacheHandler:save");
+  console.log("cacheHandler:save");
 
   var that = this;
 
-  fs.writeFile(FILENAME_STAGED, JSON.stringify({
-    staged: savedItems.toJSON()
-  }), function(err) {
+  mkdirp(config.cacheDir, function(err) {
     if (err) {
-      console.log("CacheHandler:save error " + err);
-      that.emit("saveError");
-      return;
-    }
+      console.error("cacheHandler: save mkdirp error " + err);
+    } else {
+      fs.writeFile(config.cacheDir + config.cacheFilename, JSON.stringify({
+        staged: savedItems.toJSON()
+      }), function(err) {
+        if (err) {
+          console.error("cacheHandler:save error " + err);
+          that.emit("saveError");
+          return;
+        }
 
-    that.lastSaved = new Date();
-    that.emit("saved");
+        that.lastSaved = new Date();
+        that.emit("saved");
+      });
+    }
   });
+
 };
 
 CacheHandler.prototype.load = function() {
-  console.log("CacheHandler:load");
+  console.log("cacheHandler:load");
 
   var that = this;
 
-  fs.readFile(FILENAME_STAGED, 'utf8', function(err, data) {
+  fs.readFile(config.cacheDir + config.cacheFilename, 'utf8', function(err, data) {
     var savedObject = {};
 
     if (err) {
-      console.log("CacheHandler:load error " + err);
+      console.error("cacheHandler:load error " + err);
     } else {
       savedObject = JSON.parse(data);
 
@@ -60,9 +66,9 @@ CacheHandler.prototype.load = function() {
 
       // insert into backbone collection
       savedItems.add(savedObject.staged);
+      that.lastLoaded = new Date();
     }
-
-    that.lastLoaded = new Date();
+    
     that.emit("loaded");
   });
 };
