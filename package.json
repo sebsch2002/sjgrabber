@@ -1,0 +1,23 @@
+{
+  "name": "serienjunkies-relevant-updates",
+  "version": "0.0.0",
+  "description": "fetch serienjunkies rssfeed and ...",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "serienjunkies.org"
+  ],
+  "author": "majodev",
+  "license": "MIT",
+  "dependencies": {
+    "feedparser": "^0.16.6",
+    "request": "^2.34.0",
+    "crypto": "0.0.3",
+    "lodash": "^2.4.1",
+    "cheerio": "^0.13.1",
+    "backbone": "^1.1.2",
+    "moment": "^2.5.1"
+  }
+}
