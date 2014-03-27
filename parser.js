@@ -3,11 +3,10 @@ var FeedParser = require('feedparser');
 var request = require('request');
 var crypto = require("crypto");
 var _ = require('lodash');
-var fs = require('fs');
 var $ = require('cheerio');
 var moment = require("moment");
-
 var savedItems = require("./savedItems");
+var cacheHandler = require("./cacheHandler");
 
 // constants
 var TARGET_URL = 'http://serienjunkies.org/xml/feeds/episoden.xml',
@@ -20,7 +19,7 @@ var RELEVANT_TITLES = ["american.dad", "family.guy", "futurama", "house.of.cards
 ];
 
 // db
-var stagedItems = [];
+//var stagedItems = [];
 
 // request/response runtime vars
 var req,
@@ -81,7 +80,9 @@ function makeRSSRequest() {
     reqLog.success = true;
     logRequestParseSummary();
 
-    writeStaged(stagedItems);
+    cacheHandler.save();
+
+    //writeStaged(savedItems.toJSON());
     getUploadedLinks();
     // schedule rerequest after successful requests...
     scheduleRerequest();
@@ -108,13 +109,13 @@ function makeRSSRequest() {
 
       if (validateItemIsNew(newUuid) === -1) {
         // new item that needs to be pushed into the database!
-        stagedItems.push({
-          uuid: newUuid,
-          title: item.title,
-          link: item.link,
-          date: item.date,
-          uploadedLink: false
-        });
+        // stagedItems.push({
+        //   uuid: newUuid,
+        //   title: item.title,
+        //   link: item.link,
+        //   date: item.date,
+        //   uploadedLink: false
+        // });
 
         // add to backbone
         savedItems.add({
@@ -136,7 +137,7 @@ function makeRSSRequest() {
 }
 
 function validateItemIsNew(uuidToCheck) {
-  return _.findIndex(stagedItems, function(stagedItem) {
+  return _.findIndex(savedItems.toJSON(), function(stagedItem) {
     return stagedItem.uuid === uuidToCheck;
   });
 }
@@ -144,7 +145,7 @@ function validateItemIsNew(uuidToCheck) {
 function logRequestParseSummary() {
   console.log("REQUEST_PARSE_LOG - new: " + reqLog.newItems +
     " - dismissed: " + reqLog.dismissedItems + " - total: " +
-    stagedItems.length + " - start: " + reqLog.startDate + " - end: " + reqLog.endDate);
+    savedItems.length + " - start: " + reqLog.startDate + " - end: " + reqLog.endDate);
 }
 
 function scheduleRerequest() {
@@ -192,45 +193,45 @@ function convertDate(inputFormat) {
 
 
 
-function writeStaged(items) {
-  fs.writeFile(FILENAME_STAGED, JSON.stringify({
-    staged: items
-  }), function(err) {
-    if (err) return console.log(err);
-  });
-}
+// function writeStaged(items) {
+//   fs.writeFile(FILENAME_STAGED, JSON.stringify({
+//     staged: items
+//   }), function(err) {
+//     if (err) return console.log(err);
+//   });
+// }
 
-function readStaged() {
-  console.log("PERSISTENCE - reading --> stagedItems.json");
+// function readStaged() {
+//   console.log("PERSISTENCE - reading --> stagedItems.json");
 
-  fs.readFile(FILENAME_STAGED, 'utf8', function(err, data) {
-    var savedObject = {};
+//   fs.readFile(FILENAME_STAGED, 'utf8', function(err, data) {
+//     var savedObject = {};
 
-    if (err) {
-      console.log('PERSISTENCE - ERROR reading --> statedItems.json');
-      makeRSSRequest();
-      return;
-    }
-    savedObject = JSON.parse(data);
-    stagedItems = savedObject.staged;
+//     if (err) {
+//       console.log('PERSISTENCE - ERROR reading --> statedItems.json');
+//       makeRSSRequest();
+//       return;
+//     }
+//     savedObject = JSON.parse(data);
+//     //stagedItems = savedObject.staged;
 
-    // convinience meth for old model, convert string dates to real dates
-    var i = 0,
-      len = savedObject.staged.length;
-    for (i; i < len; i += 1) {
-      if (_.isString(savedObject.staged[i].date) === true) {
-        //console.log("converting date...");
-        savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
-      }
-    }
+//     // convinience meth for old model, convert string dates to real dates
+//     var i = 0,
+//       len = savedObject.staged.length;
+//     for (i; i < len; i += 1) {
+//       if (_.isString(savedObject.staged[i].date) === true) {
+//         //console.log("converting date...");
+//         savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
+//       }
+//     }
 
-    // insert into backbone collection
-    savedItems.add(savedObject.staged);
+//     // insert into backbone collection
+//     savedItems.add(savedObject.staged);
 
-    console.log("PERSISTENCE - restored --> stagedItems.json");
-    makeRSSRequest();
-  });
-}
+//     console.log("PERSISTENCE - restored --> stagedItems.json");
+//     makeRSSRequest();
+//   });
+// }
 
 
 // uploaded url parsing
@@ -246,13 +247,13 @@ function getUploadedLinks() {
   var countToFetch = 0;
 
   if (ONLY_FETCH_RELEVANT_SERIES_UL_LINKS === true) {
-    uniqueLinks = _.union(_.map(_.filter(stagedItems, checkRelevantSeries), "link"));
-    countToFetch = _.where(_.filter(stagedItems, checkRelevantSeries), {
+    uniqueLinks = _.union(_.map(_.filter(savedItems.toJSON(), checkRelevantSeries), "link"));
+    countToFetch = _.where(_.filter(savedItems.toJSON(), checkRelevantSeries), {
       'uploadedLink': false
     }).length;
   } else {
-    uniqueLinks = _.union(_.map(stagedItems, "link"));
-    countToFetch = _.where(stagedItems, {
+    uniqueLinks = _.union(_.map(savedItems.toJSON(), "link"));
+    countToFetch = _.where(savedItems.toJSON(), {
       'uploadedLink': false
     }).length;
   }
@@ -279,12 +280,12 @@ function nextULParse() {
 
 
     if (ONLY_FETCH_RELEVANT_SERIES_UL_LINKS === true) {
-      console.log("\nUL_PARSER: done, " + _.where(_.filter(stagedItems, checkRelevantSeries), {
+      console.log("\nUL_PARSER: done, " + _.where(_.filter(savedItems.toJSON(), checkRelevantSeries), {
         'uploadedLink': false
       }).length + " ul items missing.");
 
     } else {
-      console.log("\nUL_PARSER: done, " + _.where(stagedItems, {
+      console.log("\nUL_PARSER: done, " + _.where(savedItems.toJSON(), {
         'uploadedLink': false
       }).length + " ul items missing.");
     }
@@ -300,7 +301,7 @@ function nextULParse() {
 
 function parseURLForULLinks() {
   var link = uniqueLinks[currentUILink];
-  var toParseItems = _.where(stagedItems, {
+  var toParseItems = _.where(savedItems.toJSON(), {
     'link': link,
     'uploadedLink': false
   }),
@@ -433,7 +434,9 @@ function parseItem() {
         // console.log($(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
         //   $(this).html().lastIndexOf("\" target=\"_blank\">")));
 
-        writeStaged(stagedItems);
+        cacheHandler.save();
+
+        //writeStaged(savedItems.toJSON());
         return false;
         //}
       });
@@ -493,9 +496,9 @@ exports.printItemsListBackbone = function() {
   return returnString;
 };
 
+exports.makeRSSRequest = makeRSSRequest;
+
 
 // EXECUTE
 
-
-
-readStaged();
+//readStaged();

@@ -1,6 +1,8 @@
 var http = require('http');
 var parser = require('./parser.js');
 
+var controller = require("./controller.js");
+
 
 http.createServer(function(req, res) {
   res.writeHead(200, {

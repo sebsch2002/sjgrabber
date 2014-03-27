@@ -23,7 +23,7 @@ var SavedItemsCollection = Backbone.Collection.extend({
 var savedItems = new SavedItemsCollection();
 
 savedItems.on("add", function(model, collection, options) {
-  console.log("added model: " + model.get("title") + model.get("date"));
+  //console.log("added model: " + model.get("title") + model.get("date"));
 });
 
 // Export
