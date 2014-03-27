@@ -1,69 +1,61 @@
 var request = require('request');
 var _ = require('lodash');
 var $ = require('cheerio');
+var zlib = require('zlib');
 
 var savedItems = require("./savedItems");
 var cacheHandler = require("./cacheHandler");
 var helper = require("./helper");
+var config = require("./config");
 
-// constants
-var REREQUEST_TIMEOUT_MS = 300000; // default every 30min = 1800000 ms
-var ONLY_FETCH_FAVOURITES = true;
+// runtime...
 
-// uploaded url parsing
-
-//var gotULLinks = 0;
 var uniqueLinks = [];
 var currentUILink = 0;
 
-exports.getUploadedLinks = function () {
+exports.getUploadedLinks = function() {
 
   var countToFetch = 0;
 
-  if (ONLY_FETCH_FAVOURITES === true) {
-    uniqueLinks = _.union(_.map(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavourite), "link"));
-    countToFetch = _.where(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavourite), {
-      'uploadedLink': false
-    }).length;
-  } else {
-    uniqueLinks = _.union(_.map(savedItems.toJSON(), "link"));
-    countToFetch = _.where(savedItems.toJSON(), {
-      'uploadedLink': false
-    }).length;
-  }
-
-
+  uniqueLinks = getUnionedLinksToFetch(config.fetchOnlyFavourites);
+  countToFetch = getCountLinksMissing(config.fetchOnlyFavourites);
 
   currentUILink = 0;
 
-  console.log("UL_PARSER: attempt to resolve " + countToFetch + " ul links from " + uniqueLinks.length + " sites !");
+  console.log("linkParser:getUploadedLinks (attempting to resolve " + countToFetch + " ul links from " + uniqueLinks.length + " sites)");
 
   parseURLForULLinks();
 
 };
 
+function getUnionedLinksToFetch(onlyFavourites) {
+  if (onlyFavourites) {
+    return _.union(_.map(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavouriteLinkMissing), "link"));
+  } else {
+    return _.union(_.map(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONLinkMissing), "link"));
+  }
+}
+
+function getCountLinksMissing(onlyFavourites) {
+  if (onlyFavourites) {
+    return _.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavouriteLinkMissing).length;
+  } else {
+    return _.filter(savedItems.toJSON(), helper.checkSavedItemJSONLinkMissing).length;
+  }
+}
+
 function nextULParse() {
+
+  console.log(" done.");
+
   currentUILink += 1;
-  if (currentUILink > uniqueLinks.length) {
+  if (currentUILink >= uniqueLinks.length) {
+    // all done!
     currentUILink = 0;
-
-
-    if (ONLY_FETCH_FAVOURITES === true) {
-      console.log("\nUL_PARSER: done, " + _.where(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavourite), {
-        'uploadedLink': false
-      }).length + " ul items missing.");
-
-    } else {
-      console.log("\nUL_PARSER: done, " + _.where(savedItems.toJSON(), {
-        'uploadedLink': false
-      }).length + " ul items missing.");
-    }
-
+    console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.fetchOnlyFavourites) + " ul items missing.");
+    // emit event here!!!!!!!!!!!
 
   } else {
-
-    process.stdout.write("(" + currentUILink + "/" + uniqueLinks.length + ")");
-
     parseURLForULLinks();
   }
 }
@@ -76,7 +68,7 @@ function parseURLForULLinks() {
   }),
     linkRequest;
 
-  //console.log("to parse = " + toParseItems);
+  process.stdout.write("fetching " + uniqueLinks[currentUILink] + " | ");
 
   var ulReq;
 
@@ -84,14 +76,36 @@ function parseURLForULLinks() {
 
     request({
       uri: link,
-      timeout: 7000
+      timeout: config.requestTimeoutMS,
+      encoding: null,
+      headers: {
+        'Accept-Encoding': 'gzip',
+      },
     }, function(error, response, body) {
+
+      //console.log(JSON.stringify(response.toJSON()));
+
       if (!error && response.statusCode == 200) {
-        parseHTML(body, toParseItems);
+
+        if (response.headers['content-encoding'] === "gzip") {
+          //console.log("response is gzip, unpacking...");
+
+          zlib.unzip(body, function(err, buffer) {
+            //console.log(buffer.toString());
+            parseHTML(buffer.toString(), toParseItems);
+          });
+
+        } else {
+          //console.log("response is not gzip, proceeding...");
+          parseHTML(body, toParseItems);
+        }
+
+
+
       } else {
         console.error("ERROR parsing @" + link + " - " + err);
+        nextULParse();
       }
-      nextULParse();
     });
 
   } else {
@@ -100,69 +114,69 @@ function parseURLForULLinks() {
   }
 }
 
-
-
-//var runned = false;
-
 function parseHTML(html, items) {
   var parsedHTML = $.load(html);
-  //console.log(html);
 
   var i = 0,
     len = items.length,
-    item;
-
-  //process.stdout.write("(" + len + "total)");
+    item,
+    returnValue = false;
 
   for (i; i < len; i += 1) {
     //console.log(items[i].title);
-    _.bind(parseItem, {
+    returnValue = _.bind(parseItem, {
       item: items[i],
+      currentSavedItem: savedItems.findWhere({
+        uuid: items[i].uuid
+      }),
+      success: false,
       theHTML: parsedHTML,
       realItemName: items[i].title.substring(items[i].title.lastIndexOf("] ") + 2)
     })();
+
+    if (returnValue === false) {
+      // link of item could not be resolved, mark as tried.
+      process.stdout.write("*");
+      incrementRefetchCount(items[i].uuid);
+    }
   }
+
+  // check for links that werent resolved and set a flag for them - maximal resolve.
+
+  nextULParse(); // done fetching!
+}
+
+function incrementRefetchCount(uuid) {
+  var item = savedItems.findWhere({
+    uuid: uuid
+  });
+
+  var currentSet = item.get("uploadedLinkRefetchCount");
+
+  item.set("uploadedLinkRefetchCount", currentSet + 1);
 }
 
 function parseItem() {
 
-  //console.log(item);
   var that = this;
 
   this.theHTML('p').find('strong').each(function(i, el) {
 
-    //console.log(i + " - " + that.realItemName);
-
-    //var currentElement = $(this);
-
     if ($(this).text().indexOf(that.realItemName) !== -1) {
 
       $(this).parent().each(function(i, elem) {
-        //if($(this).is("a") === true) {
 
-        that.item.uploadedLink = $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
-          $(this).html().lastIndexOf("\" target=\"_blank\">"));
-
-        //gotULLinks += 1;
         process.stdout.write(".");
-        // console.log($(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
-        //   $(this).html().lastIndexOf("\" target=\"_blank\">")));
 
-        cacheHandler.save();
-        return false;
-        //}
+        that.currentSavedItem.set("uploadedLink", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
+          $(this).html().lastIndexOf("\" target=\"_blank\">")));
+
+        that.success = true;
+
       });
-
-      //console.log("match @" + realItemName + " -- " + $(this).parent());
-
-    } else {
-      //console.log("not found @ " + $(this).text() + " from " + realItemName);
     }
-
 
   });
 
-
-  //});
-  //
+  return that.success;
 }

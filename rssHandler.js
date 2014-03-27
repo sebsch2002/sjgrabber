@@ -18,7 +18,10 @@ var RSSHandler = function() {
 util.inherits(RSSHandler, EventEmitter);
 
 RSSHandler.prototype.fetch = function() {
-  var req = request(config.rssUrl);
+  var req = request({
+    uri: config.rssUrl,
+    timeout: config.requestTimeoutMS
+  });
   var feedparser = new FeedParser({
     normalize: true,
     addmeta: true,
@@ -78,14 +81,14 @@ RSSHandler.prototype.fetch = function() {
 
         that.newItems += 1;
 
-        process.stdout.write("*");
+        process.stdout.write(".");
 
       } else {
 
         // old item, dismiss.
         that.dismissedItems += 1;
 
-        process.stdout.write(".");
+        //process.stdout.write(".");
       }
 
     }

@@ -19,8 +19,21 @@ function checkSavedItemJSONIsFavourite(JSONitem) {
   return checkTitleIsFavourite(JSONitem.title);
 }
 
+function checkSavedItemJSONIsFavouriteLinkMissing(JSONitem) {
+  if (checkSavedItemJSONLinkMissing(JSONitem) && checkTitleIsFavourite(JSONitem.title)) {
+    return true;
+  }
+  return false;
+}
+
+function checkSavedItemJSONLinkMissing(JSONitem) {
+  return JSONitem.uploadedLink === false;
+}
+
 module.exports = {
   checkTitleIsFavourite: checkTitleIsFavourite,
   checkSavedItemIsFavourite: checkSavedItemIsFavourite,
-  checkSavedItemJSONIsFavourite: checkSavedItemJSONIsFavourite
+  checkSavedItemJSONIsFavourite: checkSavedItemJSONIsFavourite,
+  checkSavedItemJSONIsFavouriteLinkMissing: checkSavedItemJSONIsFavouriteLinkMissing,
+  checkSavedItemJSONLinkMissing: checkSavedItemJSONLinkMissing
 };

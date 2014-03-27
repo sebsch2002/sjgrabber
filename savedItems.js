@@ -7,7 +7,8 @@ var SavedItemModel = Backbone.Model.extend({
     title: "no title",
     link: "no link",
     date: null,
-    uploadedLink: []
+    uploadedLink: false,
+    uploadedLinkRefetchCount: 0
   }
 });
 
