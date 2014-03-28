@@ -9,6 +9,8 @@ var moment = require("moment");
 var savedItems = require("./savedItems");
 var config = require("./config");
 
+var AVERAGE_ITEMS_IN_RSS_FEED = 3000;
+
 var RSSHandler = function() {
   this.newItems = 0;
   this.dismissedItems = 0;
@@ -29,6 +31,8 @@ RSSHandler.prototype.fetch = function() {
     resume_saxerror: true
   });
   var that = this;
+
+  that.emit("start");
 
   this.newItems = 0;
   this.dismissedItems = 0;
@@ -94,6 +98,10 @@ RSSHandler.prototype.fetch = function() {
       }
 
       that.allItems += 1;
+
+      if (that.allItems % 100 === 0) {
+        that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED));
+      }
 
       process.stdout.cursorTo(32);
       process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);

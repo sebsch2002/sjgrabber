@@ -1,7 +1,5 @@
 var gui = require('nw.gui');
 var clipboard = gui.Clipboard.get();
-//clipboard.set('I love node-webkit :)', 'text');
-
 
 window.setNWClipboardBinding = function() {
   console.log("setting clipboard bindings...");
@@ -11,3 +9,5 @@ window.setNWClipboardBinding = function() {
     clipboard.set(event.target.href, 'text');
   });
 };
+
+NProgress.configure({ minimum: 0.001 });

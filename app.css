@@ -1,3 +1,17 @@
 body {
   font-size: 12px;
 }
+
+#nprogress .bar {
+  background: #ff004f;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  box-shadow: 0 0 10px #ff004f, 0 0 5px #ff004f;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #ff004f;
+  border-left-color: #ff004f;
+}

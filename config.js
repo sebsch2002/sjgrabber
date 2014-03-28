@@ -9,5 +9,6 @@ module.exports = {
   rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
   cacheDir: "cache/",
   cacheFilename: "savedItems.json",
-  rescheduleMS: 1800000
+  rescheduleMS: 1800000,
+  useCache: true
 };

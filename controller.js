@@ -17,7 +17,14 @@ var rescheduler;
 
 function cacheLoaded() {
   setListeners();
+  startCycle();
+}
+
+var cycleRunning = false;
+
+function startCycle() {
   rssHandler.fetch();
+  cycleRunning = true;
 }
 
 function setListeners() {
@@ -29,12 +36,13 @@ function setListeners() {
   linkParser.on("fetched", function() {
     cacheHandler.save();
     scheduleFetchCycle();
+    cycleRunning = false;
   });
 }
 
 function scheduleFetchCycle() {
   rescheduler = setTimeout(function() {
-    rssHandler.fetch();
+    startCycle();
   }, config.rescheduleMS);
   console.log("controller:scheduleFetchCycle next cycle will execute at " + moment().add('milliseconds', config.rescheduleMS).toDate());
 }
@@ -42,7 +50,7 @@ function scheduleFetchCycle() {
 function runFetchCycleNow() {
   console.log("controller:runFetchCycleNow");
   clearTimeout(rescheduler);
-  rssHandler.fetch();
+  startCycle();
 }
 
 
@@ -65,17 +73,36 @@ module.exports.nodeWindowReady = function () {
 
   window.setNWClipboardBinding();
 
+  if(cycleRunning === true) {
+    window.NProgress.start();
+  }
+  
   if(hookedListenersToWindow === false) {
 
+    rssHandler.on("start", function() {
+      window.document.location.reload(true);
+    });
+
     rssHandler.on("fetched", function() {
+      window.NProgress.done();
       window.document.location.reload(true);
     });
 
     linkParser.on("fetched", function() {
+      window.NProgress.done();
       window.document.location.reload(true);
     });
 
+    rssHandler.on("progress", function(progressCount) {
+      window.NProgress.set(progressCount);
+    });
+
+    linkParser.on("progress", function(progressCount) {
+      window.NProgress.set(progressCount);
+    });
+
     cacheHandler.on("loaded", function() {
+      window.NProgress.done();
       window.document.location.reload(true);
     });
 

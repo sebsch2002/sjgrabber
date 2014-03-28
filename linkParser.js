@@ -15,14 +15,21 @@ var config = require("./config");
 var LinkParser = function() {
   this.uniqueLinks = [];
   this.currentLinkIndex = 0;
+  this.countCurrentFetchedLinks = 0;
+  this.countTotalLinksToFetch = 0;
 };
 
 util.inherits(LinkParser, EventEmitter);
 
 LinkParser.prototype.getUploadedLinks = function() {
 
+  this.emit("start");
+
   this.uniqueLinks = getUnionedLinksToFetch(config.fetchOnlyFavourites);
   this.currentLinkIndex = 0;
+
+  this.countCurrentFetchedLinks = 0;
+  this.countTotalLinksToFetch = getCountLinksMissing(config.fetchOnlyFavourites);
 
   console.log("linkParser:getUploadedLinks (in progress) |" +
     getCountLinksMissing(config.fetchOnlyFavourites) + " links - " +
@@ -161,6 +168,9 @@ function parseHTML(html, items) {
       process.stdout.write("*");
       incrementRefetchCount(items[i].uuid);
     }
+
+    linkParser.countCurrentFetchedLinks += 1;
+    linkParser.emit("progress", (linkParser.countCurrentFetchedLinks/linkParser.countTotalLinksToFetch));
   }
 
   // check for links that werent resolved and set a flag for them - maximal resolve.

@@ -15,6 +15,7 @@ var templateWrapper = _.template('<table class="table table-hover table-condense
 var templateHead = _.template('<thead><td><%= date %></td><td><%= title %></td></thead>');
 var templateBody = _.template('<tbody><%= content %></tbody>');
 var templateItem = _.template('<tr><td><%= date %></td><td><a href="<%= link %>"><%= title %></a></td></tr>');
+var templateItemNoLink = _.template('<tr><td><%= date %></td><td><%= title %></td></tr>');
 
 module.exports.getPlainHTML = function() {
   //console.log("output:getPlainHTML");
@@ -30,11 +31,18 @@ module.exports.getPlainHTML = function() {
 
   for (i; i < len; i += 1) {
     if (helper.checkSavedItemIsFavourite(savedItems.at(i)) === true) {
-      body += templateItem({
-        date: convertDate(savedItems.at(i).get("date")),
-        link: savedItems.at(i).get("uploadedLink"),
-        title: savedItems.at(i).get("title")
-      });
+      if (savedItems.at(i).get("uploadedLink") === false) {
+        body += templateItemNoLink({
+          date: convertDate(savedItems.at(i).get("date")),
+          title: savedItems.at(i).get("title")
+        });
+      } else {
+        body += templateItem({
+          date: convertDate(savedItems.at(i).get("date")),
+          link: savedItems.at(i).get("uploadedLink"),
+          title: savedItems.at(i).get("title")
+        });
+      }
     }
   }
 

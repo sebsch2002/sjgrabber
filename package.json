@@ -33,8 +33,8 @@
     "frame": true,
     "position": "center",
     "width": 800,
-    "height": 600,
-    "min_width": 640,
+    "height": 480,
+    "min_width": 800,
     "min_height": 480
   },
   "private": true

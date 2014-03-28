@@ -20,6 +20,11 @@ CacheHandler.prototype.save = function() {
 
   var that = this;
 
+  if (config.useCache === false) {
+    that.emit("saved");
+    return;
+  }
+
   mkdirp(config.cacheDir, function(err) {
     if (err) {
       console.error("cacheHandler: save mkdirp error " + err);
@@ -46,6 +51,11 @@ CacheHandler.prototype.load = function() {
 
   var that = this;
 
+  if (config.useCache === false) {
+    that.emit("loaded");
+    return;
+  }
+
   fs.readFile(config.cacheDir + config.cacheFilename, 'utf8', function(err, data) {
     var savedObject = {};
 
@@ -68,7 +78,7 @@ CacheHandler.prototype.load = function() {
       savedItems.add(savedObject.staged);
       that.lastLoaded = new Date();
     }
-    
+
     that.emit("loaded");
   });
 };
