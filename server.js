@@ -1,7 +1,7 @@
 var http = require('http');
 
-var controller = require("./controller.js");
-var output = require('./output.js');
+var controller = require("./daemon/controller.js");
+var output = require('./daemon/output.js');
 
 http.createServer(function(req, res) {
   res.writeHead(200, {

@@ -10,6 +10,6 @@ module.exports = {
   cacheDir: "cache/",
   cacheFilename: "savedItems.json",
   rescheduleMS: 1800000,
-  useCache: false,
+  useCache: true,
   stdoutSupportsCursorTo: false
 };

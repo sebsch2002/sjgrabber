@@ -37,6 +37,14 @@ module.exports = function(grunt) {
           src: ["*", "!*.html"],
           dest: "build/"
         }]
+      },
+      "daemon": {
+        files: [{
+          expand: true,
+          cwd: "daemon/",
+          src: ["*"],
+          dest: "build/daemon/"
+        }]
       }
     },
     uglify: {
@@ -58,10 +66,15 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: { // dest: source
-          "build/index.html": "build-templates/index.html" 
+          "build/index.html": "build-templates/index.html"
         }
       }
     },
+    "install-dependencies": {
+      options: {
+        cwd: "build/"
+      }
+    }
   });
 
   grunt.loadNpmTasks("grunt-node-webkit-builder");
@@ -70,6 +83,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-htmlmin");
+  grunt.loadNpmTasks('grunt-install-dependencies');
 
-  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin", "copy", "uglify", "nodewebkit"]);
+  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin", "copy", "uglify", "install-dependencies", "nodewebkit", "clean:post"]);
 };
