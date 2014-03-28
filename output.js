@@ -19,8 +19,8 @@ module.exports.getPlainHTML = function() {
   for (i; i < len; i += 1) {
     if (helper.checkSavedItemIsFavourite(savedItems.at(i)) === true) {
 
-      returnString += "<a href='" + savedItems.at(i).get("uploadedLink") + "'>" + savedItems.at(i).get("title") +
-        "</a> -- " + convertDate(savedItems.at(i).get("date")) + " <br />";
+      returnString += "<p>" + convertDate(savedItems.at(i).get("date")) + " - <a href='" + savedItems.at(i).get("uploadedLink") + "'>" + savedItems.at(i).get("title") +
+        "</a>" + "</p>";
     }
   }
 

@@ -1,8 +1,7 @@
 {
   "name": "serienjunkies-relevant-updates",
   "version": "0.0.0",
-  "description": "fetch serienjunkies rssfeed and ...",
-  "main": "app.js",
+  "description": "fetch serienjunkies rss and uploaded links from favourites",
   "scripts": {
     "start": "node server.js"
   },
@@ -21,18 +20,22 @@
     "mkdirp": "^0.3.5",
     "zlib": "^1.0.5"
   },
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-node-webkit-builder": "^0.1.18"
+  }, // -------- node-webkit config
   "main": "index.html",
   "node-main": "controller.js",
   "window": {
-    "title": "SJgrapper", 
-    "show": true, 
-    "toolbar": true, 
-    "frame": true, 
-    "position": "center", 
-    "width": 800, 
-    "height": 600, 
-    "min_width": 640, 
+    "title": "SJgrapper",
+    "show": true,
+    "toolbar": true,
+    "frame": true,
+    "position": "center",
+    "width": 800,
+    "height": 600,
+    "min_width": 640,
     "min_height": 480
-  }, 
+  },
   "private": true
 }

@@ -56,7 +56,12 @@ var hookedListenersToWindow = false;
 
 module.exports.nodeWindowReady = function () {
   console.log("controller:nodeWindowReady");
-  window.document.write(output.getPlainHTML());
+
+  var appContainer = window.document.getElementById('appContainer');
+
+  //window.document.write(output.getPlainHTML());
+
+  appContainer.innerHTML = output.getPlainHTML();
 
   if(hookedListenersToWindow === false) {
 
