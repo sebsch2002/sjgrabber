@@ -63,6 +63,8 @@ module.exports.nodeWindowReady = function () {
 
   appContainer.innerHTML = output.getPlainHTML();
 
+  window.setNWClipboardBinding();
+
   if(hookedListenersToWindow === false) {
 
     rssHandler.on("fetched", function() {
@@ -78,7 +80,6 @@ module.exports.nodeWindowReady = function () {
     });
 
     hookedListenersToWindow = true;
-
   }
 };
 

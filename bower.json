@@ -1,0 +1,13 @@
+{
+  "name": "serienjunkies-relevant-updates",
+  "version": "0.0.0",
+  "authors": [
+    "c23i"
+  ],
+  "description": "see package.json",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "~3.1.1"
+  }
+}

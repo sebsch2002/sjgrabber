@@ -27,9 +27,9 @@
   "main": "index.html",
   "node-main": "controller.js",
   "window": {
-    "title": "SJgrapper",
+    "title": "JSgrapper",
     "show": true,
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "position": "center",
     "width": 800,
