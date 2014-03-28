@@ -4,6 +4,7 @@ var cacheHandler = require("./cachehandler");
 var linkParser = require("./linkParser");
 var rssHandler = require("./rssHandler");
 var config = require("./config");
+var output = require("./output");
 
 var rescheduler;
 
@@ -43,3 +44,37 @@ function runFetchCycleNow() {
   clearTimeout(rescheduler);
   rssHandler.fetch();
 }
+
+
+
+
+// ---
+// node-webkit ONLY
+// ---
+
+var hookedListenersToWindow = false;
+
+module.exports.nodeWindowReady = function () {
+  console.log("controller:nodeWindowReady");
+  window.document.write(output.getPlainHTML());
+
+  if(hookedListenersToWindow === false) {
+
+    rssHandler.on("fetched", function() {
+      window.document.location.reload(true);
+    });
+
+    linkParser.on("fetched", function() {
+      window.document.location.reload(true);
+    });
+
+    cacheHandler.on("loaded", function() {
+      window.document.location.reload(true);
+    });
+
+    hookedListenersToWindow = true;
+
+  }
+};
+
+
