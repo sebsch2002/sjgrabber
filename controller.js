@@ -47,13 +47,17 @@ function scheduleFetchCycle() {
   console.log("controller:scheduleFetchCycle next cycle will execute at " + moment().add('milliseconds', config.rescheduleMS).toDate());
 }
 
-function runFetchCycleNow() {
-  console.log("controller:runFetchCycleNow");
-  clearTimeout(rescheduler);
-  startCycle();
-}
 
 
+module.exports.runFetchCycleNow = function () {
+  if(cycleRunning === false) {
+    console.log("controller:runFetchCycleNow (executing)");
+    clearTimeout(rescheduler);
+    startCycle();
+  } else {
+    console.log("controller: runFetchCycleNow (not executing, already running)");
+  }
+};
 
 
 // ---
@@ -72,6 +76,8 @@ module.exports.nodeWindowReady = function () {
   appContainer.innerHTML = output.getPlainHTML();
 
   window.setNWClipboardBinding();
+  window.setNWButtonBinding();
+  window.toggleNWRefetchButtonAvailable(!cycleRunning);
 
   if(cycleRunning === true) {
     window.NProgress.start();

@@ -10,4 +10,18 @@ window.setNWClipboardBinding = function() {
   });
 };
 
+window.setNWButtonBinding = function() {
+  $('#refetch_button').click(function () {
+    process.mainModule.exports.runFetchCycleNow();
+  });
+};
+
+window.toggleNWRefetchButtonAvailable = function (available) {
+  if(available) {
+    $('#refetch_button').button('reset');
+  } else {
+    $('#refetch_button').button('loading');
+  }
+};
+
 NProgress.configure({ minimum: 0.001 });
