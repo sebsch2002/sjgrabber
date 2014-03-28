@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <link href="app.min.css" rel="stylesheet" />
+    <title>SJgrapper</title>
+  </head>
+  <body onload="process.mainModule.exports.nodeWindowReady()">
+    <button type="button" id="refetch_button" data-loading-text="Fetching serienjunkies.org..." class="btn btn-block btn-default btn-lg">Refetch serienjunkies.org</button>
+    <div id="appContainer">
+    </div>
+    <script src="app.client.min.js"></script>
+  </body>
+</html>

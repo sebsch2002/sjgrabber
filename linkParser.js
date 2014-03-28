@@ -52,10 +52,8 @@ LinkParser.prototype.nextULParse = function() {
     // all done!
     this.currentLinkIndex = 0;
     console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.fetchOnlyFavourites) + " ul items missing.");
-    // emit event here!!!!!!!!!!!
 
     this.emit("fetched");
-
   } else {
     parseURLForULLinks();
   }
@@ -99,8 +97,6 @@ function parseURLForULLinks() {
 
   process.stdout.write("fetching " + linkParser.uniqueLinks[linkParser.currentLinkIndex] + " | ");
 
-  var ulReq;
-
   if (toParseItems.length > 0) {
 
     request({
@@ -114,27 +110,47 @@ function parseURLForULLinks() {
 
       //console.log(JSON.stringify(response.toJSON()));
 
-      if (!error && response.statusCode == 200) {
+      if (error) {
+        console.error("ERROR parsing @" + link + " - " + error);
+        linkParser.emit("error", error);
+        linkParser.nextULParse();
+        return;
+      }
 
-        if (response.headers['content-encoding'] === "gzip") {
-          //console.log("response is gzip, unpacking...");
+      if (response.statusCode !== 200) {
+        console.error("ERROR parsing @" + link + " - bad status code " + response.statusCode);
+        linkParser.emit("error", response.statusCode);
+        linkParser.nextULParse();
+        return;
+      }
 
-          zlib.unzip(body, function(err, buffer) {
+      //if (!error && response.statusCode == 200) {
+
+      if (response.headers['content-encoding'] === "gzip") {
+        //console.log("response is gzip, unpacking...");
+
+        zlib.unzip(body, function(err, buffer) {
+
+          if (err) {
+            linkParser.emit("error", err);
+          } else {
             //console.log(buffer.toString());
             parseHTML(buffer.toString(), toParseItems);
-          });
-
-        } else {
-          //console.log("response is not gzip, proceeding...");
-          parseHTML(body, toParseItems);
-        }
-
-
+          }
+        });
 
       } else {
-        console.error("ERROR parsing @" + link + " - " + err);
-        linkParser.nextULParse();
+        //console.log("response is not gzip, proceeding...");
+        parseHTML(body, toParseItems);
       }
+
+
+
+      // } else {
+      //   console.error("ERROR parsing @" + link + " - " + error);
+      //   linkParser.emit("error", error);
+      //   linkParser.nextULParse();
+      // }
     });
 
   } else {
@@ -170,7 +186,7 @@ function parseHTML(html, items) {
     }
 
     linkParser.countCurrentFetchedLinks += 1;
-    linkParser.emit("progress", (linkParser.countCurrentFetchedLinks/linkParser.countTotalLinksToFetch));
+    linkParser.emit("progress", (linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch));
   }
 
   // check for links that werent resolved and set a flag for them - maximal resolve.

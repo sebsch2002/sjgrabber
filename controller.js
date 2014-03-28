@@ -1,4 +1,5 @@
 var moment = require("moment");
+var _ = require("lodash");
 
 var cacheHandler = require("./cachehandler");
 var linkParser = require("./linkParser");
@@ -6,53 +7,65 @@ var rssHandler = require("./rssHandler");
 var config = require("./config");
 var output = require("./output");
 
-var rescheduler;
+// runtime variables managing state
 
-(function startup() {
-  // start by loading old items into our cache
-  cacheHandler.once("loaded", cacheLoaded);
-  cacheHandler.load();
-}());
-
-
-function cacheLoaded() {
-  setListeners();
-  startCycle();
-}
-
+var rescheduleTimer;
 var cycleRunning = false;
 
-function startCycle() {
-  rssHandler.fetch();
-  cycleRunning = true;
-}
-
-function setListeners() {
+// restricted to run only once.
+var hookCycleListeners = _.once(function() {
   rssHandler.on("fetched", function() {
     cacheHandler.save();
     linkParser.getUploadedLinks();
   });
-
   linkParser.on("fetched", function() {
     cacheHandler.save();
     scheduleFetchCycle();
     cycleRunning = false;
   });
+
+  rssHandler.on("error", function(err) {
+    // stop cycle immediately?
+    console.log("controller:hookCycleListeners catched rssHandler error!");
+  });
+
+  linkParser.on("error", function(err) {
+    // stop cycle immediately?
+    console.log("controller:hookCycleListeners catched linkParser error!");
+  });
+});
+
+// startup execute
+(function startup() {
+  // start by loading old items into our cache
+  cacheHandler.once("loaded", startCycle);
+  cacheHandler.on("error", function (err) {
+    // stop cycle immediately?
+    console.log("controller:startup catched cacheHandler error!");
+  });
+  cacheHandler.load();
+}());
+
+// starts a cycle.
+function startCycle() {
+  hookCycleListeners();
+  rssHandler.fetch();
+  cycleRunning = true;
 }
 
 function scheduleFetchCycle() {
-  rescheduler = setTimeout(function() {
+  rescheduleTimer = setTimeout(function() {
     startCycle();
   }, config.rescheduleMS);
   console.log("controller:scheduleFetchCycle next cycle will execute at " + moment().add('milliseconds', config.rescheduleMS).toDate());
 }
 
 
-
-module.exports.runFetchCycleNow = function () {
-  if(cycleRunning === false) {
+// EXPORTED immediately run a new cycle now
+module.exports.runFetchCycleNow = function() {
+  if (cycleRunning === false) {
     console.log("controller:runFetchCycleNow (executing)");
-    clearTimeout(rescheduler);
+    clearTimeout(rescheduleTimer);
     startCycle();
   } else {
     console.log("controller: runFetchCycleNow (not executing, already running)");
@@ -61,59 +74,50 @@ module.exports.runFetchCycleNow = function () {
 
 
 // ---
-// node-webkit ONLY
+// EXPORTED node-webkit ONLY
 // ---
 
-var hookedListenersToWindow = false;
-
-module.exports.nodeWindowReady = function () {
+module.exports.nodeWindowReady = function() {
   console.log("controller:nodeWindowReady");
 
+  // add output to containers
   var appContainer = window.document.getElementById('appContainer');
-
-  //window.document.write(output.getPlainHTML());
-
   appContainer.innerHTML = output.getPlainHTML();
 
+  // call 
   window.setNWClipboardBinding();
   window.setNWButtonBinding();
   window.toggleNWRefetchButtonAvailable(!cycleRunning);
 
-  if(cycleRunning === true) {
+  // is a cycle currently running? - start progress.
+  if (cycleRunning === true) {
     window.NProgress.start();
   }
-  
-  if(hookedListenersToWindow === false) {
 
-    rssHandler.on("start", function() {
-      window.document.location.reload(true);
-    });
-
-    rssHandler.on("fetched", function() {
-      window.NProgress.done();
-      window.document.location.reload(true);
-    });
-
-    linkParser.on("fetched", function() {
-      window.NProgress.done();
-      window.document.location.reload(true);
-    });
-
-    rssHandler.on("progress", function(progressCount) {
-      window.NProgress.set(progressCount);
-    });
-
-    linkParser.on("progress", function(progressCount) {
-      window.NProgress.set(progressCount);
-    });
-
-    cacheHandler.on("loaded", function() {
-      window.NProgress.done();
-      window.document.location.reload(true);
-    });
-
-    hookedListenersToWindow = true;
-  }
+  // manage node-webkit listeners
+  hookNWListeners();
 };
 
+// restricted to run only once.
+var hookNWListeners = _.once(function() {
+  rssHandler.on("start", reloadNWWindowOnly);
+  rssHandler.on("fetched", cycleDoneReloadNWWindow);
+  linkParser.on("fetched", cycleDoneReloadNWWindow);
+  cacheHandler.on("loaded", cycleDoneReloadNWWindow);
+  rssHandler.on("progress", updateNWProgress);
+  linkParser.on("progress", updateNWProgress);
+});
 
+
+function reloadNWWindowOnly() {
+  window.document.location.reload(true);
+}
+
+function cycleDoneReloadNWWindow() {
+  window.NProgress.done();
+  window.document.location.reload(true);
+}
+
+function updateNWProgress(progressCount) {
+  window.NProgress.set(progressCount);
+}

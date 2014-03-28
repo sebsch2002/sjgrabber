@@ -40,20 +40,20 @@ RSSHandler.prototype.fetch = function() {
 
   req.on('error', function(error) {
     console.error("rssHandler:fetch request error: " + error);
-    that.emit("error");
+    that.emit("error", error);
   });
 
   feedparser.on('error', function(error) {
     console.error("rssHandler:fetch feedparser error: " + error);
-    that.emit("error");
+    that.emit("error", error);
   });
 
   req.on('response', function(res) {
     var stream = this;
 
     if (res.statusCode != 200) {
-      console.error("rssHandler:fetch request bad status code: " + error);
-      that.emit("error");
+      console.error("rssHandler:fetch request bad status code: " + res.statusCode);
+      that.emit("error", res.statusCode);
       return;
     }
 
@@ -87,14 +87,14 @@ RSSHandler.prototype.fetch = function() {
 
         that.newItems += 1;
 
-        process.stdout.write(".");
+        process.stdout.write("*");
 
       } else {
 
         // old item, dismiss.
         that.dismissedItems += 1;
 
-        //process.stdout.write(".");
+        process.stdout.write(".");
       }
 
       that.allItems += 1;
@@ -103,8 +103,10 @@ RSSHandler.prototype.fetch = function() {
         that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED));
       }
 
-      process.stdout.cursorTo(32);
-      process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);
+      if(config.stdoutSupportsCursorTo) {
+        process.stdout.cursorTo(32);
+        process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);
+      }
 
     }
   });

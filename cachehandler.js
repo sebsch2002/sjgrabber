@@ -28,13 +28,14 @@ CacheHandler.prototype.save = function() {
   mkdirp(config.cacheDir, function(err) {
     if (err) {
       console.error("cacheHandler: save mkdirp error " + err);
+      that.emit("error", err);
     } else {
       fs.writeFile(config.cacheDir + config.cacheFilename, JSON.stringify({
         staged: savedItems.toJSON()
       }), function(err) {
         if (err) {
           console.error("cacheHandler:save error " + err);
-          that.emit("saveError");
+          that.emit("error", err);
           return;
         }
 
@@ -61,6 +62,7 @@ CacheHandler.prototype.load = function() {
 
     if (err) {
       console.error("cacheHandler:load error " + err);
+      that.emit("error", err);
     } else {
       savedObject = JSON.parse(data);
 

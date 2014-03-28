@@ -1,0 +1,20 @@
+{
+  "name": "SJgrapper",
+  "version": "0.0.0",
+  "description": "fetches from serienjunkies.org",
+  "author": "majodev",
+  "main": "index.html",
+  "node-main": "app.daemon.min.js",
+  "window": {
+    "title": "SJgrapper",
+    "show": true,
+    "toolbar": false,
+    "frame": true,
+    "position": "center",
+    "width": 800,
+    "height": 480,
+    "min_width": 800,
+    "min_height": 480
+  },
+  "private": true
+}
