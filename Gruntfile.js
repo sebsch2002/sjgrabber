@@ -8,9 +8,11 @@ module.exports = function(grunt) {
         win: false,
         linux32: false,
         linux64: false,
-        version: '0.9.2'
+        version: '0.9.2',
+        zip: true,
+        mac_icns: "assets/SJ_logo.icns"
       },
-      src: ['./**/*'] // source
+      src: ['build/**/*'] // source
     },
     clean: {
       pre: ["build", "release/releases"],
