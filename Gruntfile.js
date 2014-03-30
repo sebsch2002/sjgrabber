@@ -5,7 +5,7 @@ module.exports = function(grunt) {
       options: {
         build_dir: './release', // target
         mac: true,
-        win: false,
+        win: true,
         linux32: false,
         linux64: false,
         version: '0.9.2',

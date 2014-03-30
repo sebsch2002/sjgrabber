@@ -11,6 +11,7 @@ var config = require("./config");
 var CacheHandler = function() {
   this.lastLoaded = false;
   this.lastSaved = false;
+  this.localStorage = undefined;
 };
 
 util.inherits(CacheHandler, EventEmitter);
@@ -22,6 +23,21 @@ CacheHandler.prototype.save = function() {
 
   if (config.useCache === false) {
     that.emit("saved");
+    return;
+  }
+
+  if (config.cacheViaLocalStorageOnly === true) {
+    if (_.isUndefined(this.localStorage) === true) {
+      console.error("cacheHandler:save localStorage is not linked to cacheHandler!");
+      this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
+    } else {
+      // save to localStorage
+      this.localStorage.savedItems = JSON.stringify({
+        staged: savedItems.toJSON()
+      });
+      that.lastSaved = new Date();
+      that.emit("saved");
+    }
     return;
   }
 
@@ -57,16 +73,30 @@ CacheHandler.prototype.load = function() {
     return;
   }
 
+  if (config.cacheViaLocalStorageOnly === true) {
+    if (_.isUndefined(this.localStorage) === true) {
+      console.error("cacheHandler:load localStorage is not linked to cacheHandler!");
+      this.emit("error", "cacheHandler:load localStorage is not linked to cacheHandler!");
+    } else {
+      // load from localStorage
+      if (_.isUndefined(this.localStorage.savedItems) === false) {
+        loadItems(this.localStorage.savedItems);
+      }
+      that.emit("loaded");
+    }
+    return;
+  }
+
   fs.readFile(config.cacheDir + config.cacheFilename, 'utf8', function(err, data) {
-    var savedObject = {};
+    //var savedObject = {};
 
     if (err) {
       console.error("cacheHandler:load error " + err);
       that.emit("error", err);
     } else {
-      savedObject = JSON.parse(data);
+      //savedObject = JSON.parse(data);
 
-      // convinience meth for old model, convert string dates to real dates
+      //convinience meth for old model, convert string dates to real dates
       var i = 0,
         len = savedObject.staged.length;
       for (i; i < len; i += 1) {
@@ -76,14 +106,42 @@ CacheHandler.prototype.load = function() {
         }
       }
 
+      loadItems(data);
+
       // insert into backbone collection
-      savedItems.add(savedObject.staged);
-      that.lastLoaded = new Date();
+      //savedItems.add(savedObject.staged);
+      //that.lastLoaded = new Date();
     }
 
     that.emit("loaded");
   });
 };
 
+CacheHandler.prototype.linkLocalStorage = function(localStorage) {
+  this.localStorage = localStorage;
 
-module.exports = new CacheHandler();
+  localStorage.test = "ass!";
+};
+
+function loadItems(data) {
+  var savedObject = JSON.parse(data);
+  if (_.isUndefined(savedObject.staged) === false) {
+
+    //convinience meth for old model, convert string dates to real dates
+    var i = 0,
+      len = savedObject.staged.length;
+    for (i; i < len; i += 1) {
+      if (_.isString(savedObject.staged[i].date) === true) {
+        //console.log("converting date...");
+        savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
+      }
+    }
+
+    savedItems.add(savedObject.staged);
+  }
+  cacheHandler.lastLoaded = new Date();
+}
+
+var cacheHandler = new CacheHandler();
+
+module.exports = cacheHandler;

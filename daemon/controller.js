@@ -1,7 +1,7 @@
 var moment = require("moment");
 var _ = require("lodash");
 
-var cacheHandler = require("./cachehandler");
+var cacheHandler = require("./cacheHandler");
 var linkParser = require("./linkParser");
 var rssHandler = require("./rssHandler");
 var config = require("./config");
@@ -24,26 +24,28 @@ var hookCycleListeners = _.once(function() {
     cycleRunning = false;
   });
 
-  rssHandler.on("error", function(err) {
-    // stop cycle immediately?
-    console.log("controller:hookCycleListeners catched rssHandler error!");
-  });
+  // rssHandler.on("error", function(err) {
+  //   // stop cycle immediately?
+  //   console.log("controller:hookCycleListeners catched rssHandler error!");
+  // });
 
-  linkParser.on("error", function(err) {
-    // stop cycle immediately?
-    console.log("controller:hookCycleListeners catched linkParser error!");
-  });
+  // linkParser.on("error", function(err) {
+  //   // stop cycle immediately?
+  //   console.log("controller:hookCycleListeners catched linkParser error!");
+  // });
 });
 
 // startup execute
 (function startup() {
   // start by loading old items into our cache
   cacheHandler.once("loaded", startCycle);
-  cacheHandler.on("error", function (err) {
-    // stop cycle immediately?
-    console.log("controller:startup catched cacheHandler error!");
-  });
-  cacheHandler.load();
+  // cacheHandler.on("error", function(err) {
+  //   // stop cycle immediately?
+  //   console.log("controller:startup catched cacheHandler error!");
+  // });
+  if (config.cacheViaLocalStorageOnly === false) {
+    cacheHandler.load(); // load immediately if file caching enabled, else wait for NW-localstorage
+  }
 }());
 
 // starts a cycle.
@@ -57,7 +59,8 @@ function scheduleFetchCycle() {
   rescheduleTimer = setTimeout(function() {
     startCycle();
   }, config.rescheduleMS);
-  console.log("controller:scheduleFetchCycle next cycle will execute at " + moment().add('milliseconds', config.rescheduleMS).toDate());
+  console.log("controller:scheduleFetchCycle next cycle will execute at " +
+    moment().add('milliseconds', config.rescheduleMS).toDate());
 }
 
 
@@ -80,11 +83,7 @@ module.exports.runFetchCycleNow = function() {
 module.exports.nodeWindowReady = function() {
   console.log("controller:nodeWindowReady");
 
-  // add output to containers
-  var appContainer = window.document.getElementById('appContainer');
-  appContainer.innerHTML = output.getPlainHTML();
-
-  // call 
+  // call CLIENT exported methods...
   window.setNWClipboardBinding();
   window.setNWButtonBinding();
   window.toggleNWRefetchButtonAvailable(!cycleRunning);
@@ -94,12 +93,23 @@ module.exports.nodeWindowReady = function() {
     window.NProgress.start();
   }
 
+  cacheHandler.linkLocalStorage(window.localStorage);
+
   // manage node-webkit listeners
   hookNWListeners();
+
+  // add output to containers
+  var appContainer = window.document.getElementById('appContainer');
+  appContainer.innerHTML = output.getPlainHTML();
 };
 
 // restricted to run only once.
 var hookNWListeners = _.once(function() {
+
+  if (config.cacheViaLocalStorageOnly === true) {
+    cacheHandler.load();
+  }
+
   rssHandler.on("start", reloadNWWindowOnly);
   rssHandler.on("fetched", cycleDoneReloadNWWindow);
   linkParser.on("fetched", cycleDoneReloadNWWindow);
