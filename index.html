@@ -6,13 +6,16 @@
     <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <link href="bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" />
     <link href="bower_components/nprogress/nprogress.css" rel="stylesheet" />
+    <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="client/app.css" rel="stylesheet" />
     <title>SJgrapper</title>
   </head>
   <body onload="process.mainModule.exports.NWReady()">
-    <button type="button" id="refetch_button" data-loading-text="Fetching serienjunkies.org..." class="btn btn-block btn-default btn-lg">Refetch serienjunkies.org</button>
+    
+    <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i> fetching" class="btn btn-block btn-default btn-lg"><i class="fa fa-refresh"></i> refetch</button>
     <div id="appContainer">
     </div>
+    
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/nprogress/nprogress.js"></script>

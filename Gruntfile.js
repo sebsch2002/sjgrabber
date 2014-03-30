@@ -10,14 +10,14 @@ module.exports = function(grunt) {
         linux64: false,
         version: '0.9.2',
         zip: true,
+        keep_nw: true,
         mac_icns: "assets/SJ_logo.icns"
       },
       src: ['build/**/*'] // source
     },
     clean: {
       pre: ["build", "dist"],
-      post: ["build"],
-      postcompress: ["release/releases"],
+      post: ["build", "release/releases"],
       "build-deps": ["build-templates/node_modules"]
     },
     cssmin: {
@@ -25,9 +25,10 @@ module.exports = function(grunt) {
         src: ["bower_components/bootstrap/dist/css/bootstrap.css",
           "bower_components/bootstrap/dist/css/bootstrap-theme.css",
           "bower_components/nprogress/nprogress.css",
+          "bower_components/font-awesome/css/font-awesome.css",
           "client/app.css"
         ],
-        dest: "build/app.min.css"
+        dest: "build/css/app.min.css"
       },
       options: {
         keepSpecialComments: 0
@@ -42,17 +43,22 @@ module.exports = function(grunt) {
           dest: "build/"
         }]
       },
-      "daemon": {
+      "fonts": {
         files: [{
           expand: true,
-          cwd: "daemon/",
+          cwd: "bower_components/font-awesome/fonts/",
           src: ["*"],
-          dest: "build/daemon/"
+          dest: "build/fonts/"
+        }, {
+          expand: true,
+          cwd: "bower_components/bootstrap/fonts",
+          src: ["*"],
+          dest: "build/fonts/"
         }]
       }
     },
     uglify: {
-      jsfiles: {
+      clientjs: {
         files: {
           "build/app.client.min.js": [
             "bower_components/jquery/dist/jquery.js",
@@ -61,6 +67,14 @@ module.exports = function(grunt) {
             "client/app.js"
           ]
         }
+      },
+      daemonjs: {
+        files: [{
+          expand: true,
+          src: '**/*.js',
+          dest: 'build/daemon',
+          cwd: 'daemon'
+        }]
       }
     },
     htmlmin: { // Task
@@ -103,6 +117,18 @@ module.exports = function(grunt) {
           src: ['**'],
           dest: '',
         }]
+      },
+      nw: {
+        options: {
+          archive: "dist/SJgrapper_nw_v" + grunt.file.readJSON('package.json').version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/SJgrapper/',
+          src: ['*'],
+          dest: '',
+        }]
       }
     }
   });
@@ -117,7 +143,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
 
   grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin",
-    "uglify", "install-dependencies", "copy", "nodewebkit", "clean:post",
-    "compress", "clean:postcompress"
+    "uglify:clientjs", "install-dependencies", "copy", "uglify:daemonjs",
+    "nodewebkit", "compress", "clean:post"
   ]);
 };
