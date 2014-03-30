@@ -44,7 +44,7 @@ var hookCycleListeners = _.once(function() {
   //   console.log("controller:startup catched cacheHandler error!");
   // });
   if (config.cacheViaLocalStorageOnly === false) {
-    cacheHandler.load(); // load immediately if file caching enabled, else wait for NW-localstorage
+    cacheHandler.load(); // load immediately if normal file caching enabled, else wait for NW-localstorage
   }
 }());
 

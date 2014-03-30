@@ -127,12 +127,11 @@ function loadItems(data) {
   var savedObject = JSON.parse(data);
   if (_.isUndefined(savedObject.staged) === false) {
 
-    //convinience meth for old model, convert string dates to real dates
+    // convert string dates to real dates
     var i = 0,
       len = savedObject.staged.length;
     for (i; i < len; i += 1) {
       if (_.isString(savedObject.staged[i].date) === true) {
-        //console.log("converting date...");
         savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
       }
     }
