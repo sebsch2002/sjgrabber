@@ -83,14 +83,12 @@ RSSHandler.prototype.fetch = function() {
         });
 
         that.newItems += 1;
-
         process.stdout.write("*");
 
       } else {
 
         // old item, dismiss.
         that.dismissedItems += 1;
-
         process.stdout.write(".");
       }
 
@@ -100,7 +98,7 @@ RSSHandler.prototype.fetch = function() {
         that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED));
       }
 
-      if(config.stdoutSupportsCursorTo) {
+      if(config.support.stdoutCursorTo) {
         process.stdout.cursorTo(32);
         process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);
       }

@@ -1,7 +1,9 @@
 {
   "name": "SJgrapper",
-  "version": "0.0.0",
-  "description": "fetches from serienjunkies.org",
+  "version": "0.0.1",
+  "description": "fetches rss and links from serienjunkies.org",
+  "author": "the unknown",
+  "license": "MIT",
   "dependencies": {
     "feedparser": "^0.16.6",
     "request": "^2.34.0",

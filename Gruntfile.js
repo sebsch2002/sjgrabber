@@ -15,15 +15,16 @@ module.exports = function(grunt) {
       src: ['build/**/*'] // source
     },
     clean: {
-      pre: ["build", "release/releases"],
-      post: ["build"]
+      pre: ["build", "dist"],
+      post: ["build"],
+      postcompress: ["release/releases"]
     },
     cssmin: {
       minify: {
         src: ["bower_components/bootstrap/dist/css/bootstrap.css",
           "bower_components/bootstrap/dist/css/bootstrap-theme.css",
           "bower_components/nprogress/nprogress.css",
-          "app.css"
+          "client/app.css"
         ],
         dest: "build/app.min.css"
       },
@@ -56,7 +57,7 @@ module.exports = function(grunt) {
             "bower_components/jquery/dist/jquery.js",
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/nprogress/nprogress.js",
-            "nwClient.js"
+            "client/app.js"
           ]
         }
       }
@@ -76,6 +77,32 @@ module.exports = function(grunt) {
       options: {
         cwd: "build/"
       }
+    },
+    compress: {
+      mac: {
+        options: {
+          archive: "dist/SJgrapper_mac_v" + grunt.file.readJSON('package.json').version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/SJgrapper/mac/',
+          src: ['**'],
+          dest: '',
+        }]
+      },
+      win: {
+        options: {
+          archive: "dist/SJgrapper_win_v" + grunt.file.readJSON('package.json').version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/SJgrapper/win/',
+          src: ['**'],
+          dest: '',
+        }]
+      }
     }
   });
 
@@ -86,6 +113,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-htmlmin");
   grunt.loadNpmTasks('grunt-install-dependencies');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin", "copy", "uglify", "install-dependencies", "nodewebkit", "clean:post"]);
+  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin", "copy",
+    "uglify", "install-dependencies", "nodewebkit", "clean:post",
+    "compress", "clean:postcompress"
+  ]);
 };

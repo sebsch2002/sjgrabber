@@ -25,7 +25,3 @@ window.toggleNWRefetchButtonAvailable = function(available) {
     $('#refetch_button').button('loading');
   }
 };
-
-NProgress.configure({
-  minimum: 0.001
-});

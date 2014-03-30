@@ -1,14 +1,14 @@
 {
-  "name": "serienjunkies-relevant-updates",
-  "version": "0.0.0",
-  "description": "fetch serienjunkies rss and uploaded links from favourites",
+  "name": "SJgrapper",
+  "version": "0.0.1",
+  "description": "fetches rss and links from serienjunkies.org",
   "scripts": {
     "start": "node server.js"
   },
   "keywords": [
     "serienjunkies.org"
   ],
-  "author": "majodev",
+  "author": "the unknown",
   "license": "MIT",
   "dependencies": {
     "feedparser": "^0.16.6",
@@ -27,7 +27,8 @@
     "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-contrib-htmlmin": "^0.2.0",
-    "grunt-install-dependencies": "^0.1.0"
+    "grunt-install-dependencies": "^0.1.0",
+    "grunt-contrib-compress": "^0.7.0"
   },
   "main": "index.html",
   "node-main": "daemon/controller.js",

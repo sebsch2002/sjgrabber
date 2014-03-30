@@ -15,6 +15,8 @@ module.exports = {
       filename: "savedItems.json"
     }
   },
-  rescheduleMS: 4000,
-  stdoutSupportsCursorTo: false
+  support: {
+    stdoutCursorTo: false
+  },
+  rescheduleMS: 1800000
 };
