@@ -82,26 +82,35 @@ module.exports.runFetchCycleNow = function() {
 // EXPORTED node-webkit ONLY
 // ---
 
-module.exports.nodeWindowReady = function() {
-  console.log("controller:nodeWindowReady");
+var NWAPP;
+module.exports.NWReady = function() {
+  console.log("controller:NWReady");
 
-  // call CLIENT exported methods...
-  //window.setNWClipboardBinding();
-  window.setNWButtonBinding();
-  window.toggleNWRefetchButtonAvailable(!cycleRunning);
-
-  // is a cycle currently running? - start progress.
-  if (cycleRunning === true) {
-    window.NProgress.start();
+  // we need the window object within here, hence check for it
+  if(_.isUndefined(window) === true) {
+    console.error("controller:NWReady undefined window object!");
+    return;
   }
 
+  // sets the link to the clientApp.
+  NWAPP = window.NWAPP;
+
+  // initial set on page load...
+  NWAPP.hookStaticBindings();
+
+  // if daemons cycle already running, tell client instantly
+  if (cycleRunning === true) {
+    NWAPP.startCycle();
+  }
+
+  // link the cacheHandler with NW provided localStorage object
   cacheHandler.linkLocalStorage(window.localStorage);
 
   // manage node-webkit listeners
   hookNWListeners();
 
-  // print the output...
-  printOutputNW();
+  // print the dynamic output initially...
+  printDynamicContentNW();
 };
 
 // restricted to run only once.
@@ -120,26 +129,22 @@ var hookNWListeners = _.once(function() {
 
 
 function cycleStartsNW() {
-  window.NProgress.start();
-  window.toggleNWRefetchButtonAvailable(false);
+  NWAPP.startCycle();
 }
 
 function cycleDoneNW() {
-  window.NProgress.done();
-  printOutputNW();
-  window.toggleNWRefetchButtonAvailable(true);
+  NWAPP.endCycle();
+  printDynamicContentNW();
 }
 
 function cycleProgressNW(progressCount) {
-  window.NProgress.set(progressCount);
+  NWAPP.updateProgress(progressCount);
 }
 
-function printOutputNW() {
-  console.log("controller:printOutputNW updating output");
+function printDynamicContentNW() {
+  // set clients dynamic content
+  NWAPP.setDynamicContent(output.getPlainHTML());
 
-  // add output to containers
-  var appContainer = window.document.getElementById('appContainer');
-  appContainer.innerHTML = output.getPlainHTML();
-
-  window.setNWClipboardBinding();
+  // tell client to hook its listeners to the dynamic content
+  NWAPP.hookDynamicBindings();
 }

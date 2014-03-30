@@ -17,7 +17,8 @@ module.exports = function(grunt) {
     clean: {
       pre: ["build", "dist"],
       post: ["build"],
-      postcompress: ["release/releases"]
+      postcompress: ["release/releases"],
+      "build-deps": ["build-templates/node_modules"]
     },
     cssmin: {
       minify: {
