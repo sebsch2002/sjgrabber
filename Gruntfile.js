@@ -37,7 +37,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: "build-templates/",
-          src: ["*", "!*.html"],
+          src: ["**", "!*.html"],
           dest: "build/"
         }]
       },
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     },
     "install-dependencies": {
       options: {
-        cwd: "build/"
+        cwd: "build-templates/"
       }
     },
     compress: {
@@ -115,8 +115,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-install-dependencies');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin", "copy",
-    "uglify", "install-dependencies", "nodewebkit", "clean:post",
+  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin",
+    "uglify", "install-dependencies", "copy", "nodewebkit", "clean:post",
     "compress", "clean:postcompress"
   ]);
 };
