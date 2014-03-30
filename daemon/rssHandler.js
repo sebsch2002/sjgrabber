@@ -39,12 +39,10 @@ RSSHandler.prototype.fetch = function() {
   this.allItems = 0;
 
   req.on('error', function(error) {
-    console.error("rssHandler:fetch request error: " + error);
     that.emit("error", error);
   });
 
   feedparser.on('error', function(error) {
-    console.error("rssHandler:fetch feedparser error: " + error);
     that.emit("error", error);
   });
 
@@ -52,8 +50,7 @@ RSSHandler.prototype.fetch = function() {
     var stream = this;
 
     if (res.statusCode != 200) {
-      console.error("rssHandler:fetch request bad status code: " + res.statusCode);
-      that.emit("error", res.statusCode);
+      that.emit("error", "rssHandler:fetch request bad status code: " + res.statusCode);
       return;
     }
 

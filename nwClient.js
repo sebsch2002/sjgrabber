@@ -2,8 +2,8 @@ var gui = require('nw.gui');
 var clipboard = gui.Clipboard.get();
 
 window.setNWClipboardBinding = function() {
-  console.log("nwClient:setNWClipboardBinding");
-
+  //console.log("nwClient:setNWClipboardBinding");
+  $("a").off();
   $("a").on("click", function(event) {
     event.preventDefault();
     clipboard.set(event.target.href, 'text');

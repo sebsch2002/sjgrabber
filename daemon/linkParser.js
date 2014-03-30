@@ -108,49 +108,30 @@ function parseURLForULLinks() {
       },
     }, function(error, response, body) {
 
-      //console.log(JSON.stringify(response.toJSON()));
-
       if (error) {
-        console.error("ERROR parsing @" + link + " - " + error);
-        linkParser.emit("error", error);
+        linkParser.emit("error", "ERROR parsing @" + link + " - " + error);
         linkParser.nextULParse();
         return;
       }
 
       if (response.statusCode !== 200) {
-        console.error("ERROR parsing @" + link + " - bad status code " + response.statusCode);
-        linkParser.emit("error", response.statusCode);
+        linkParser.emit("error", "ERROR parsing @" + link + " - bad status code " + response.statusCode);
         linkParser.nextULParse();
         return;
       }
 
-      //if (!error && response.statusCode == 200) {
-
+      // parse gzipped content or plain...
       if (response.headers['content-encoding'] === "gzip") {
-        //console.log("response is gzip, unpacking...");
-
         zlib.unzip(body, function(err, buffer) {
-
           if (err) {
-            linkParser.emit("error", err);
+            linkParser.emit("error", "gzip error: " + err);
           } else {
-            //console.log(buffer.toString());
             parseHTML(buffer.toString(), toParseItems);
           }
         });
-
       } else {
-        //console.log("response is not gzip, proceeding...");
         parseHTML(body, toParseItems);
       }
-
-
-
-      // } else {
-      //   console.error("ERROR parsing @" + link + " - " + error);
-      //   linkParser.emit("error", error);
-      //   linkParser.nextULParse();
-      // }
     });
 
   } else {

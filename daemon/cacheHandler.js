@@ -21,17 +21,16 @@ CacheHandler.prototype.save = function() {
 
   var that = this;
 
-  if (config.useCache === false) {
+  if (config.cache.enabled === false) {
     that.emit("saved");
     return;
   }
 
-  if (config.cacheViaLocalStorageOnly === true) {
+  if (config.cache.preferLocalStorage === true) {
     if (_.isUndefined(this.localStorage) === true) {
-      console.error("cacheHandler:save localStorage is not linked to cacheHandler!");
       this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
     } else {
-      // save to localStorage
+      // save to localStorage...
       this.localStorage.savedItems = JSON.stringify({
         staged: savedItems.toJSON()
       });
@@ -41,16 +40,15 @@ CacheHandler.prototype.save = function() {
     return;
   }
 
-  mkdirp(config.cacheDir, function(err) {
+  // save to file...
+  mkdirp(config.cache.fileStorage.dir, function(err) {
     if (err) {
-      console.error("cacheHandler: save mkdirp error " + err);
       that.emit("error", err);
     } else {
-      fs.writeFile(config.cacheDir + config.cacheFilename, JSON.stringify({
+      fs.writeFile(config.cache.fileStorage.dir + config.cache.fileStorage.filename, JSON.stringify({
         staged: savedItems.toJSON()
       }), function(err) {
         if (err) {
-          console.error("cacheHandler:save error " + err);
           that.emit("error", err);
           return;
         }
@@ -68,17 +66,16 @@ CacheHandler.prototype.load = function() {
 
   var that = this;
 
-  if (config.useCache === false) {
+  if (config.cache.enabled === false) {
     that.emit("loaded");
     return;
   }
 
-  if (config.cacheViaLocalStorageOnly === true) {
+  if (config.cache.preferLocalStorage === true) {
     if (_.isUndefined(this.localStorage) === true) {
-      console.error("cacheHandler:load localStorage is not linked to cacheHandler!");
       this.emit("error", "cacheHandler:load localStorage is not linked to cacheHandler!");
     } else {
-      // load from localStorage
+      // load from localStorage...
       if (_.isUndefined(this.localStorage.savedItems) === false) {
         loadItems(this.localStorage.savedItems);
       }
@@ -87,30 +84,12 @@ CacheHandler.prototype.load = function() {
     return;
   }
 
-  fs.readFile(config.cacheDir + config.cacheFilename, 'utf8', function(err, data) {
-    //var savedObject = {};
-
+  // load from file...
+  fs.readFile(config.cache.fileStorage.dir + config.cache.fileStorage.filename, 'utf8', function(err, data) {
     if (err) {
-      console.error("cacheHandler:load error " + err);
       that.emit("error", err);
     } else {
-      //savedObject = JSON.parse(data);
-
-      //convinience meth for old model, convert string dates to real dates
-      var i = 0,
-        len = savedObject.staged.length;
-      for (i; i < len; i += 1) {
-        if (_.isString(savedObject.staged[i].date) === true) {
-          //console.log("converting date...");
-          savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
-        }
-      }
-
       loadItems(data);
-
-      // insert into backbone collection
-      //savedItems.add(savedObject.staged);
-      //that.lastLoaded = new Date();
     }
 
     that.emit("loaded");
@@ -124,8 +103,16 @@ CacheHandler.prototype.linkLocalStorage = function(localStorage) {
 };
 
 function loadItems(data) {
-  var savedObject = JSON.parse(data);
-  if (_.isUndefined(savedObject.staged) === false) {
+  var savedObject;
+
+  try {
+    savedObject = JSON.parse(data);
+  } catch (e) {
+    cacheHandler.emit("error", e);
+  }
+
+  if (_.isUndefined(savedObject) === false &&
+    _.isUndefined(savedObject.staged) === false) {
 
     // convert string dates to real dates
     var i = 0,

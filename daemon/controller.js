@@ -24,26 +24,28 @@ var hookCycleListeners = _.once(function() {
     cycleRunning = false;
   });
 
-  // rssHandler.on("error", function(err) {
-  //   // stop cycle immediately?
-  //   console.log("controller:hookCycleListeners catched rssHandler error!");
-  // });
+  rssHandler.on("error", function(err) {
+    // stop cycle immediately?
+    console.error("controller:hookCycleListeners got rssHandler error: " + err);
+  });
 
-  // linkParser.on("error", function(err) {
-  //   // stop cycle immediately?
-  //   console.log("controller:hookCycleListeners catched linkParser error!");
-  // });
+  linkParser.on("error", function(err) {
+    // stop cycle immediately?
+    console.error("controller:hookCycleListeners got linkParser error: " + err);
+  });
 });
 
 // startup execute
 (function startup() {
   // start by loading old items into our cache
   cacheHandler.once("loaded", startCycle);
-  // cacheHandler.on("error", function(err) {
-  //   // stop cycle immediately?
-  //   console.log("controller:startup catched cacheHandler error!");
-  // });
-  if (config.cacheViaLocalStorageOnly === false) {
+  
+  cacheHandler.on("error", function(err) {
+    // stop cycle immediately?
+    console.error("controller:startup got cacheHandler error: " + err);
+  });
+
+  if (config.cache.preferLocalStorage === false) {
     cacheHandler.load(); // load immediately if normal file caching enabled, else wait for NW-localstorage
   }
 }());
@@ -51,8 +53,8 @@ var hookCycleListeners = _.once(function() {
 // starts a cycle.
 function startCycle() {
   hookCycleListeners();
-  rssHandler.fetch();
   cycleRunning = true;
+  rssHandler.fetch();
 }
 
 function scheduleFetchCycle() {
@@ -84,7 +86,7 @@ module.exports.nodeWindowReady = function() {
   console.log("controller:nodeWindowReady");
 
   // call CLIENT exported methods...
-  window.setNWClipboardBinding();
+  //window.setNWClipboardBinding();
   window.setNWButtonBinding();
   window.toggleNWRefetchButtonAvailable(!cycleRunning);
 
@@ -98,36 +100,46 @@ module.exports.nodeWindowReady = function() {
   // manage node-webkit listeners
   hookNWListeners();
 
-  // add output to containers
-  var appContainer = window.document.getElementById('appContainer');
-  appContainer.innerHTML = output.getPlainHTML();
+  // print the output...
+  printOutputNW();
 };
 
 // restricted to run only once.
 var hookNWListeners = _.once(function() {
+  rssHandler.on("start", cycleStartsNW);
+  linkParser.on("start", cycleStartsNW);
+  rssHandler.on("fetched", cycleDoneNW);
+  linkParser.on("fetched", cycleDoneNW);
+  rssHandler.on("progress", cycleProgressNW);
+  linkParser.on("progress", cycleProgressNW);
 
-  if (config.cacheViaLocalStorageOnly === true) {
-    cacheHandler.load();
+  if (config.cache.preferLocalStorage === true) {
+    cacheHandler.load(); // start cacheing now that localStorage is available.
   }
-
-  rssHandler.on("start", reloadNWWindowOnly);
-  rssHandler.on("fetched", cycleDoneReloadNWWindow);
-  linkParser.on("fetched", cycleDoneReloadNWWindow);
-  cacheHandler.on("loaded", cycleDoneReloadNWWindow);
-  rssHandler.on("progress", updateNWProgress);
-  linkParser.on("progress", updateNWProgress);
 });
 
 
-function reloadNWWindowOnly() {
-  window.document.location.reload(true);
+function cycleStartsNW() {
+  window.NProgress.start();
+  window.toggleNWRefetchButtonAvailable(false);
 }
 
-function cycleDoneReloadNWWindow() {
+function cycleDoneNW() {
   window.NProgress.done();
-  window.document.location.reload(true);
+  printOutputNW();
+  window.toggleNWRefetchButtonAvailable(true);
 }
 
-function updateNWProgress(progressCount) {
+function cycleProgressNW(progressCount) {
   window.NProgress.set(progressCount);
+}
+
+function printOutputNW() {
+  console.log("controller:printOutputNW updating output");
+
+  // add output to containers
+  var appContainer = window.document.getElementById('appContainer');
+  appContainer.innerHTML = output.getPlainHTML();
+
+  window.setNWClipboardBinding();
 }

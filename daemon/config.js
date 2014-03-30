@@ -7,10 +7,14 @@ module.exports = {
   requestTimeoutMS: 7000,
   maxLinkRefetchRetrys: 3,
   rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
-  useCache: true,
-  cacheViaLocalStorageOnly: true,
-  cacheDir: "cache/",
-  cacheFilename: "savedItems.json",
-  rescheduleMS: 1800000,
+  cache: {
+    enabled: true,
+    preferLocalStorage: true,
+    fileStorage: {
+      dir: "cache/",
+      filename: "savedItems.json"
+    }
+  },
+  rescheduleMS: 4000,
   stdoutSupportsCursorTo: false
 };
