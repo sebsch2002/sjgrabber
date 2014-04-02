@@ -49,11 +49,6 @@ module.exports = function(grunt) {
           cwd: "bower_components/font-awesome/fonts/",
           src: ["*"],
           dest: "build/fonts/"
-        }, {
-          expand: true,
-          cwd: "bower_components/bootstrap/fonts",
-          src: ["*"],
-          dest: "build/fonts/"
         }]
       }
     },
@@ -66,6 +61,15 @@ module.exports = function(grunt) {
             "bower_components/nprogress/nprogress.js",
             "client/app.js"
           ]
+        },
+        options: {
+          compress: {
+            drop_console: true,
+            dead_code: true,
+            global_defs: {
+              "DEBUG": false
+            }
+          }
         }
       },
       daemonjs: {
@@ -74,7 +78,16 @@ module.exports = function(grunt) {
           src: '**/*.js',
           dest: 'build/daemon',
           cwd: 'daemon'
-        }]
+        }],
+        options: {
+          compress: {
+            drop_console: true,
+            dead_code: true,
+            global_defs: {
+              "DEBUG": false
+            }
+          }
+        }
       }
     },
     htmlmin: { // Task
