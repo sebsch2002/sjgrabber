@@ -1,2 +1,35 @@
-<button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i> fetching" class="btn btn-block btn-default btn-lg"><i class="fa fa-refresh"></i> refetch</button>
-<div id="favourites"></div>
+<div class="container-fluid">
+  <!-- Navigation -->
+  <ul class="nav nav-tabs">
+    <li><a href="#all_tab" data-toggle="tab">All</a></li>
+    <li class="active"><a href="#favourites_tab" data-toggle="tab">Favourites</a></li>
+    <li><a href="#settings_tab" data-toggle="tab">Settings</a></li>
+  </ul>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="input-group">
+        <input id="search_input" type="text" class="form-control" placeholder="Search for keywords">
+        <span class="input-group-btn">
+          <button type="button" id="addkeyword_button" class="btn btn-default"><i class="fa fa-heart"></i> to fav</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i> fetching" class="btn btn-default"><i class="fa fa-refresh"></i> refetch</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="tab-content">
+    <div id="all_tab" class="tab-pane">
+      <div id="all">template all</div>
+    </div>
+    <div id="favourites_tab" class="tab-pane active">
+      <div id="favourites">template favourites</div>
+    </div>
+    <div id="settings_tab" class="tab-pane">
+      <div id="settings">template settings</div>
+    </div>
+  </div>
+</div>

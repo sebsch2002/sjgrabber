@@ -1,0 +1,21 @@
+<table class="table table-hover table-condensed">
+  <thead>
+    <td>Date</td>
+    <td>Title</td>
+  </thead>
+  <tbody>
+    {{! output each item}}
+    {{#each items}}
+    <tr>
+      <td>{{date}}</td>
+      {{#if link}}
+        <td><a href="{{link}}">{{title}}</a></td>
+      {{else}}
+        <td>{{title}}</td>
+      {{/if}}
+    </tr>
+    {{else}}
+      <p class="empty">No content</p>
+    {{/each}}
+  </tbody>
+</table>

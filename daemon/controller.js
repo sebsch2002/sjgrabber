@@ -141,18 +141,24 @@ function cycleProgressNW(progressCount) {
   NWAPP.updateProgress(progressCount);
 }
 
+// set clients dynamic content
 function printDynamicContentNW() {
-  // set clients dynamic content
-
+  var all = [];
   var favourites = [];
+
   savedItems.each(function(item) {
+    all.push(item.getPrintable());
     if (item.isFavourite() === true) {
       favourites.push(item.getPrintable());
     }
   });
 
   NWAPP.printFavourites({
-    favourites: favourites
+    items: favourites
+  });
+
+  NWAPP.printAll({
+    items: all
   });
 
   // tell client to hook its listeners to the dynamic content

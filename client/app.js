@@ -1,9 +1,7 @@
 var gui = require("nw.gui");
 var clipboard = gui.Clipboard.get();
 
-
 var NWAPP = window.NWAPP || {};
-
 
 // 
 // startup
@@ -41,7 +39,7 @@ NWAPP.hookStaticBindings = function() {
 };
 
 // 
-// display fetch cycle changes
+// fetch cycle: update changes
 // 
 
 NWAPP.startCycle = function() {
@@ -67,12 +65,17 @@ NWAPP.toggleNWRefetchButtonAvailable = function(available) {
 };
 
 //
-// template helpers
+// dynamic content: template helpers
 //
  
-NWAPP.printFavourites = function(favourites) {
+NWAPP.printFavourites = function(items) {
   var favDiv = document.getElementById("favourites");
-  favDiv.innerHTML = NWAPP.Templates.favourites(favourites);
+  favDiv.innerHTML = NWAPP.Templates.items(items);
+};
+
+NWAPP.printAll = function(items) {
+  var favAll = document.getElementById("all");
+  favAll.innerHTML = NWAPP.Templates.items(items);
 };
 
 window.NWAPP = NWAPP;

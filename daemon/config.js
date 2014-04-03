@@ -1,5 +1,5 @@
 module.exports = {
-  favourites: ["american dad", "family guy", "futurama", "house of cards",
+  favourites: ["american dad", "family guy", "futurama", "cards",
     "my name is earl", "mentalist", "south park", "two and a half men",
     "walking dead", "met your mother", "simpsons"
   ],
