@@ -6,6 +6,7 @@ var linkParser = require("./linkParser");
 var rssHandler = require("./rssHandler");
 var config = require("./config");
 var savedItems = require("./savedItems");
+var favourites = require("./favourites");
 
 // runtime variables managing state
 
@@ -35,7 +36,7 @@ var hookCycleListeners = _.once(function() {
   });
 });
 
-// startup execute
+// startup execute - create bindings to cacheHandler, but wait until NW responds
 (function startup() {
   // start by loading old items into our cache
   cacheHandler.once("loaded", startCycle);
@@ -45,9 +46,6 @@ var hookCycleListeners = _.once(function() {
     console.error("controller:startup got cacheHandler error: " + err);
   });
 
-  if (config.cache.preferLocalStorage === false) {
-    cacheHandler.load(); // load immediately if normal file caching enabled, else wait for NW-localstorage
-  }
 }());
 
 // starts a cycle.
@@ -65,9 +63,7 @@ function scheduleFetchCycle() {
     moment().add('milliseconds', config.rescheduleMS).toDate());
 }
 
-
-// EXPORTED immediately run a new cycle now
-module.exports.runFetchCycleNow = function() {
+function runFetchCycleNow() {
   if (cycleRunning === false) {
     console.log("controller:runFetchCycleNow (executing)");
     clearTimeout(rescheduleTimer);
@@ -75,7 +71,10 @@ module.exports.runFetchCycleNow = function() {
   } else {
     console.log("controller: runFetchCycleNow (not executing, already running)");
   }
-};
+}
+
+// EXPORTED immediately run a new cycle now
+module.exports.runFetchCycleNow = runFetchCycleNow;
 
 
 // ---
@@ -122,9 +121,7 @@ var hookNWListeners = _.once(function() {
   rssHandler.on("progress", cycleProgressNW);
   linkParser.on("progress", cycleProgressNW);
 
-  if (config.cache.preferLocalStorage === true) {
-    cacheHandler.load(); // start cacheing now that localStorage is available.
-  }
+  cacheHandler.load(); // start cacheing now that localStorage is available.
 });
 
 
@@ -146,24 +143,42 @@ var searchString = "";
 
 // set clients dynamic content
 function printDynamicContentNW() {
-  var all = [];
-  var favourites = [];
+  var allItems = [];
+  var favouriteItems = [];
+  var favouriteKeywords = [];
 
   savedItems.each(function(item) {
     if (item.stringMatchesTitle(searchString)) {
-      all.push(item.getPrintable());
+      allItems.push(item.getPrintable());
       if (item.isFavourite() === true) {
-        favourites.push(item.getPrintable());
+        favouriteItems.push(item.getPrintable());
       }
     }
   });
 
-  NWAPP.printFavourites({
-    items: favourites
+  favourites.each(function(fav) {
+    var favCount = 0;
+    savedItems.each(function(item) {
+      if (item.stringMatchesTitle(fav.get("keyword"))) {
+        favCount += 1;
+      }
+    });
+    favouriteKeywords.push({
+      keyword: fav.get("keyword"),
+      count: favCount
+    });
   });
 
-  NWAPP.printAll({
-    items: all
+  NWAPP.printFavouriteItems({
+    items: favouriteItems
+  });
+
+  NWAPP.printAllItems({
+    items: allItems
+  });
+
+  NWAPP.printFavouriteKeywords({
+    favourites: favouriteKeywords
   });
 
   // tell client to hook its listeners to the dynamic content
@@ -171,13 +186,26 @@ function printDynamicContentNW() {
 }
 
 // set search content
-module.exports.NWupdateSearchString = function (str) {
+module.exports.NWupdateSearchString = function(str) {
   searchString = _.unescape(str);
   printDynamicContentNW();
 };
 
-module.exports.clearCacheReset = function () {
+
+// add a keyword
+module.exports.NWaddCurrentKeyword = function() {
+  favourites.add({
+    keyword: searchString
+  });
+  cacheHandler.save();
+  printDynamicContentNW();
+  runFetchCycleNow();
+};
+
+// settings, reset everything.
+module.exports.clearCacheReset = function() {
   cacheHandler.clear();
   savedItems.reset();
+  favourites.reset();
   printDynamicContentNW();
 };

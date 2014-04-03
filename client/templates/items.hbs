@@ -1,3 +1,4 @@
+{{#if items}}
 <table class="table table-hover table-condensed">
   <thead>
     <td>Date</td>
@@ -14,8 +15,9 @@
         <td>{{title}}</td>
       {{/if}}
     </tr>
-    {{else}}
-      <p class="empty">No content</p>
     {{/each}}
   </tbody>
 </table>
+{{else}}
+  <h5><i class="fa fa-frown-o"></i> no content <i class="fa fa-frown-o"></i></h5>
+{{/if}}

@@ -8,12 +8,7 @@ module.exports = {
   maxLinkRefetchRetrys: 3,
   rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
   cache: {
-    enabled: true,
-    preferLocalStorage: true,
-    fileStorage: {
-      dir: "cache/",
-      filename: "savedItems.json"
-    }
+    enabled: true
   },
   support: {
     stdoutCursorTo: false

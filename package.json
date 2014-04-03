@@ -13,8 +13,7 @@
     "lodash": "^2.4.1",
     "cheerio": "^0.13.1",
     "backbone": "^1.1.2",
-    "moment": "^2.5.1",
-    "mkdirp": "^0.3.5"
+    "moment": "^2.5.1"
   },
   "devDependencies": {
     "grunt": "^0.4.4",

@@ -39,6 +39,10 @@ NWAPP.hookStaticBindings = function() {
   $("#clearreset_button").click(function() {
     process.mainModule.exports.clearCacheReset();
   });
+
+  $("#addkeyword_button").click(function() {
+    process.mainModule.exports.NWaddCurrentKeyword();
+  });
   
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
@@ -76,12 +80,16 @@ NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
 // dynamic content: template helpers
 //
 
-NWAPP.printFavourites = function(items) {
-  document.getElementById("favourites").innerHTML = NWAPP.Templates.items(items);
+NWAPP.printFavouriteKeywords = function(favourites) {
+  document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
 };
 
-NWAPP.printAll = function(items) {
-  document.getElementById("all").innerHTML = NWAPP.Templates.items(items);
+NWAPP.printFavouriteItems = function(items) {
+  document.getElementById("favourite_items").innerHTML = NWAPP.Templates.items(items);
+};
+
+NWAPP.printAllItems = function(items) {
+  document.getElementById("all_items").innerHTML = NWAPP.Templates.items(items);
 };
 
 window.NWAPP = NWAPP;

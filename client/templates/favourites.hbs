@@ -1,0 +1,19 @@
+{{!-- <p><strong>Keywords: </strong>
+  {{#each favourites}}
+    <a href="#">{{keyword}} <span class="badge">{{count}}</span></a>
+  {{/each}}
+</p> --}}
+
+
+{{#if favourites}}
+  <ul class="nav nav-pills">
+    <li><h5><i class="fa fa-heart"></i>'d keywords:</h5></li>
+    {{#each favourites}}
+      <li><a href="#">{{keyword}} <span class="badge">{{count}}</span></a></li>
+    {{/each}}
+  </ul>
+{{else}}
+  <ul class="nav nav-pills">
+    <li><h5>You don't <i class="fa fa-heart"></i> any keywords...</h5></li>
+  </ul>
+{{/if}}

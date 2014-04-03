@@ -1,11 +1,10 @@
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
-var fs = require('fs');
 var _ = require('lodash');
 var moment = require("moment"); // might take out, was only needed for migration.
-var mkdirp = require("mkdirp");
 
 var savedItems = require("./savedItems");
+var favourites = require("./favourites");
 var config = require("./config");
 
 var CacheHandler = function() {
@@ -26,38 +25,24 @@ CacheHandler.prototype.save = function() {
     return;
   }
 
-  if (config.cache.preferLocalStorage === true) {
-    if (_.isUndefined(this.localStorage) === true) {
-      this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
-    } else {
-      // save to localStorage...
-      this.localStorage.savedItems = JSON.stringify({
-        staged: savedItems.toJSON()
-      });
-      that.lastSaved = new Date();
-      that.emit("saved");
-    }
-    return;
+  if (_.isUndefined(this.localStorage) === true) {
+    this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
+  } else {
+
+    // save ITEMS to localStorage...
+    this.localStorage.savedItems = JSON.stringify({
+      staged: savedItems.toJSON()
+    });
+
+    // save FAVOURITES to localStorage...
+    this.localStorage.favourites = JSON.stringify({
+      favourites: favourites.toJSON()
+    });
+
+    that.lastSaved = new Date();
+    that.emit("saved");
   }
-
-  // save to file...
-  mkdirp(config.cache.fileStorage.dir, function(err) {
-    if (err) {
-      that.emit("error", err);
-    } else {
-      fs.writeFile(config.cache.fileStorage.dir + config.cache.fileStorage.filename, JSON.stringify({
-        staged: savedItems.toJSON()
-      }), function(err) {
-        if (err) {
-          that.emit("error", err);
-          return;
-        }
-
-        that.lastSaved = new Date();
-        that.emit("saved");
-      });
-    }
-  });
+  return;
 
 };
 
@@ -71,29 +56,24 @@ CacheHandler.prototype.load = function() {
     return;
   }
 
-  if (config.cache.preferLocalStorage === true) {
-    if (_.isUndefined(this.localStorage) === true) {
-      this.emit("error", "cacheHandler:load localStorage is not linked to cacheHandler!");
-    } else {
-      // load from localStorage...
-      if (_.isUndefined(this.localStorage.savedItems) === false) {
-        loadItems(this.localStorage.savedItems);
-      }
-      that.emit("loaded");
-    }
-    return;
-  }
+  if (_.isUndefined(this.localStorage) === true) {
+    this.emit("error", "cacheHandler:load localStorage is not linked to cacheHandler!");
+  } else {
 
-  // load from file...
-  fs.readFile(config.cache.fileStorage.dir + config.cache.fileStorage.filename, 'utf8', function(err, data) {
-    if (err) {
-      that.emit("error", err);
-    } else {
-      loadItems(data);
+    // load ITEMS from localStorage...
+    if (_.isUndefined(this.localStorage.savedItems) === false) {
+      loadSavedItems(this.localStorage.savedItems);
     }
 
+    // load FAVOURITES from localStorage...
+    if (_.isUndefined(this.localStorage.favourites) === false) {
+      loadFavourites(this.localStorage.favourites);
+    }
+
+    that.lastLoaded = new Date();
     that.emit("loaded");
-  });
+  }
+  return;
 };
 
 CacheHandler.prototype.linkLocalStorage = function(localStorage) {
@@ -101,42 +81,55 @@ CacheHandler.prototype.linkLocalStorage = function(localStorage) {
 };
 
 CacheHandler.prototype.clear = function() {
-  if (config.cache.preferLocalStorage === true) {
-    if (_.isUndefined(this.localStorage) === true) {
-      this.emit("error", "cacheHandler:clear localStorage is not linked to cacheHandler!");
-    } else {
-      this.localStorage.clear();
-      this.emit("cleared");
-    }
+  if (_.isUndefined(this.localStorage) === true) {
+    this.emit("error", "cacheHandler:clear localStorage is not linked to cacheHandler!");
   } else {
-    this.emit("error", "cacheHandler:clear fileOperation is unsupported!");
+    this.localStorage.clear();
+    this.lastLoaded = false;
+    this.lastSaved = false;
+    this.emit("cleared");
   }
 };
 
-function loadItems(data) {
-  var savedObject;
+function loadSavedItems(data) {
+  var dataObject = parseJSONObject(data);
+
+  if (_.isUndefined(dataObject) === false &&
+    _.isUndefined(dataObject.staged) === false) {
+
+    // convert string dates to real dates
+    var i = 0,
+      len = dataObject.staged.length;
+    for (i; i < len; i += 1) {
+      if (_.isString(dataObject.staged[i].date) === true) {
+        dataObject.staged[i].date = moment(dataObject.staged[i].date).toDate();
+      }
+    }
+
+    savedItems.add(dataObject.staged);
+  }
+}
+
+function loadFavourites(data) {
+  var dataObject = parseJSONObject(data);
+
+  if (_.isUndefined(dataObject) === false &&
+    _.isUndefined(dataObject.favourites) === false) {
+
+    favourites.add(dataObject.favourites);
+  }
+}
+
+function parseJSONObject(data) {
+  var dataObject;
 
   try {
-    savedObject = JSON.parse(data);
+    dataObject = JSON.parse(data);
   } catch (e) {
     cacheHandler.emit("error", e);
   }
 
-  if (_.isUndefined(savedObject) === false &&
-    _.isUndefined(savedObject.staged) === false) {
-
-    // convert string dates to real dates
-    var i = 0,
-      len = savedObject.staged.length;
-    for (i; i < len; i += 1) {
-      if (_.isString(savedObject.staged[i].date) === true) {
-        savedObject.staged[i].date = moment(savedObject.staged[i].date).toDate();
-      }
-    }
-
-    savedItems.add(savedObject.staged);
-  }
-  cacheHandler.lastLoaded = new Date();
+  return dataObject;
 }
 
 var cacheHandler = new CacheHandler();

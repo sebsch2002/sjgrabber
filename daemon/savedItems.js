@@ -44,11 +44,6 @@ var SavedItemsCollection = Backbone.Collection.extend({
 // Initialize
 var savedItems = new SavedItemsCollection();
 
-savedItems.on("add", function(model, collection, options) {
-  //console.log("added model: " + model.get("title") + model.get("date"));
-});
-
-
 // private Helper functions
 function convertDate(inputFormat) {
   function pad(s) {

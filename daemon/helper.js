@@ -1,13 +1,13 @@
-var config = require("./config.js");
+var favourites = require("./favourites.js");
 
 function checkTitleIsFavourite(title) {
   var i = 0,
-    len = config.favourites.length;
+    len = favourites.length;
 
   var titleDotsReplaced = replaceAll(".", " ", title);
 
   for (i; i < len; i += 1) {
-    if (titleDotsReplaced.toLowerCase().indexOf(config.favourites[i].toLowerCase()) > -1) {
+    if (titleDotsReplaced.toLowerCase().indexOf(favourites.at(i).get("keyword").toLowerCase()) > -1) {
       return true;
     }
   }
