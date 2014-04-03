@@ -1,4 +1,5 @@
 body {
+  padding-top: 50px;
   font-size: 12px;
 }
 
@@ -14,4 +15,13 @@ body {
 #nprogress .spinner-icon {
   border-top-color: #ff004f;
   border-left-color: #ff004f;
+}
+
+#nprogress .bar,
+#nprogress .spinner {
+    z-index: 999999;
+    }
+
+.navrightaddmargin {
+  margin-right: 30px;
 }
