@@ -11,9 +11,9 @@
     <div class="container-fluid">
       
       <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">SJgrapper</a>
-      </div>
+      {{!-- <div class="navbar-header">
+        <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i>" class="btn btn-danger"><i class="fa fa-refresh"></i></button>
+      </div> --}}
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse">
@@ -24,10 +24,11 @@
         </ul>
 
         <form class="navbar-form navbar-left" role="search">
+          <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-refresh'></i>" class="btn btn-danger appCycleDependent"><i class="fa fa-refresh"></i></button>
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search">
+            <input id="search_input" type="text" class="form-control" placeholder="search">
           </div>
-          <button type="button" id="addkeyword_button" class="btn btn-primary"><i class="fa fa-heart"></i></button>
+          <button type="button" id="addkeyword_button" class="btn btn-primary disabled"><i class="fa fa-heart"></i></button>
         </form>
 
         {{!-- <form class="navbar-form navbar-left" role="search">
@@ -41,9 +42,9 @@
           </div>
         </form> --}}
 
-        <div class="navbar-right">
+        {{!-- <div class="navbar-right">
           <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i>" class="btn btn-danger navrightaddmargin"><i class="fa fa-refresh"></i></button>
-        </div>
+        </div> --}}
 
       </div>
 
@@ -68,13 +69,13 @@
 
   <!-- Content -->
   <div class="tab-content">
-    <div id="all_tab" class="tab-pane">
+    <div id="all_tab" class="tab-pane fade">
       <div id="all">template all</div>
     </div>
-    <div id="favourites_tab" class="tab-pane active">
+    <div id="favourites_tab" class="tab-pane fade in active">
       <div id="favourites">template favourites</div>
     </div>
-    <div id="settings_tab" class="tab-pane">
+    <div id="settings_tab" class="tab-pane fade">
       <div id="settings">template settings</div>
     </div>
   </div>

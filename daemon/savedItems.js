@@ -20,6 +20,16 @@ var SavedItemModel = Backbone.Model.extend({
       date: convertDate(this.get("date")),
       link: this.get("uploadedLink")
     };
+  },
+  stringMatchesTitle: function(str) {
+    if (str.length === 0) {
+      return true;
+    } else {
+      if (helper.replaceAll(".", " ", this.get("title")).toLowerCase().indexOf(str.toLowerCase()) > -1) {
+        return true;
+      }
+      return false;
+    }
   }
 });
 

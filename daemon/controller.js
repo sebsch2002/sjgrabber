@@ -138,8 +138,11 @@ function cycleDoneNW() {
 }
 
 function cycleProgressNW(progressCount) {
+  printDynamicContentNW();
   NWAPP.updateProgress(progressCount);
 }
+
+var searchString = "";
 
 // set clients dynamic content
 function printDynamicContentNW() {
@@ -147,9 +150,11 @@ function printDynamicContentNW() {
   var favourites = [];
 
   savedItems.each(function(item) {
-    all.push(item.getPrintable());
-    if (item.isFavourite() === true) {
-      favourites.push(item.getPrintable());
+    if (item.stringMatchesTitle(searchString)) {
+      all.push(item.getPrintable());
+      if (item.isFavourite() === true) {
+        favourites.push(item.getPrintable());
+      }
     }
   });
 
@@ -164,3 +169,15 @@ function printDynamicContentNW() {
   // tell client to hook its listeners to the dynamic content
   NWAPP.hookDynamicBindings();
 }
+
+// set search content
+module.exports.NWupdateSearchString = function (str) {
+  searchString = _.unescape(str);
+  printDynamicContentNW();
+};
+
+module.exports.clearCacheReset = function () {
+  cacheHandler.clear();
+  savedItems.reset();
+  printDynamicContentNW();
+};

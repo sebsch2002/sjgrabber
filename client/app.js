@@ -7,10 +7,10 @@ var NWAPP = window.NWAPP || {};
 // startup
 // 
 
-(function clientStartup () {
-  // add compile app template into app div
-  var appDiv = document.getElementById("app");
-  appDiv.innerHTML = NWAPP.Templates.app({});
+(function clientStartup() {
+  // add compile app template into app and settings div
+  document.getElementById("app").innerHTML = NWAPP.Templates.app({});
+  document.getElementById("settings").innerHTML = NWAPP.Templates.settings({});
 }());
 
 // 
@@ -18,7 +18,7 @@ var NWAPP = window.NWAPP || {};
 // 
 
 NWAPP.hookDynamicBindings = function() {
-  console.log("app:hookDynamicBindings");
+  //console.log("app:hookDynamicBindings");
 
   // a.href to clipboard bindings
   $("a").off();
@@ -29,12 +29,20 @@ NWAPP.hookDynamicBindings = function() {
 };
 
 NWAPP.hookStaticBindings = function() {
-  console.log("app:hookStaticBindings");
+  //console.log("app:hookStaticBindings");
 
   // refetch.click button bindings
-  $("#refetch_button").off();
   $("#refetch_button").click(function() {
     process.mainModule.exports.runFetchCycleNow();
+  });
+
+  $("#clearreset_button").click(function() {
+    process.mainModule.exports.clearCacheReset();
+  });
+  
+  // search box to NWupdate
+  $("#search_input").on("change keyup paste click", function() {
+    process.mainModule.exports.NWupdateSearchString($(this).val());
   });
 };
 
@@ -44,38 +52,36 @@ NWAPP.hookStaticBindings = function() {
 
 NWAPP.startCycle = function() {
   NProgress.start();
-  NWAPP.toggleNWRefetchButtonAvailable(false);
+  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
 };
 
 NWAPP.endCycle = function() {
   NProgress.done();
-  NWAPP.toggleNWRefetchButtonAvailable(true);
+  NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
 };
 
 NWAPP.updateProgress = function(progressCount) {
   NProgress.set(progressCount);
 };
 
-NWAPP.toggleNWRefetchButtonAvailable = function(available) {
+NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
   if (available) {
-    $("#refetch_button").button("reset");
+    $(".appCycleDependent").button("reset");
   } else {
-    $("#refetch_button").button("loading");
+    $(".appCycleDependent").button("loading");
   }
 };
 
 //
 // dynamic content: template helpers
 //
- 
+
 NWAPP.printFavourites = function(items) {
-  var favDiv = document.getElementById("favourites");
-  favDiv.innerHTML = NWAPP.Templates.items(items);
+  document.getElementById("favourites").innerHTML = NWAPP.Templates.items(items);
 };
 
 NWAPP.printAll = function(items) {
-  var favAll = document.getElementById("all");
-  favAll.innerHTML = NWAPP.Templates.items(items);
+  document.getElementById("all").innerHTML = NWAPP.Templates.items(items);
 };
 
 window.NWAPP = NWAPP;

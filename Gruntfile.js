@@ -22,7 +22,8 @@ module.exports = function(grunt) {
     },
     cssmin: {
       minify: {
-        src: ["bower_components/bootswatch/superhero/bootstrap.css",
+        src: ["bower_components/bootstrap/dist/css/bootstrap.css",
+          "bower_components/bootstrap/dist/css/bootstrap-theme.css",
           "bower_components/nprogress/nprogress.css",
           "bower_components/font-awesome/css/font-awesome.css",
           "client/app.css"

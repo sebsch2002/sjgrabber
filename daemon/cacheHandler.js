@@ -98,8 +98,19 @@ CacheHandler.prototype.load = function() {
 
 CacheHandler.prototype.linkLocalStorage = function(localStorage) {
   this.localStorage = localStorage;
+};
 
-  localStorage.test = "ass!";
+CacheHandler.prototype.clear = function() {
+  if (config.cache.preferLocalStorage === true) {
+    if (_.isUndefined(this.localStorage) === true) {
+      this.emit("error", "cacheHandler:clear localStorage is not linked to cacheHandler!");
+    } else {
+      this.localStorage.clear();
+      this.emit("cleared");
+    }
+  } else {
+    this.emit("error", "cacheHandler:clear fileOperation is unsupported!");
+  }
 };
 
 function loadItems(data) {
