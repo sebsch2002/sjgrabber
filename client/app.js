@@ -75,6 +75,7 @@ NWAPP.endCycle = function() {
 
 NWAPP.updateProgress = function(progressCount) {
   NProgress.set(progressCount);
+  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
 };
 
 NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
