@@ -10,7 +10,6 @@ var NWAPP = window.NWAPP || {};
 (function clientStartup() {
   // add compile app template into app and settings div
   document.getElementById("app").innerHTML = NWAPP.Templates.app({});
-  document.getElementById("settings").innerHTML = NWAPP.Templates.settings({});
 }());
 
 // 
@@ -21,10 +20,23 @@ NWAPP.hookDynamicBindings = function() {
   //console.log("app:hookDynamicBindings");
 
   // a.href to clipboard bindings
-  $("a").off();
-  $("a").on("click", function(event) {
+  $(".items_link").off();
+  $(".items_link").on("click", function(event) {
     event.preventDefault();
     clipboard.set(event.target.href, "text");
+  });
+
+  $(".keyword_link").off();
+  $(".keyword_link").on("click", function(event) {
+    event.preventDefault();
+    process.mainModule.exports.NWupdateKeywordString(event.currentTarget.dataset.keyword);
+  });
+
+  // settings is dynamic for fetch time output!
+  $("#clearreset_button").off();
+  $("#clearreset_button").click(function() {
+    process.mainModule.exports.clearCacheReset();
+    $('#appNavigationTab a[href="#all_tab"]').tab('show');
   });
 };
 
@@ -36,12 +48,9 @@ NWAPP.hookStaticBindings = function() {
     process.mainModule.exports.runFetchCycleNow();
   });
 
-  $("#clearreset_button").click(function() {
-    process.mainModule.exports.clearCacheReset();
-  });
-
   $("#addkeyword_button").click(function() {
     process.mainModule.exports.NWaddCurrentKeyword();
+    $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
   });
   
   // search box to NWupdate
@@ -90,6 +99,10 @@ NWAPP.printFavouriteItems = function(items) {
 
 NWAPP.printAllItems = function(items) {
   document.getElementById("all_items").innerHTML = NWAPP.Templates.items(items);
+};
+
+NWAPP.printSettings = function(config) {
+  document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
 };
 
 window.NWAPP = NWAPP;

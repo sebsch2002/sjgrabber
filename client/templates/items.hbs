@@ -10,7 +10,7 @@
     <tr>
       <td>{{date}}</td>
       {{#if link}}
-        <td><a href="{{link}}">{{title}}</a></td>
+        <td><a class="items_link" href="{{link}}">{{title}}</a></td>
       {{else}}
         <td>{{title}}</td>
       {{/if}}
@@ -19,5 +19,5 @@
   </tbody>
 </table>
 {{else}}
-  <h5><i class="fa fa-frown-o"></i> no content <i class="fa fa-frown-o"></i></h5>
+  <p class="text-center lead">no content.</p>
 {{/if}}

@@ -1,19 +1,24 @@
-{{!-- <p><strong>Keywords: </strong>
-  {{#each favourites}}
-    <a href="#">{{keyword}} <span class="badge">{{count}}</span></a>
-  {{/each}}
-</p> --}}
-
-
+<div class="favouritekeywords">
 {{#if favourites}}
   <ul class="nav nav-pills">
-    <li><h5><i class="fa fa-heart"></i>'d keywords:</h5></li>
+    {{#if noFilter}}
+      <li class="active">
+    {{else}}
+      <li>
+    {{/if}}
+      <a href="" class="keyword_link" data-keyword="">.:*<i class="fa fa-heart"></i>*:.<span class="badge">{{totalCount}}</span></a>
+    </li>
     {{#each favourites}}
-      <li><a href="#">{{keyword}} <span class="badge">{{count}}</span></a></li>
+      {{#if selected}}
+        <li class="active">
+      {{else}}
+        <li>
+      {{/if}}
+          <a href="" class="keyword_link" data-keyword="{{keyword}}">{{keyword}} <span class="badge">{{count}}</span></a>
+        </li>
     {{/each}}
   </ul>
 {{else}}
-  <ul class="nav nav-pills">
-    <li><h5>You don't <i class="fa fa-heart"></i> any keywords...</h5></li>
-  </ul>
+  <p class="text-center lead">first <i class="fa fa-eye fa-5x"></i> discover and <i class="fa fa-heart fa-4x"></i> keywords.</p>
 {{/if}}
+</div>

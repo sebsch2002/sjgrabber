@@ -68,6 +68,7 @@ function runFetchCycleNow() {
     console.log("controller:runFetchCycleNow (executing)");
     clearTimeout(rescheduleTimer);
     startCycle();
+    printDynamicContentNW();
   } else {
     console.log("controller: runFetchCycleNow (not executing, already running)");
   }
@@ -80,6 +81,8 @@ module.exports.runFetchCycleNow = runFetchCycleNow;
 // ---
 // EXPORTED node-webkit ONLY
 // ---
+
+var nextFetchTime = false;
 
 var NWAPP;
 module.exports.NWReady = function() {
@@ -126,33 +129,37 @@ var hookNWListeners = _.once(function() {
 
 
 function cycleStartsNW() {
+  nextFetchTime = false;
   NWAPP.startCycle();
 }
 
 function cycleDoneNW() {
   NWAPP.endCycle();
+  nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format("HH:mm:ss");
   printDynamicContentNW();
 }
 
 function cycleProgressNW(progressCount) {
-  printDynamicContentNW();
+  nextFetchTime = false;
   NWAPP.updateProgress(progressCount);
 }
 
 var searchString = "";
+var keywordString = "";
 
 // set clients dynamic content
 function printDynamicContentNW() {
   var allItems = [];
   var favouriteItems = [];
   var favouriteKeywords = [];
+  var totalCount = 0;
 
   savedItems.each(function(item) {
     if (item.stringMatchesTitle(searchString)) {
       allItems.push(item.getPrintable());
-      if (item.isFavourite() === true) {
-        favouriteItems.push(item.getPrintable());
-      }
+    }
+    if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+      favouriteItems.push(item.getPrintable());
     }
   });
 
@@ -161,11 +168,13 @@ function printDynamicContentNW() {
     savedItems.each(function(item) {
       if (item.stringMatchesTitle(fav.get("keyword"))) {
         favCount += 1;
+        totalCount += 1;
       }
     });
     favouriteKeywords.push({
       keyword: fav.get("keyword"),
-      count: favCount
+      count: favCount,
+      selected: (keywordString === fav.get("keyword")) ? true : false
     });
   });
 
@@ -178,7 +187,14 @@ function printDynamicContentNW() {
   });
 
   NWAPP.printFavouriteKeywords({
-    favourites: favouriteKeywords
+    favourites: favouriteKeywords,
+    noFilter: (keywordString === "") ? true : false,
+    totalCount: totalCount
+  });
+
+  NWAPP.printSettings({
+    nextFetchTime: nextFetchTime,
+    interval: config.rescheduleMS/1000/60
   });
 
   // tell client to hook its listeners to the dynamic content
@@ -187,10 +203,16 @@ function printDynamicContentNW() {
 
 // set search content
 module.exports.NWupdateSearchString = function(str) {
-  searchString = _.unescape(str);
+  searchString = _.unescape(str).toLowerCase();
   printDynamicContentNW();
 };
 
+function NWupdateKeywordString(str) {
+  keywordString = _.unescape(str).toLowerCase();
+  printDynamicContentNW();
+}
+
+module.exports.NWupdateKeywordString = NWupdateKeywordString;
 
 // add a keyword
 module.exports.NWaddCurrentKeyword = function() {
@@ -198,6 +220,10 @@ module.exports.NWaddCurrentKeyword = function() {
     keyword: searchString
   });
   cacheHandler.save();
+
+  // searchString to keyword string...
+  NWupdateKeywordString(searchString);
+
   printDynamicContentNW();
   runFetchCycleNow();
 };
@@ -207,5 +233,10 @@ module.exports.clearCacheReset = function() {
   cacheHandler.clear();
   savedItems.reset();
   favourites.reset();
+
+  searchString = "";
+  keywordString = "";
+
   printDynamicContentNW();
+  runFetchCycleNow();
 };
