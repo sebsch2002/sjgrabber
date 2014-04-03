@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
+
+    <!-- meta -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-    <link href="css/app.min.css" rel="stylesheet" />
     <title>SJgrapper</title>
+
+    <!-- styles -->
+    <link href="css/app.min.css" rel="stylesheet" />
+    
   </head>
   <body onload="process.mainModule.exports.NWReady()">
     
-    <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-coffee'></i> fetching" class="btn btn-block btn-default btn-lg"><i class="fa fa-refresh"></i> refetch</button>
-    <div id="appContainer">
-    </div>
+    <!-- client application -->
+    <div id="app"></div>
     
+    <!-- client scripts -->
     <script src="app.client.min.js"></script>
+    
   </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "SJgrapper",
   "version": "0.0.1",
-  "description": "fetches rss and links from serienjunkies.org",
+  "description": "nw-app that fetches rss and links from serienjunkies.org",
   "author": "the unknown",
   "license": "MIT",
   "dependencies": {

@@ -59,6 +59,8 @@ module.exports = function(grunt) {
             "bower_components/jquery/dist/jquery.js",
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/nprogress/nprogress.js",
+            "bower_components/handlebars/handlebars.runtime.js",
+            "client/templates.js",
             "client/app.js"
           ]
         },
@@ -143,6 +145,28 @@ module.exports = function(grunt) {
           dest: '',
         }]
       }
+    },
+    handlebars: {
+      all: {
+        files: {
+          "client/templates.js": ["client/templates/**/*.hbs"]
+        }
+      },
+      options: {
+        namespace: 'NWAPP.Templates',
+        processName: function(filePath) {
+          return filePath.replace(/^client\/templates\//, '').replace(/\.hbs$/, '');
+        }
+      }
+    },
+    watch: {
+      templates: {
+        files: 'client/templates/**/*.hbs',
+        tasks: ['handlebars'],
+        options: {
+          interrupt: true,
+        }
+      }
     }
   });
 
@@ -154,8 +178,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-htmlmin");
   grunt.loadNpmTasks('grunt-install-dependencies');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-handlebars');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask("default", ["clean:pre", "htmlmin", "cssmin",
+  grunt.registerTask("default", ["clean:pre", "handlebars", "htmlmin", "cssmin",
     "uglify:clientjs", "install-dependencies", "copy", "uglify:daemonjs",
     "nodewebkit", "compress", "clean:post"
   ]);

@@ -1,7 +1,23 @@
-var gui = require('nw.gui');
+var gui = require("nw.gui");
 var clipboard = gui.Clipboard.get();
 
-var NWAPP = {};
+
+var NWAPP = window.NWAPP || {};
+
+
+// 
+// startup
+// 
+
+(function clientStartup () {
+  // add compile app template into app div
+  var appDiv = document.getElementById("app");
+  appDiv.innerHTML = NWAPP.Templates.app({});
+}());
+
+// 
+// listeners
+// 
 
 NWAPP.hookDynamicBindings = function() {
   console.log("app:hookDynamicBindings");
@@ -10,7 +26,7 @@ NWAPP.hookDynamicBindings = function() {
   $("a").off();
   $("a").on("click", function(event) {
     event.preventDefault();
-    clipboard.set(event.target.href, 'text');
+    clipboard.set(event.target.href, "text");
   });
 };
 
@@ -19,23 +35,14 @@ NWAPP.hookStaticBindings = function() {
 
   // refetch.click button bindings
   $("#refetch_button").off();
-  $('#refetch_button').click(function() {
+  $("#refetch_button").click(function() {
     process.mainModule.exports.runFetchCycleNow();
   });
 };
 
-NWAPP.toggleNWRefetchButtonAvailable = function(available) {
-  if (available) {
-    $('#refetch_button').button('reset');
-  } else {
-    $('#refetch_button').button('loading');
-  }
-};
-
-NWAPP.setDynamicContent = function(content) {
-  var appContainer = document.getElementById('appContainer');
-  appContainer.innerHTML = content;
-};
+// 
+// display fetch cycle changes
+// 
 
 NWAPP.startCycle = function() {
   NProgress.start();
@@ -49,6 +56,23 @@ NWAPP.endCycle = function() {
 
 NWAPP.updateProgress = function(progressCount) {
   NProgress.set(progressCount);
+};
+
+NWAPP.toggleNWRefetchButtonAvailable = function(available) {
+  if (available) {
+    $("#refetch_button").button("reset");
+  } else {
+    $("#refetch_button").button("loading");
+  }
+};
+
+//
+// template helpers
+//
+ 
+NWAPP.printFavourites = function(favourites) {
+  var favDiv = document.getElementById("favourites");
+  favDiv.innerHTML = NWAPP.Templates.favourites(favourites);
 };
 
 window.NWAPP = NWAPP;

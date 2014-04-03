@@ -5,7 +5,7 @@ var cacheHandler = require("./cacheHandler");
 var linkParser = require("./linkParser");
 var rssHandler = require("./rssHandler");
 var config = require("./config");
-var output = require("./output");
+var savedItems = require("./savedItems");
 
 // runtime variables managing state
 
@@ -39,7 +39,7 @@ var hookCycleListeners = _.once(function() {
 (function startup() {
   // start by loading old items into our cache
   cacheHandler.once("loaded", startCycle);
-  
+
   cacheHandler.on("error", function(err) {
     // stop cycle immediately?
     console.error("controller:startup got cacheHandler error: " + err);
@@ -87,7 +87,7 @@ module.exports.NWReady = function() {
   console.log("controller:NWReady");
 
   // we need the window object within here, hence check for it
-  if(_.isUndefined(window) === true) {
+  if (_.isUndefined(window) === true) {
     console.error("controller:NWReady undefined window object!");
     return;
   }
@@ -143,7 +143,17 @@ function cycleProgressNW(progressCount) {
 
 function printDynamicContentNW() {
   // set clients dynamic content
-  NWAPP.setDynamicContent(output.getPlainHTML());
+
+  var favourites = [];
+  savedItems.each(function(item) {
+    if (item.isFavourite() === true) {
+      favourites.push(item.getPrintable());
+    }
+  });
+
+  NWAPP.printFavourites({
+    favourites: favourites
+  });
 
   // tell client to hook its listeners to the dynamic content
   NWAPP.hookDynamicBindings();
