@@ -6,7 +6,7 @@
     {{else}}
       <li>
     {{/if}}
-      <a href="" class="keyword_link" data-keyword="">all I <i class="fa fa-heart"></i><span class="badge">{{totalCount}}</span></a>
+      <a href="" class="keyword_link" data-keyword="">all <i class="fa fa-heart"></i> keywords <span class="badge">{{totalCount}}</span></a>
     </li>
     {{#each favourites}}
       {{#if selected}}
@@ -19,6 +19,6 @@
     {{/each}}
   </ul>
 {{else}}
-  <p class="text-center lead">first <i class="fa fa-eye fa-5x"></i> and <i class="fa fa-heart fa-4x"></i> keywords. <i class="fa fa-bars fa-4x"></i> for more information.</p>
+  <p class="text-center lead">first <i class="fa fa-eye fa-5x"></i> and <i class="fa fa-heart fa-4x"></i> keywords.<br />goto <i class="fa fa-bars fa-4x"></i> for more information.<br /></p>
 {{/if}}
 </div>

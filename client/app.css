@@ -13,7 +13,7 @@ table {
 
 #nprogress .spinner {
   top: 18px;
-  right: 70px;
+  right: 6px;
 }
 
 #nprogress .bar {
@@ -52,7 +52,35 @@ table {
 }
 
 .navbar-nav.nav-justified > li{
-    float:none;
+  float:none;
+}
+
+.nav-justified > li {
+  display: table-cell;
+  width: 1%;
+}
+
+.settings_item {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: -15px;
+  margin-bottom: -20px;
+}
+
+.jumbo_small {
+  font-size: 16px !important;
+}
+
+.settings_what {
+  background-color: #eee;
+}
+
+.settings_status {
+  background-color: #fff; 
+}
+
+.settings_contact {
+  background-color: #eee;
 }
 
 .navbar-nav {
@@ -63,10 +91,3 @@ nav {
   -webkit-app-region: drag
 }
 
-button {
-  -webkit-app-region: no-drag;
-}
-
-a {
-  -webkit-app-region: no-drag;
-}
