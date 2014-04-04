@@ -1,5 +1,5 @@
 body {
-  padding-top: 70px;
+  padding-top: 100px;
 }
 
 table {
@@ -12,8 +12,8 @@ table {
 }
 
 #nprogress .spinner {
-  top: 18px;
-  right: 6px;
+  top: 5px;
+  right: 5px;
 }
 
 #nprogress .bar {
@@ -31,12 +31,28 @@ table {
   margin-bottom: 15px;
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_red {
-  color: #d9534f;
+.navbar-inverse .navbar-nav > li > a.nav_exit {
+  color: #ac2925;
 } 
 
-.navbar-inverse .navbar-nav > li > a.nav_red:hover {
-  color: #ac2925;
+.navbar-inverse .navbar-nav > li > a.nav_exit:hover {
+  color: #d9534f; 
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_minimize {
+  color: #DBC116;
+} 
+
+.navbar-inverse .navbar-nav > li > a.nav_minimize:hover {
+  color: #FFE600;
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_maximize {
+  color: #61B329;
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_maximize:hover {
+  color: #83F52C;
 }
 
 .removeKeyword:hover {
@@ -44,11 +60,11 @@ table {
 }
 
 .navbar-inverse .navbar-nav > li > a.nav_blue {
-  color: #428bca;
+  color: #2a64ba;
 }
 
 .navbar-inverse .navbar-nav > li > a.nav_blue:hover {
-  color: #2a6496;
+  color: #428bfd;
 }
 
 .navbar-nav.nav-justified > li{
@@ -97,7 +113,28 @@ table {
   float: none;
 }
 
-nav {
-  -webkit-app-region: drag
+.windowtitle {
+  color: #eee;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding-left: 30px;
 }
 
+nav {
+  -webkit-app-region: drag;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: moz-none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+
+a {
+  -webkit-app-region: no-drag;
+}

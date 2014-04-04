@@ -21,9 +21,9 @@
     "frame": false,
     "position": "center",
     "width": 800,
-    "height": 530,
+    "height": 560,
     "min_width": 800,
-    "min_height": 530
+    "min_height": 560
   },
   "private": true
 }

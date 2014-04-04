@@ -83,8 +83,17 @@ NWAPP.hookStaticBindings = function() {
   });
 
   // for closing frameless windows
-  $(".nwapp_menu_controls").on("click", function() {
+  $(".nav_exit").on("click", function() {
     win.close();
+  });
+
+  // for minimizing
+  $(".nav_minimize").on("click", function() {
+    win.minimize();
+  });
+
+  $(".nav_maximize").on("click", function() {
+    win.maximize();
   });
 
   $(".dismissLinkAction").on("click", function() {
