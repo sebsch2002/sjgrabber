@@ -8,13 +8,6 @@ function Menu(cutLabel, copyLabel, pasteLabel) {
         console.log('Menu:', 'search: cutted to clipboard');
       }
     }),
-    // cut = new gui.MenuItem({
-    //   label: cutLabel || "Cut",
-    //   click: function() {
-    //     document.execCommand("cut");
-    //     console.log('Menu:', 'cutted to clipboard');
-    //   }
-    // }),
     copy = new gui.MenuItem({
       label: copyLabel || "Copy",
       click: function() {

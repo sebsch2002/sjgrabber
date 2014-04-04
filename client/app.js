@@ -20,7 +20,7 @@ var NWAPP = window.NWAPP || {};
 // 
 
 NWAPP.hookDynamicBindings = function() {
-  //console.log("app:hookDynamicBindings");
+  // console.log("app:hookDynamicBindings");
 
   // a.href to clipboard bindings
   $(".items_link").off();
@@ -44,7 +44,7 @@ NWAPP.hookDynamicBindings = function() {
 };
 
 NWAPP.hookStaticBindings = function() {
-  //console.log("app:hookStaticBindings");
+  // console.log("app:hookStaticBindings");
 
   // refetch.click button bindings
   $("#refetch_button").click(function() {

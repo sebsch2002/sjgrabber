@@ -29,6 +29,17 @@ table {
   right: 70px;
 }
 
+#nprogress .bar {
+  height: 4px;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  -webkit-transform: rotate(3deg) translate(0px, -2px);
+      -ms-transform: rotate(3deg) translate(0px, -2px);
+          transform: rotate(3deg) translate(0px, -2px);
+}
+
 .input-group {
   margin-bottom: 15px;
 }

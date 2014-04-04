@@ -25,10 +25,13 @@ var SavedItemModel = Backbone.Model.extend({
     if (str.length === 0) {
       return true;
     } else {
-      if (helper.replaceAll(".", " ", this.get("title")).toLowerCase().indexOf(str.toLowerCase()) > -1) {
-        return true;
-      }
-      return false;
+
+      return helper.titleKeywordComparator(this.get("title"), str);
+
+      // if (helper.replaceAll(".", " ", this.get("title")).toLowerCase().indexOf(str.toLowerCase()) > -1) {
+      //   return true;
+      // }
+      // return false;
     }
   }
 });

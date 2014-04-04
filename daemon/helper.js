@@ -4,14 +4,27 @@ function checkTitleIsFavourite(title) {
   var i = 0,
     len = favourites.length;
 
-  var titleDotsReplaced = replaceAll(".", " ", title);
-
   for (i; i < len; i += 1) {
-    if (titleDotsReplaced.toLowerCase().indexOf(favourites.at(i).get("keyword").toLowerCase()) > -1) {
+    if (titleKeywordComparator(title, favourites.at(i).get("keyword")) === true) {
       return true;
     }
   }
   return false;
+}
+
+function titleKeywordComparator(title, keyword) {
+  var titleDotsReplaced = replaceAll(".", " ", title).toLowerCase();
+  keywordArr = keyword.toLowerCase().split(" ");
+
+  var i = 0,
+    len = keywordArr.length;
+  for (i; i < len; i += 1) {
+    if (titleDotsReplaced.indexOf(keywordArr[i]) === -1) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function checkSavedItemIsFavourite(savedItem) {
@@ -38,7 +51,7 @@ function replaceAll(find, replace, str) {
 }
 
 function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
 module.exports = {
@@ -47,5 +60,6 @@ module.exports = {
   checkSavedItemJSONIsFavourite: checkSavedItemJSONIsFavourite,
   checkSavedItemJSONIsFavouriteLinkMissing: checkSavedItemJSONIsFavouriteLinkMissing,
   checkSavedItemJSONLinkMissing: checkSavedItemJSONLinkMissing,
-  replaceAll: replaceAll
+  replaceAll: replaceAll,
+  titleKeywordComparator: titleKeywordComparator
 };
