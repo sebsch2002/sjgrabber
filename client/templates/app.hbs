@@ -11,19 +11,46 @@
       {{!-- Main Nav Holder --}}
       <div class="collapse navbar-collapse">
 
-        {{!-- Navigation Tabs --}}
-        <ul class="nav nav-pills navbar-nav" id="appNavigationTab">
-          <li><a href="#close" class="nwapp_menu_controls"><i class="fa fa-times-circle fa-2x"></i></a></li>
-          <li class="active"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars fa-2x"></i></a></li>
-          <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye fa-2x"></i></a></li>
-          <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
-        </ul>
+        <div class="row">
 
-        {{!-- Action Button in Navbar --}}
-        <form class="navbar-form navbar-right">
-          {{!-- Refetch --}}
-          <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="btn btn-link appCycleDependent"><i class="fa fa-cloud fa-2x"></i></button>
-        </form>
+          <div class="col-xs-1">
+
+            {{!-- Left nav --}}
+            <form class="navbar-left">
+              {{!-- NW_controls --}}
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" class="nwapp_menu_controls nav_red dismissLinkAction"><i class="fa fa-times-circle fa-2x"></i></a></li>
+              </ul>
+            </form>
+
+          </div>
+
+          <div class="col-xs-10">
+
+            {{!-- Navigation Tabs --}}
+            <ul class="nav nav-pills navbar-nav nav-justified" id="appNavigationTab">
+              <li class="active"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars fa-2x"></i></a></li>
+              <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye fa-2x"></i></a></li>
+              <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
+            </ul>
+
+          </div>
+
+          <div class="col-xs-1">
+
+            {{!-- Right nav --}}
+            <form class="navbar-right">
+              {{!-- Refetch --}}  
+
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="appCycleDependent dismissLinkAction nav_blue"><i class="fa fa-cloud fa-2x"></i></a></li>
+              </ul>
+              {{!-- <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="btn btn-link appCycleDependent"><i class="fa fa-cloud fa-2x"></i></button> --}}
+            </form>
+
+          </div>
+
+        </div>
 
       </div>
 

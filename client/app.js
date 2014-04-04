@@ -65,6 +65,12 @@ NWAPP.hookStaticBindings = function() {
   $(".nwapp_menu_controls").on("click", function() {
     window.close();
   });
+
+  $(".dismissLinkAction").on("click", function() {
+    event.preventDefault();
+  });
+
+  
   
 };
 

@@ -6,19 +6,6 @@ table {
   font-size: 12px;
 }
 
-/*#nprogress .bar {
-  background: #ff004f;
-}
-
-#nprogress .peg {
-  box-shadow: 0 0 10px #ff004f, 0 0 5px #ff004f;
-}
-
-#nprogress .spinner-icon {
-  border-top-color: #ff004f;
-  border-left-color: #ff004f;
-}*/
-
 #nprogress .bar,
 #nprogress .spinner {
   z-index: 999999;
@@ -46,6 +33,30 @@ table {
 
 .favouritekeywords {
   margin-bottom: 15px;
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_red {
+  color: #d9534f;
+} 
+
+.navbar-inverse .navbar-nav > li > a.nav_red:hover {
+  color: #ac2925;
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_blue {
+  color: #428bca;
+}
+
+.navbar-inverse .navbar-nav > li > a.nav_blue:hover {
+  color: #2a6496;
+}
+
+.navbar-nav.nav-justified > li{
+    float:none;
+}
+
+.navbar-nav {
+  float: none;
 }
 
 nav {
