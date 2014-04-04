@@ -31,10 +31,6 @@ table {
   margin-bottom: 15px;
 }
 
-.favouritekeywords {
-  margin-bottom: 15px;
-}
-
 .navbar-inverse .navbar-nav > li > a.nav_red {
   color: #d9534f;
 } 
@@ -81,6 +77,16 @@ table {
 
 .settings_contact {
   background-color: #eee;
+}
+
+.subActionBar {
+  background-color: #eee;
+  margin: -15px;
+  padding: 15px;
+} 
+
+.itemsholder {
+  padding-top: 20px;
 }
 
 .navbar-nav {

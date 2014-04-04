@@ -1,5 +1,6 @@
 var gui = require("nw.gui");
 var clipboard = gui.Clipboard.get();
+var win = gui.Window.get();
 
 var NWAPP = window.NWAPP || {};
 
@@ -19,6 +20,14 @@ var NWAPP = window.NWAPP || {};
 // listeners
 // 
 
+win.on("close", function() {
+  this.hide(); // Pretend to be closed already
+
+  console.log("TODO: cache now, window is closing...");
+
+  this.close(true);
+});
+
 NWAPP.hookDynamicBindings = function() {
   // console.log("app:hookDynamicBindings");
 
@@ -32,7 +41,7 @@ NWAPP.hookDynamicBindings = function() {
   $(".keyword_link").off();
   $(".keyword_link").on("click", function(event) {
     event.preventDefault();
-    process.mainModule.exports.NWupdateKeywordString(event.currentTarget.dataset.keyword);
+    process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
   });
 
   // settings is dynamic for fetch time output!
@@ -40,8 +49,13 @@ NWAPP.hookDynamicBindings = function() {
   $("#clearreset_button").click(function() {
     process.mainModule.exports.clearCacheReset();
     $('#appNavigationTab a[href="#all_tab"]').tab('show');
+    clearSearchInputValue();
   });
 };
+
+function clearSearchInputValue() {
+  $("#search_input").val("");
+}
 
 NWAPP.hookStaticBindings = function() {
   // console.log("app:hookStaticBindings");
@@ -58,21 +72,31 @@ NWAPP.hookStaticBindings = function() {
 
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
-    process.mainModule.exports.NWupdateSearchString($(this).val());
+    checkSearchToggleAddButton($(this).val());
+    process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
   });
 
   // for closing frameless windows
   $(".nwapp_menu_controls").on("click", function() {
-    window.close();
+    win.close();
   });
 
   $(".dismissLinkAction").on("click", function() {
     event.preventDefault();
   });
-
-  
-  
 };
+
+function trimWhiteSpace(text) {
+  return text.replace( / {2,}/g, ' ' ).trim();
+}
+
+function checkSearchToggleAddButton(text) {
+  if (text.replace(/\s+/g, '') !== "") {
+    $("#addkeyword_button").removeClass("disabled");
+  } else {
+    $("#addkeyword_button").addClass("disabled");
+  }
+}
 
 // 
 // fetch cycle: update changes

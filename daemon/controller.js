@@ -194,10 +194,10 @@ function printDynamicContentNW() {
 
   NWAPP.printSettings({
     nextFetchTime: nextFetchTime,
-    interval: config.rescheduleMS/1000/60,
+    interval: config.rescheduleMS / 1000 / 60,
     fetchOnlyFavourites: config.fetchOnlyFavourites,
     maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
-    requestTimeoutSec: config.requestTimeoutMS/1000,
+    requestTimeoutSec: config.requestTimeoutMS / 1000,
     publicCoin: config.publicCoin,
     mail: config.mail
   });
@@ -221,15 +221,21 @@ module.exports.NWupdateKeywordString = NWupdateKeywordString;
 
 // add a keyword
 module.exports.NWaddCurrentKeyword = function() {
-  favourites.add({
+
+  // only add it if it is new!
+  if (_.isUndefined(favourites.findWhere({
     keyword: searchString
-  });
-  cacheHandler.save();
+  })) === true) {
+    favourites.add({
+      keyword: searchString
+    });
+    cacheHandler.save();
+  }
 
   // searchString to keyword string...
   NWupdateKeywordString(searchString);
 
-  printDynamicContentNW();
+  //printDynamicContentNW();
   runFetchCycleNow();
 };
 

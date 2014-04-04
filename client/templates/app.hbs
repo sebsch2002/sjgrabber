@@ -61,20 +61,20 @@
   <div class="tab-content">
     <div id="all_tab" class="tab-pane fade">
       {{!-- Search + add to favourites --}}
-      <div class="input-group input-group-lg">
+      <div class="input-group input-group-lg subActionBar">
         <span class="input-group-addon"><i class='fa fa-search'></i></span>
         <input id="search_input" type="text" class="form-control" placeholder="search for keywords (e.g. 'title format release-group language')">
         <span class="input-group-btn">
-          <button type="button" id="addkeyword_button" data-loading-text="<i class='fa fa-heart'></i> keyword" class="btn btn-primary appCycleDependent">I <i class='fa fa-heart'></i> this keyword</button>
+          <button type="button" id="addkeyword_button" class="btn btn-primary disabled">I <i class='fa fa-heart'></i> this keyword</button>
         </span>
       </div>
       {{!-- TEMPLATE --}}
-      <div id="all_items">template items</div>
+      <div id="all_items" class="itemsholder">template items</div>
     </div>
     <div id="favourites_tab" class="tab-pane fade">
       {{!-- TEMPLATE --}}
-      <div id="favourite_keywords">template favourites</div>
-      <div id="favourite_items">template items</div>
+      <div id="favourite_keywords" class="subActionBar">template favourites</div>
+      <div id="favourite_items" class="itemsholder">template items</div>
     </div>
     <div id="settings_tab" class="tab-pane fade in active">
       {{!-- TEMPLATE --}}
