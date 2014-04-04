@@ -1,6 +1,6 @@
 {
   "name": "SJgrapper",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "nw-app that fetches rss and links from serienjunkies.org",
   "author": "the unknown",
   "license": "MIT",
@@ -18,12 +18,12 @@
     "title": "SJgrapper",
     "show": true,
     "toolbar": false,
-    "frame": true,
+    "frame": false,
     "position": "center",
     "width": 800,
-    "height": 480,
+    "height": 600,
     "min_width": 800,
-    "min_height": 480
+    "min_height": 600
   },
   "private": true
 }

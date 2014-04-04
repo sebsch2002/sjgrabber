@@ -61,6 +61,7 @@ module.exports = function(grunt) {
             "bower_components/nprogress/nprogress.js",
             "bower_components/handlebars/handlebars.runtime.js",
             "client/templates.js",
+            "client/contextMenu.js",
             "client/app.js"
           ]
         },

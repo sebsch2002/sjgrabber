@@ -9,7 +9,10 @@ var NWAPP = window.NWAPP || {};
 
 (function clientStartup() {
   // add compile app template into app and settings div
-  document.getElementById("app").innerHTML = NWAPP.Templates.app({});
+  document.getElementById("app").innerHTML = NWAPP.Templates.app({
+    name: gui.App.manifest.name,
+    version: gui.App.manifest.version
+  });
 }());
 
 // 
@@ -52,11 +55,17 @@ NWAPP.hookStaticBindings = function() {
     process.mainModule.exports.NWaddCurrentKeyword();
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
   });
-  
+
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
     process.mainModule.exports.NWupdateSearchString($(this).val());
   });
+
+  // for closing frameless windows
+  $(".nwapp_menu_controls").on("click", function() {
+    window.close();
+  });
+  
 };
 
 // 

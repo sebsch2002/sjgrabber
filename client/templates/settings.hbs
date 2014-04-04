@@ -1,9 +1,37 @@
-{{#if nextFetchTime}}
-  <p class="text-center lead">next <i class='fa fa-cloud'></i> fetch will automatically take place at {{nextFetchTime}} (every {{interval}} minutes).</p>
+<p class="text-center lead">SJgrapper is your <strong>personal</strong> serienjunkies.org assistent.</p>
+
+<p class="text-center">1. <i class="fa fa-eye"></i> <small><em>(discover)</em></small> and <i class="fa fa-search"></i> <small><em>(search)</em></small> through new and cached releases.</p>
+
+<p class="text-center">2. <i class="fa fa-search"></i> <small><em>(search)</em></small> through all releases and <i class='fa fa-heart'></i> <small><em>(love)</em></small> your keywords (to save a query).</p>
+
+<p class="text-center">3. have all <i class='fa fa-heart'></i> <small><em>(loved)</em></small> keywords at hand in your <i class='fa fa-star'></i> <small><em>(favourites)</em></small>.</p>
+
+<p class="text-center">4. <strong>by the way</strong>, every single <i class="fa fa-link"></i> <small><em>(filehoster link)</em></small> from your <i class='fa fa-star'></i> <small><em>(favourites)</em></small> gets <strong>automatically</strong> <i class='fa fa-cloud-download'></i> <small><em>(fetched)</em></small>!</p>
+
+<p class="text-center">5. <strong>click</strong> <i class="fa fa-link"></i><i class="fa fa-link"></i><i class="fa fa-link"></i> <small><em>(filehoster links)</em></small> to <strong>copy them to your clipboard</strong> (solve captcha in JDownloader).</p>
+
+<p class="text-center">6. click <i class='fa fa-cloud'></i> <small><em>(refetch)</em></small> manually if you want, but I will <i class='fa fa-cloud-download'></i> <small><em>(fetch)</em></small> every {{interval}} minutes.</p>
+
+{{!-- {{#if fetchOnlyFavourites}}
+  <p class="text-center lead"><i class="fa fa-link"></i> <small><em>('links' e.g. uploaded.to)</em></small> from <i class='fa fa-heart'></i> <small><em>('loved')</em></small> keywords in <i class="fa fa-star"></i> <small><em>('favourites')</em></small> will be <i class='fa fa-cloud-download'></i> <small><em>('fetched')</em></small>.</p>
 {{else}}
-  <p class="text-center lead"><i class='fa fa-cloud-download'></i> fetch in progress (every {{interval}} minutes).</p>
+  <p class="text-center lead">all <i class="fa fa-link"></i> will be automatically <i class='fa fa-cloud-download'></i> <small>({{maxLinkRefetchRetrys}} retrys)</small>.</p>
+{{/if}}  --}}
+
+<hr>
+
+{{#if nextFetchTime}}
+  <p class="text-center">next <i class='fa fa-cloud-download'></i> <small><em>(fetching)</em></small> will take place at {{nextFetchTime}}</p>
+{{else}}
+  <p class="text-center">next <i class='fa fa-cloud-download'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
 {{/if}}
 
-<p></p>
-<p class="text-center lead">problems with these <i class="fa fa-bug fa-5x"></i>? hit the big red button!</p>
-<p class="text-center"><button type="button" id="clearreset_button" data-loading-text="clear cache, remove favourites, reset settings and fetch" class="btn btn-danger btn-lg appCycleDependent">clear cache, remove favourites, reset settings and fetch</button></p>
+{{!-- <p class="text-center lead">stable network recommended (connections timeout after {{requestTimeoutSec}} seconds).</p> --}}
+
+<p class="text-center">problems with <i class="fa fa-bug"></i> <small><em>(bugs)</em></small>? press <button type="button" id="clearreset_button" data-loading-text="reset application" class="btn btn-danger btn appCycleDependent">reset application</button></p>
+{{!-- <p class="text-center"><button type="button" id="clearreset_button" data-loading-text="clear cache, remove favourites, reset settings and fetch" class="btn btn-danger btn-lg appCycleDependent">clear cache, remove favourites, reset settings and fetch</button></p> --}}
+
+<hr>
+
+<p class="text-center"><i class="fa fa-envelope"></i> <small><em>(send)</em></small> your requests, bugs and disgust to {{mail}}</p>
+<p class="text-center lead">no fucking ads! <i class="fa fa-smile-o fa-4x"></i> <small><em>(like)</em></small> it? support me by donating <i class="fa fa-btc fa-4x"></i> <small><em>(bitcoins)</em></small> to<br />{{publicCoin}}</p>

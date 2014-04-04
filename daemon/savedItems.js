@@ -16,7 +16,7 @@ var SavedItemModel = Backbone.Model.extend({
   },
   getPrintable: function() {
     return {
-      title: this.get("title"),
+      title: helper.replaceAll(".", " ", this.get("title")),
       date: convertDate(this.get("date")),
       link: this.get("uploadedLink")
     };

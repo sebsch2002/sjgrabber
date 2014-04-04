@@ -25,7 +25,8 @@ table {
 }
 
 #nprogress .spinner {
-  right: 120px;
+  top: 18px;
+  right: 70px;
 }
 
 .input-group {
@@ -34,4 +35,16 @@ table {
 
 .favouritekeywords {
   margin-bottom: 15px;
+}
+
+nav {
+  -webkit-app-region: drag
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+
+a {
+  -webkit-app-region: no-drag;
 }

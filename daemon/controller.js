@@ -194,7 +194,12 @@ function printDynamicContentNW() {
 
   NWAPP.printSettings({
     nextFetchTime: nextFetchTime,
-    interval: config.rescheduleMS/1000/60
+    interval: config.rescheduleMS/1000/60,
+    fetchOnlyFavourites: config.fetchOnlyFavourites,
+    maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
+    requestTimeoutSec: config.requestTimeoutMS/1000,
+    publicCoin: config.publicCoin,
+    mail: config.mail
   });
 
   // tell client to hook its listeners to the dynamic content

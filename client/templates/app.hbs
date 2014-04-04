@@ -5,23 +5,24 @@
       
       {{!-- Brand --}}
       <div class="navbar-header disabled">
-        <a class="navbar-brand" href="#">SJgrapper</a>
+        {{!-- <a class="navbar-brand" href="#">{{name}} v{{version}}</a> --}}
       </div>
 
       {{!-- Main Nav Holder --}}
       <div class="collapse navbar-collapse">
-        
+
         {{!-- Navigation Tabs --}}
         <ul class="nav nav-pills navbar-nav" id="appNavigationTab">
-          <li class="active"><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye"></i> discover</a></li>
-          <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star'></i> favourites</a></li>
-          <li><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars"></i> settings</a></li>
+          <li><a href="#close" class="nwapp_menu_controls"><i class="fa fa-times-circle fa-2x"></i></a></li>
+          <li class="active"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars fa-2x"></i></a></li>
+          <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye fa-2x"></i></a></li>
+          <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
         </ul>
 
         {{!-- Action Button in Navbar --}}
         <form class="navbar-form navbar-right">
           {{!-- Refetch --}}
-          <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download'></i> fetching..." class="btn btn-link appCycleDependent"><i class="fa fa-cloud"></i> fetch serienjunkies.org</button>
+          <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="btn btn-link appCycleDependent"><i class="fa fa-cloud fa-2x"></i></button>
         </form>
 
       </div>
@@ -31,13 +32,13 @@
 
   {{!-- Tab Content --}}
   <div class="tab-content">
-    <div id="all_tab" class="tab-pane fade in active">
+    <div id="all_tab" class="tab-pane fade">
       {{!-- Search + add to favourites --}}
-      <div class="input-group">
+      <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class='fa fa-search'></i></span>
-        <input id="search_input" type="text" class="form-control" placeholder="search for keywords (e.g. title, format, rls groups)">
+        <input id="search_input" type="text" class="form-control" placeholder="search for keywords (e.g. 'title format release-group language')">
         <span class="input-group-btn">
-          <button type="button" id="addkeyword_button" data-loading-text="<i class='fa fa-heart'></i> keyword" class="btn btn-primary appCycleDependent"><i class='fa fa-heart'></i> keyword</button>
+          <button type="button" id="addkeyword_button" data-loading-text="<i class='fa fa-heart'></i> keyword" class="btn btn-primary appCycleDependent">I <i class='fa fa-heart'></i> this keyword</button>
         </span>
       </div>
       {{!-- TEMPLATE --}}
@@ -48,7 +49,7 @@
       <div id="favourite_keywords">template favourites</div>
       <div id="favourite_items">template items</div>
     </div>
-    <div id="settings_tab" class="tab-pane fade">
+    <div id="settings_tab" class="tab-pane fade in active">
       {{!-- TEMPLATE --}}
       <div id="settings">template settings</div>
     </div>
