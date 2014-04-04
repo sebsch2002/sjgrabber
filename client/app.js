@@ -51,6 +51,12 @@ NWAPP.hookDynamicBindings = function() {
     $('#appNavigationTab a[href="#all_tab"]').tab('show');
     clearSearchInputValue();
   });
+
+  $(".removeKeyword").off();
+  $(".removeKeyword").click(function(event) {
+    event.preventDefault();
+    process.mainModule.exports.NWremoveKeyword(event.target.parentElement.dataset.keyword);
+  });
 };
 
 function clearSearchInputValue() {
@@ -87,7 +93,7 @@ NWAPP.hookStaticBindings = function() {
 };
 
 function trimWhiteSpace(text) {
-  return text.replace( / {2,}/g, ' ' ).trim();
+  return text.replace(/ {2,}/g, ' ').trim();
 }
 
 function checkSearchToggleAddButton(text) {

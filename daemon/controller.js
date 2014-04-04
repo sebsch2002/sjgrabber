@@ -239,6 +239,19 @@ module.exports.NWaddCurrentKeyword = function() {
   runFetchCycleNow();
 };
 
+// add a keyword
+module.exports.NWremoveKeyword = function(keyword) {
+
+  favourites.remove(favourites.findWhere({
+    keyword: keyword
+  }));
+
+  // no keyword selected anymore
+  keywordString = "";
+
+  printDynamicContentNW();
+};
+
 // settings, reset everything.
 module.exports.clearCacheReset = function() {
   cacheHandler.clear();

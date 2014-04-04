@@ -39,6 +39,10 @@ table {
   color: #ac2925;
 }
 
+.removeKeyword:hover {
+  color: #ac2925;
+}
+
 .navbar-inverse .navbar-nav > li > a.nav_blue {
   color: #428bca;
 }
