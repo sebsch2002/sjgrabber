@@ -2,6 +2,8 @@ var gui = require("nw.gui");
 var clipboard = gui.Clipboard.get();
 var win = gui.Window.get();
 
+
+// NAMESPACE NWAPP
 var NWAPP = window.NWAPP || {};
 
 // 
@@ -19,6 +21,12 @@ var NWAPP = window.NWAPP || {};
       linux: (process.platform !== "win32" && process.platform !== "darwin") ? true : false
     }
   });
+
+  // are we running in debug mode?
+  if (NWAPP_DEBUG === true) {
+    win.showDevTools();
+  }
+
 }());
 
 // 

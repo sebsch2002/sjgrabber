@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             drop_console: true,
             dead_code: true,
             global_defs: {
-              "DEBUG": false
+              "NWAPP_DEBUG": false
             }
           }
         }
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
             drop_console: true,
             dead_code: true,
             global_defs: {
-              "DEBUG": false
+              "NWAPP_DEBUG": false
             }
           }
         }

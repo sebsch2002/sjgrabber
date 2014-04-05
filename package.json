@@ -33,7 +33,7 @@
   "window": {
     "title": "SJgrapper",
     "show": true,
-    "toolbar": true,
+    "toolbar": false,
     "frame": false,
     "position": "center",
     "width": 800,
