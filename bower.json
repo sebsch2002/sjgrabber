@@ -12,7 +12,6 @@
     "font-awesome": "~4.0.3",
     "jquery": "~2.1.0",
     "nprogress": "~0.1.3",
-    "handlebars": "~1.3.0",
-    "perfect-scrollbar": "~0.4.9"
+    "handlebars": "~1.3.0"
   }
 }

@@ -26,7 +26,7 @@ a {
   -webkit-app-region: no-drag;
 }
 
-/* hide scrollbar */
+/* hide native scrollbar */
 ::-webkit-scrollbar {
   width: 0 !important;
 }
@@ -56,28 +56,28 @@ application outer frameless borders
       left: 0;
       right: 0;
       top: 0;
-      height: 2px;
+      height: 1px;
     }
 
     #app-border-bottom {
       left: 0;
       right: 0;
       bottom: 0;
-      height: 2px;
+      height: 1px;
     }
 
     #app-border-left {
       left: 0;
       top: 0;
       bottom: 0;
-      width: 2px;
+      width: 1px;
     }
 
     #app-border-right {
       right: 0;
       top: 0;
       bottom: 0;
-      width: 2px;
+      width: 1px;
     }
 
 /* -----------------------------------------------------------------------------
