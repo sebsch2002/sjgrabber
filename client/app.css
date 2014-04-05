@@ -27,9 +27,9 @@ a {
 }
 
 /* hide native scrollbar */
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   width: 0 !important;
-}
+}*/
 
 .disallowHighlighting {
   -webkit-touch-callout: none;
@@ -180,6 +180,10 @@ nav and titlebar
 
 .windowBarRightCol {
   padding-right: 5px;
+}
+
+.windowBar {
+  z-index: 999997; /* fix bug scrolled content breaks windowBar dragging */
 }
 
 /* -----------------------------------------------------------------------------

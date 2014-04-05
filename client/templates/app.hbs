@@ -8,7 +8,7 @@
   <nav class="navbar navbar-inverse navbar-fixed-top disallowHighlighting" role="navigation">
     <div class="container-fluid">
 
-      <div class="row">
+      <div class="row windowBar">
 
         <div class="col-xs-4 windowBarLeftCol">
           {{#if platform.mac}}
@@ -70,7 +70,7 @@
   </nav>
 
   {{!-- Tab Content --}}
-  <div class="tab-content">
+  <div id="mainContentContainer" class="tab-content">
     <div id="all_tab" class="tab-pane fade">
       {{!-- Search + add to favourites --}}
       <div class="input-group input-group-lg subActionBar">
