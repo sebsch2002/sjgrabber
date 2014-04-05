@@ -2,8 +2,12 @@
 GLOBALS
 ----------------------------------------------------------------------------- */
 
+html, body{
+  height: 100%; /* always use full available height (fixes footer)*/
+}
+
 body {
-  padding-top: 100px;
+  padding-top: 100px; /* fixes navbar */
 }
 
 table {
@@ -36,6 +40,45 @@ a {
   user-select: none;
   cursor: default;
 }
+
+
+/* -----------------------------------------------------------------------------
+application outer frameless borders
+----------------------------------------------------------------------------- */
+
+#app-border-top, #app-border-bottom, #app-border-left, #app-border-right {
+      position: fixed;
+      background: #333;
+      z-index: 999998;
+    }
+
+    #app-border-top {
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+    }
+
+    #app-border-bottom {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+    }
+
+    #app-border-left {
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+    }
+
+    #app-border-right {
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+    }
 
 /* -----------------------------------------------------------------------------
 nprogress
@@ -124,6 +167,7 @@ nav and titlebar
   padding-bottom: 3px !important;
   padding-left: 3px !important;
   padding-right: 3px !important;
+  cursor: default;
 }
 
 .windowBarLeftCol {
