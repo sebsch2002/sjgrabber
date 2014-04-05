@@ -1,3 +1,7 @@
+/* -----------------------------------------------------------------------------
+GLOBALS
+----------------------------------------------------------------------------- */
+
 body {
   padding-top: 100px;
 }
@@ -6,30 +10,51 @@ table {
   font-size: 12px;
 }
 
+nav {
+  -webkit-app-region: drag;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: moz-none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+
+a {
+  -webkit-app-region: no-drag;
+}
+
+/* -----------------------------------------------------------------------------
+nprogress
+----------------------------------------------------------------------------- */
+
 #nprogress .bar,
 #nprogress .spinner {
   z-index: 999999;
 }
 
 #nprogress .spinner {
-  top: 5px;
-  right: 5px;
+  display: none;
 }
 
 #nprogress .bar {
   height: 4px;
 }
 
-/* Fancy blur effect */
 #nprogress .peg {
   -webkit-transform: rotate(3deg) translate(0px, -2px);
       -ms-transform: rotate(3deg) translate(0px, -2px);
           transform: rotate(3deg) translate(0px, -2px);
 }
 
-.input-group {
-  margin-bottom: 15px;
-}
+/* -----------------------------------------------------------------------------
+nav and titlebar
+----------------------------------------------------------------------------- */
 
 .navbar-inverse .navbar-nav > li > a.nav_exit {
   color: #ac2925;
@@ -76,15 +101,48 @@ table {
   width: 1%;
 }
 
+.navbar-nav {
+  float: none;
+}
+
+.windowtitle {
+  color: #eee;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.nwapp_menu_controls {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+
+.windowBarLeftCol {
+  padding-left: 5px;
+}
+
+.windowBarMiddleCol {
+
+}
+
+.windowBarRightCol {
+  padding-right: 5px;
+}
+
+/* -----------------------------------------------------------------------------
+settings 
+----------------------------------------------------------------------------- */
+
+.jumbo_small {
+  font-size: 16px !important;
+}
+
 .settings_item {
   padding-top: 20px;
   padding-bottom: 20px;
   margin: -15px;
   margin-bottom: -20px;
-}
-
-.jumbo_small {
-  font-size: 16px !important;
 }
 
 .settings_what {
@@ -99,42 +157,20 @@ table {
   background-color: #eee;
 }
 
-.subActionBar {
-  background-color: #eee;
-  margin: -15px;
-  padding: 15px;
-} 
+/* -----------------------------------------------------------------------------
+items 
+----------------------------------------------------------------------------- */
 
 .itemsholder {
   padding-top: 20px;
 }
 
-.navbar-nav {
-  float: none;
-}
+/* -----------------------------------------------------------------------------
+search/fav 
+----------------------------------------------------------------------------- */
 
-.windowtitle {
-  color: #eee;
-  margin-top: 3px;
-  margin-bottom: 3px;
-  padding-left: 30px;
-}
-
-nav {
-  -webkit-app-region: drag;
-
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: moz-none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-button {
-  -webkit-app-region: no-drag;
-}
-
-a {
-  -webkit-app-region: no-drag;
-}
+.subActionBar {
+  background-color: #eee;
+  margin: -15px;
+  padding: 15px;
+} 

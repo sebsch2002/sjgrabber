@@ -2,67 +2,63 @@
   <!-- Navigation -->
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
-      
-      {{!-- Brand --}}
-      <div class="navbar-header disabled">
-        {{!-- <a class="navbar-brand" href="#">{{name}} v{{version}}</a> --}}
+
+      <div class="row">
+
+        <div class="col-xs-4 windowBarLeftCol">
+          {{#if platform.mac}}
+            {{!-- NW_controls: System MAC --}}
+            <form class="navbar-left">
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" class="nwapp_menu_controls nav_exit dismissLinkAction"><i class="fa fa-times-circle"></i></a></li>
+                <li><a href="" class="nwapp_menu_controls nav_minimize dismissLinkAction"><i class="fa fa-minus-circle"></i></a></li>
+                <li><a href="" class="nwapp_menu_controls nav_maximize dismissLinkAction"><i class="fa fa-plus-circle"></i></a></li>
+              </ul>
+            </form>
+          {{else}}
+            {{!-- NW_controls: Refetch WIN or LINUX--}}  
+            <form class="navbar-left">
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download'></i>" class="appCycleDependent dismissLinkAction nav_blue nwapp_menu_controls"><i class="fa fa-cloud"></i></a></li>
+              </ul>
+            </form>
+          {{/if}}
+        </div>
+
+        <div class="col-xs-4 windowBarMiddleCol">
+          {{!-- Titlebar --}}
+          <p class="windowtitle text-center disabled">{{name}} v{{version}}</p>
+        </div>
+
+        <div class="col-xs-4 windowBarRightCol">
+          {{#if platform.mac}}
+            {{!-- NW_controls: Refetch MAC --}}  
+            <form class="navbar-right">
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download'></i>" class="appCycleDependent dismissLinkAction nav_blue nwapp_menu_controls"><i class="fa fa-cloud"></i></a></li>
+              </ul>
+            </form>
+          {{else}}
+            {{!-- NW_controls: System WIN or LINUX --}}
+            <form class="navbar-right">
+              <ul class="nav nav-pills navbar-nav">
+                <li><a href="" class="nwapp_menu_controls nav_minimize dismissLinkAction"><i class="fa fa-minus-circle"></i></a></li>
+                <li><a href="" class="nwapp_menu_controls nav_maximize dismissLinkAction"><i class="fa fa-plus-circle"></i></a></li>
+                <li><a href="" class="nwapp_menu_controls nav_exit dismissLinkAction"><i class="fa fa-times-circle"></i></a></li>
+              </ul>
+            </form>
+          {{/if}}
+        </div>
+
       </div>
 
-      {{!-- Main Nav Holder --}}
-      <div class="">
-
-        <div class="row">
-          <p class="windowtitle">{{name}} v{{version}}</p>
-        </div>
-
-        <div class="row">
-
-          {{!-- <div class="col-xs-3"> --}}
-
-            {{!-- Left nav --}}
-            <form class="navbar-left">
-              {{!-- NW_controls --}}
-              <ul class="nav nav-pills navbar-nav">
-                <li><a href="" class="nwapp_menu_controls nav_exit dismissLinkAction"><i class="fa fa-times-circle fa-2x"></i></a></li>
-                <li><a href="" class="nwapp_menu_controls nav_minimize dismissLinkAction"><i class="fa fa-minus-circle fa-2x"></i></a></li>
-                <li><a href="" class="nwapp_menu_controls nav_maximize dismissLinkAction"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-              </ul>
-            </form>
-
-          {{!-- </div>
-
-          <div class="col-xs-8"> --}}
-
-            <div class="row">
-            <div class="col-xs-8">
-
-            {{!-- Navigation Tabs --}}
-            <ul class="nav nav-pills navbar-nav nav-justified" id="appNavigationTab">
-              <li class="active"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars fa-2x"></i></a></li>
-              <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye fa-2x"></i></a></li>
-              <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
-            </ul>
-
-          </div>
-
-          <div class="col-xs-1">
-
-            {{!-- Right nav --}}
-            <form class="navbar-right">
-              {{!-- Refetch --}}  
-
-              <ul class="nav nav-pills navbar-nav">
-                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="appCycleDependent dismissLinkAction nav_blue"><i class="fa fa-cloud fa-2x"></i></a></li>
-              </ul>
-              {{!-- <button type="button" id="refetch_button" data-loading-text="<i class='fa fa-cloud-download fa-2x'></i>" class="btn btn-link appCycleDependent"><i class="fa fa-cloud fa-2x"></i></button> --}}
-            </form>
-
-          </div>
-
-          </div>
-
-        </div>
-
+      <div class="row">
+        {{!-- Main Navigation Tabs --}}
+        <ul class="nav nav-pills navbar-nav nav-justified" id="appNavigationTab">
+          <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-eye fa-2x"></i></a></li>
+          <li><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
+          <li class="active"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-bars fa-2x"></i></a></li>
+        </ul>
       </div>
 
     </div>

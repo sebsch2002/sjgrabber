@@ -12,7 +12,12 @@ var NWAPP = window.NWAPP || {};
   // add compile app template into app and settings div
   document.getElementById("app").innerHTML = NWAPP.Templates.app({
     name: gui.App.manifest.name,
-    version: gui.App.manifest.version
+    version: gui.App.manifest.version,
+    platform: {
+      win: (process.platform === "win32") ? true : false,
+      mac: (process.platform === "darwin") ? true : false,
+      linux: (process.platform !== "win32" && process.platform !== "darwin") ? true : false
+    }
   });
 }());
 
