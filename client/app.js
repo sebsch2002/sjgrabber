@@ -105,12 +105,19 @@ NWAPP.hookStaticBindings = function() {
     win.minimize();
   });
 
+  // for maximizing
   $(".nav_maximize").on("click", function() {
     win.maximize();
   });
 
+  // certain links with this class shouldnt do their def. action
   $(".dismissLinkAction").on("click", function() {
     event.preventDefault();
+  });
+
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
+    console.log("tab change");
+    $(".tab-content").scrollTop(0);
   });
 };
 
