@@ -162,7 +162,7 @@ nav and titlebar
 }
 
 .windowtitle {
-  color: #ddd;
+  color: #eee;
   margin-top: 3px;
   margin-bottom: 3px;
 }
@@ -208,7 +208,7 @@ settings
 }
 
 .settings_what {
-  background-color: #ddd;
+  background-color: #eee;
 }
 
 .settings_status {
@@ -216,7 +216,7 @@ settings
 }
 
 .settings_contact {
-  background-color: #ddd;
+  background-color: #eee;
 }
 
 /* -----------------------------------------------------------------------------
@@ -232,9 +232,10 @@ search/fav
 ----------------------------------------------------------------------------- */
 
 .subActionBar {
-  background-color: #ddd;
+  background-color: #eee;
   /*margin: -15px;*/
-  margin-left: -15px;
-  margin-right: -15px;
+  /*margin-left: -15px;
+  margin-right: -15px;*/
   padding: 15px;
+  width: 100%;
 }

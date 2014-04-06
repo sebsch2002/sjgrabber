@@ -70,6 +70,8 @@ NWAPP.hookDynamicBindings = function() {
     event.preventDefault();
     process.mainModule.exports.NWremoveKeyword(event.target.parentElement.dataset.keyword);
   });
+
+  setDynamicStyles();
 };
 
 function clearSearchInputValue() {
@@ -115,9 +117,24 @@ NWAPP.hookStaticBindings = function() {
     event.preventDefault();
   });
 
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { 
+  // set dynamicstyles every time a different tab is selected
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
     console.log("tab change");
     $(".tab-content").scrollTop(0);
+    setDynamicStyles();
+  });
+
+  $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
+    $("#search_input").focus();
+    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+  });
+  $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
+    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+  });
+
+  // set dynamic styles on resize change
+  $(window).resize(function() {
+    setDynamicStyles();
   });
 };
 
@@ -181,3 +198,69 @@ NWAPP.printSettings = function(config) {
 };
 
 window.NWAPP = NWAPP;
+
+
+// -----------------------------------------------------------------------------
+// styling related stuff
+// -----------------------------------------------------------------------------
+
+function setDynamicStyles() {
+  styleFavouritesAffixPadding();
+  styleSearchboxAffixPadding();
+}
+
+// add padding based on affix
+function styleFavouritesAffixPadding() {
+  var height = $("#favourite_keywords").outerHeight() + 15;
+  $("#favourite_items").css({
+    'paddingTop': height + "px"
+  });
+  handleScrollbarPositionFixed("#favourite_keywords");
+}
+
+function styleSearchboxAffixPadding() {
+  var height = $("#all_searchbox").outerHeight() + 15;
+  $("#all_items").css({
+    'paddingTop': height + "px"
+  });
+  handleScrollbarPositionFixed("#all_searchbox");
+}
+
+function handleScrollbarPositionFixed(divString) {
+
+  var scrollBarWidth = getScrollBarWidth();
+  var totalwidth = $("body").width() - scrollBarWidth;
+
+  $(divString).css({
+    right: scrollBarWidth + "px",
+    width: totalwidth + "px"
+  });
+}
+
+// get scrollbar width in every environment
+// from http://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
+function getScrollBarWidth() {
+  var inner = document.createElement('p');
+  inner.style.width = "100%";
+  inner.style.height = "200px";
+
+  var outer = document.createElement('div');
+  outer.style.position = "absolute";
+  outer.style.top = "0px";
+  outer.style.left = "0px";
+  outer.style.visibility = "hidden";
+  outer.style.width = "200px";
+  outer.style.height = "150px";
+  outer.style.overflow = "hidden";
+  outer.appendChild(inner);
+
+  document.body.appendChild(outer);
+  var w1 = inner.offsetWidth;
+  outer.style.overflow = 'scroll';
+  var w2 = inner.offsetWidth;
+  if (w1 == w2) w2 = outer.clientWidth;
+
+  document.body.removeChild(outer);
+
+  return (w1 - w2);
+}
