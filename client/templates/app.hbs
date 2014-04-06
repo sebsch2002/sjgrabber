@@ -32,7 +32,11 @@
 
         <div class="col-xs-4 windowBarMiddleCol">
           {{!-- Titlebar --}}
-          <p class="windowtitle text-center disabled">{{name}} v{{version}}</p>
+          {{#if debugmode}}
+            <p class="windowtitle text-center disabled">{{name}} v{{version}} (debug)</p>
+          {{else}}
+            <p class="windowtitle text-center disabled">{{name}} v{{version}}</p>
+          {{/if}}
         </div>
 
         <div class="col-xs-4 windowBarRightCol">

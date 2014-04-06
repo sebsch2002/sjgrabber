@@ -1,4 +1,5 @@
 {
+  "NWAPP_DEBUG": true,
   "name": "SJgrapper",
   "version": "0.2.1",
   "description": "nw-app that fetches rss and links from serienjunkies.org",

@@ -7,6 +7,9 @@ var savedItems = require("./savedItems");
 var favourites = require("./favourites");
 var config = require("./config");
 
+var dataObjectNameSavedItems = "staged";
+var dataObjectNameFavourites = "favourites";
+
 var CacheHandler = function() {
   this.lastLoaded = false;
   this.lastSaved = false;
@@ -20,6 +23,9 @@ CacheHandler.prototype.save = function() {
 
   var that = this;
 
+  var savedItemHolder = {};
+  var favouritesHolder = {};
+
   if (config.cache.enabled === false) {
     that.emit("saved");
     return;
@@ -29,15 +35,14 @@ CacheHandler.prototype.save = function() {
     this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
   } else {
 
+    savedItemHolder[dataObjectNameSavedItems] = savedItems.toJSON();
+    favouritesHolder[dataObjectNameFavourites] = favourites.toJSON();
+
     // save ITEMS to localStorage...
-    this.localStorage.savedItems = JSON.stringify({
-      staged: savedItems.toJSON()
-    });
+    this.localStorage.savedItems = JSON.stringify(savedItemHolder);
 
     // save FAVOURITES to localStorage...
-    this.localStorage.favourites = JSON.stringify({
-      favourites: favourites.toJSON()
-    });
+    this.localStorage.favourites = JSON.stringify(favouritesHolder);
 
     that.lastSaved = new Date();
     that.emit("saved");
@@ -78,6 +83,14 @@ CacheHandler.prototype.load = function() {
 
 CacheHandler.prototype.linkLocalStorage = function(localStorage) {
   this.localStorage = localStorage;
+
+  if (process.NWAPP_DEBUG === true) {
+    console.log("cacheHandler:linkLocalStorage ---------- DEBUG MODE --------");
+    // reset saving / loading items for DEBUG use, non production
+    dataObjectNameSavedItems = "staged_DEBUG";
+    dataObjectNameFavourites = "favourites_DEBUG";
+  }
+
 };
 
 CacheHandler.prototype.clear = function() {
@@ -95,18 +108,18 @@ function loadSavedItems(data) {
   var dataObject = parseJSONObject(data);
 
   if (_.isUndefined(dataObject) === false &&
-    _.isUndefined(dataObject.staged) === false) {
+    _.isUndefined(dataObject[dataObjectNameSavedItems]) === false) {
 
     // convert string dates to real dates
     var i = 0,
-      len = dataObject.staged.length;
+      len = dataObject[dataObjectNameSavedItems].length;
     for (i; i < len; i += 1) {
-      if (_.isString(dataObject.staged[i].date) === true) {
-        dataObject.staged[i].date = moment(dataObject.staged[i].date).toDate();
+      if (_.isString(dataObject[dataObjectNameSavedItems][i].date) === true) {
+        dataObject[dataObjectNameSavedItems][i].date = moment(dataObject[dataObjectNameSavedItems][i].date).toDate();
       }
     }
 
-    savedItems.add(dataObject.staged);
+    savedItems.add(dataObject[dataObjectNameSavedItems]);
   }
 }
 
@@ -114,9 +127,9 @@ function loadFavourites(data) {
   var dataObject = parseJSONObject(data);
 
   if (_.isUndefined(dataObject) === false &&
-    _.isUndefined(dataObject.favourites) === false) {
+    _.isUndefined(dataObject[dataObjectNameFavourites]) === false) {
 
-    favourites.add(dataObject.favourites);
+    favourites.add(dataObject[dataObjectNameFavourites]);
   }
 }
 

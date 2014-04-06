@@ -38,6 +38,17 @@ var hookCycleListeners = _.once(function() {
 
 // startup execute - create bindings to cacheHandler, but wait until NW responds
 (function startup() {
+
+  console.log("controller:startup");
+
+  // check for debug flag...
+  try {
+    var pjson = require("../package.json");
+    process.NWAPP_DEBUG = (_.isUndefined(pjson.NWAPP_DEBUG) === false) ? pjson.NWAPP_DEBUG : false;
+  } catch (e) {
+    process.NWAPP_DEBUG = false;
+  }
+
   // start by loading old items into our cache
   cacheHandler.once("loaded", startCycle);
 

@@ -19,7 +19,8 @@ var NWAPP = window.NWAPP || {};
       win: (process.platform === "win32") ? true : false,
       mac: (process.platform === "darwin") ? true : false,
       linux: (process.platform !== "win32" && process.platform !== "darwin") ? true : false
-    }
+    },
+    debugmode: NWAPP_DEBUG
   });
 
   // are we running in debug mode?
