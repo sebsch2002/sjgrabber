@@ -61,7 +61,7 @@ NWAPP.hookDynamicBindings = function() {
   $("#clearreset_button").off();
   $("#clearreset_button").click(function() {
     process.mainModule.exports.clearCacheReset();
-    $('#appNavigationTab a[href="#all_tab"]').tab('show');
+    $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
     clearSearchInputValue();
   });
 
@@ -119,8 +119,7 @@ NWAPP.hookStaticBindings = function() {
 
   // set dynamicstyles every time a different tab is selected
   $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
-    console.log("tab change");
-    $(".tab-content").scrollTop(0);
+    $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
     setDynamicStyles();
   });
 

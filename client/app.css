@@ -32,11 +32,6 @@ a {
   -webkit-app-region: no-drag;
 }
 
-/* hide native scrollbar */
-/*::-webkit-scrollbar {
-  width: 0 !important;
-}*/
-
 .disallowHighlighting {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -62,28 +57,28 @@ application outer frameless borders
       left: 0;
       right: 0;
       top: 0;
-      height: 1px;
+      height: 2px;
     }
 
     #app-border-bottom {
       left: 0;
       right: 0;
       bottom: 0;
-      height: 1px;
+      height: 2px;
     }
 
     #app-border-left {
       left: 0;
       top: 0;
       bottom: 0;
-      width: 1px;
+      width: 2px;
     }
 
     #app-border-right {
       right: 0;
       top: 0;
       bottom: 0;
-      width: 1px;
+      width: 2px;
     }
 
 /* -----------------------------------------------------------------------------
@@ -234,9 +229,6 @@ search/fav
 
 .subActionBar {
   background-color: #eee;
-  /*margin: -15px;*/
-  /*margin-left: -15px;
-  margin-right: -15px;*/
   padding: 15px;
   width: 100%;
 }

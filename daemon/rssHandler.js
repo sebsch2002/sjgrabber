@@ -95,7 +95,7 @@ RSSHandler.prototype.fetch = function() {
       that.allItems += 1;
 
       if (that.allItems % 100 === 0) {
-        that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED));
+        that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED) * 0.5);
       }
 
       if(config.support.stdoutCursorTo) {

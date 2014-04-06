@@ -118,8 +118,8 @@ module.exports.NWReady = function() {
 // restricted to run only once.
 var hookNWListeners = _.once(function() {
   rssHandler.on("start", cycleStartsNW);
-  linkParser.on("start", cycleStartsNW);
-  rssHandler.on("fetched", cycleDoneNW);
+  // linkParser.on("start", cycleStartsNW);
+  // rssHandler.on("fetched", cycleDoneNW);
   linkParser.on("fetched", cycleDoneNW);
   rssHandler.on("progress", cycleProgressNW);
   linkParser.on("progress", cycleProgressNW);
@@ -245,6 +245,9 @@ module.exports.NWremoveKeyword = function(keyword) {
   favourites.remove(favourites.findWhere({
     keyword: keyword
   }));
+
+  // save because it was removed
+  cacheHandler.save();
 
   // no keyword selected anymore
   keywordString = "";

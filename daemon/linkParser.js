@@ -87,12 +87,23 @@ function getCountLinksMissing(onlyFavourites) {
   }
 }
 
+function getDownloadLinks(onlyFavourites, originlink) {
+  if (onlyFavourites) {
+    return _.where(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavouriteLinkMissing), {
+      'link': originlink,
+      'uploadedLink': false
+    });
+  } else {
+    return _.where(savedItems.toJSON(), {
+      'link': originlink,
+      'uploadedLink': false
+    });
+  }
+}
+
 function parseURLForULLinks() {
   var link = linkParser.uniqueLinks[linkParser.currentLinkIndex];
-  var toParseItems = _.where(savedItems.toJSON(), {
-    'link': link,
-    'uploadedLink': false
-  }),
+  var toParseItems = getDownloadLinks(config.fetchOnlyFavourites, link),
     linkRequest;
 
   process.stdout.write("fetching " + linkParser.uniqueLinks[linkParser.currentLinkIndex] + " | ");
@@ -167,7 +178,8 @@ function parseHTML(html, items) {
     }
 
     linkParser.countCurrentFetchedLinks += 1;
-    linkParser.emit("progress", (linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch));
+    console.log("linkparser: " + linkParser.countCurrentFetchedLinks + "/" + linkParser.countTotalLinksToFetch);
+    linkParser.emit("progress", 0.5 + ((linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch)/2));
   }
 
   // check for links that werent resolved and set a flag for them - maximal resolve.
