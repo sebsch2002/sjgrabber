@@ -8,7 +8,8 @@ html, body{
 }
 
 .tab-content { /* only allow scrolling on tab-content item */
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: auto;
   position: absolute;
   width: 100%;
   top: 85px;
