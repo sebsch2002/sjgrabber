@@ -45,8 +45,6 @@ win.on("close", function() {
 NWAPP.hookDynamicBindings = function() {
   // console.log("app:hookDynamicBindings");
 
-  $(".items_link").button();
-
   // button data.href to clipboard bindings
   $(".items_link").off();
   $(".items_link").on("click", function(event) {
@@ -55,7 +53,6 @@ NWAPP.hookDynamicBindings = function() {
 
     // add to clipboard
     clipboard.set(event.currentTarget.dataset.href, "text");
-    btn.button("loading");
 
     // notify daemon that it was clicked!
     process.mainModule.exports.NWmarkItemAsDownloaded(event.currentTarget.dataset.uuid);
