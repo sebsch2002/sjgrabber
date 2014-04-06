@@ -15,19 +15,21 @@ var SavedItemModel = Backbone.Model.extend({
     filehosterLinks: [],
     filehosterLinksFetched: false,
     filehosterLinksRefetchCount: 0,
-    uploadedLink: false, // old
-    uploadedLinkRefetchCount: 0 // OLD ERASE IT!!!!
+    userClickedFilehosterLink: false
   },
   isFavourite: function() {
     return helper.checkSavedItemIsFavourite(this);
   },
   getPrintable: function() {
     return {
+      uuid: this.get("uuid"),
       title: helper.replaceAll(".", " ", this.get("title")),
       date: moment(this.get("date")).format(config.format.date),
       link: this.get("link"),
       filehosterLinks: this.get("filehosterLinks"),
-      filehosterLinksFetched: this.get("filehosterLinksFetched")
+      filehosterLinksFetched: this.get("filehosterLinksFetched"),
+      userClickedFilehosterLink: this.get("userClickedFilehosterLink"),
+      filehosterFetchPreviouslyFailed: (this.get("filehosterLinksRefetchCount") > 0) ? true : false
     };
   },
   stringMatchesTitle: function(str) {
@@ -44,10 +46,11 @@ var SavedItemModel = Backbone.Model.extend({
     // http://stackoverflow.com/questions/11661380/does-backbone-models-this-get-copy-an-entire-array-or-point-to-the-same-array
 
     var newFilehosterLinks = _.clone(this.get("filehosterLinks"));
-    
+
     newFilehosterLinks.push({
       provider: provider,
-      link: dllink
+      link: dllink,
+      uuid: this.get("uuid")
     });
 
     this.set("filehosterLinks", newFilehosterLinks);

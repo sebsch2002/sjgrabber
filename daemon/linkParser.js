@@ -213,7 +213,11 @@ function parseItem() {
         that.currentSavedItem.addFilehosterItem("uploaded.com", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
           $(this).html().lastIndexOf("\" target=\"_blank\">")));
 
-        that.currentSavedItem.addFilehosterItem("test", "test");
+        // ---
+        // TODO: add all links here!!!!!
+        // ---
+
+        // that.currentSavedItem.addFilehosterItem("test", "test");
 
         // push item to array
         // filehosterLinks.push({

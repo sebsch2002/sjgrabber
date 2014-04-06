@@ -1,37 +1,63 @@
 {{#if items}}
 <table class="table table-hover table-condensed">
   <thead class="disallowHighlighting">
+    <td class="lead text-center"><i class="fa fa-check-circle-o fileHosterStatusHead"></i></td>
     <td class="lead">date</td>
-    <td class="lead">release <small>({{items.length}} total)</small></td>
+    <td class="lead">releases <small>({{items.length}} total)</small></td>
     <td class="lead text-center"><i class="fa fa-link"></i></td>
   </thead>
   <tbody>
     {{! output each item}}
     {{#each items}}
       <tr>
+        
+        {{!-- output status there/fetched/downloaded --}}
+        {{#if filehosterLinksFetched}}
+          {{#if userClickedFilehosterLink}}
+            <td class="text-center"><i class="fa fa-check-circle-o fileHosterStatusSymbol fileHosterStatusDownloaded"></i></td>
+          {{else}}
+            <td class="text-center"><i class="fa fa-dot-circle-o fileHosterStatusSymbol fileHosterStatusFetched"></i></td>
+          {{/if}}
+        {{else}}
+          {{#if filehosterFetchPreviouslyFailed}}
+            <td class="text-center"><i class="fa fa-exclamation-circle fileHosterStatusSymbol fileHosterStatusFetchFailed"></i></td>
+          {{else}}
+            <td class="text-center"><i class="fa fa-circle-o fileHosterStatusSymbol fileHosterStatusNonFetched"></i></td>
+          {{/if}}
+        {{/if}}
+        
+        {{!-- static --}}
         <td><small>{{date}}</small></td>
         <td>{{title}}</td>
-            {{#each filehosterLinks}}
-              
-              {{#if @first}}
-                <td>
-              {{/if}}
-              
-              <a class="items_link" href="{{link}}">{{provider}}</a>
-              
-              {{#unless @last}}
-                <br />
-              {{/unless}}
-              
-              {{#if @last}}
-                </td>
-              {{/if}}
+        
+        {{!-- output all links --}}
+        {{#each filehosterLinks}}
+          
+          {{#if @first}}
+            <td>
+          {{/if}}
 
-            {{else}}
-              <td class="text-center">-</td>
-            {{/each}}
-          </td>
-        </tr>
+          <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs btn-block items_link" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i> {{provider}}</button>
+          
+          {{#unless @last}}
+            <br />
+          {{/unless}}
+          
+          {{#if @last}}
+            </td>
+          {{/if}}
+
+        {{/each}}
+
+        {{#unless filehosterLinks}}
+          {{#if filehosterFetchPreviouslyFailed}}
+            <td><a class="items_link_external" href="{{link}}" data-uuid="{{uuid}}">open in browser</a></td>
+          {{else}}
+            <td class="text-center">-</td>
+          {{/if}}
+        {{/unless}}
+        
+      </tr>
     {{/each}}
   </tbody>
 </table>

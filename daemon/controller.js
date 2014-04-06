@@ -132,8 +132,10 @@ module.exports.NWReady = function() {
 var hookNWListeners = _.once(function() {
   rssHandler.on("start", cycleStartsNW);
   linkParser.on("fetched", cycleDoneNW);
+
   rssHandler.on("progress", cycleProgressNW);
   linkParser.on("progress", cycleProgressNW);
+  linkParser.on("progress", cycleProgressNWUpdateUI);
 
   linkParser.on("error", cycleErrorNW);
   rssHandler.on("error", cycleErrorNW);
@@ -154,9 +156,10 @@ function cycleDoneNW() {
   printDynamicContentNW();
 }
 
-function cycleErrorNW(e) {
+function cycleErrorNW(e, suppressDefault) {
   NWAPP.printErrorMessage({
-    errorMessage: e.toString()
+    errorMessage: e.toString(),
+    suppressDefault: suppressDefault
   });
   cycleDoneNW();
 }
@@ -164,6 +167,10 @@ function cycleErrorNW(e) {
 function cycleProgressNW(progressCount) {
   nextFetchTime = false;
   NWAPP.updateProgress(progressCount);
+}
+
+function cycleProgressNWUpdateUI(processCount) {
+  printDynamicContentNW();
 }
 
 var searchString = "";
@@ -275,6 +282,25 @@ module.exports.NWremoveKeyword = function(keyword) {
   keywordString = "";
 
   printDynamicContentNW();
+};
+
+module.exports.NWmarkItemAsDownloaded = function(uuid) {
+  var updateItem = savedItems.findWhere({
+    uuid: uuid
+  });
+
+  if (_.isUndefined(updateItem) === false) {
+    updateItem.set("userClickedFilehosterLink", true);
+
+    // save because it was updated
+    cacheHandler.save();
+
+    printDynamicContentNW();
+  } else {
+    // error item with uuid not found!
+    console.error("controller.NWmarkItemAsDownloaded item with uuid " + uuid + " not found!");
+    cycleErrorNW("controller.NWmarkItemAsDownloaded item with uuid " + uuid + " not found!", true);
+  }
 };
 
 // settings, reset everything.

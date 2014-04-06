@@ -262,3 +262,27 @@ search/fav
   padding: 15px;
   width: 100%;
 }
+
+.fileHosterStatusSymbol {
+  font-size: 20px;
+}
+
+.fileHosterStatusDownloaded {
+  color: #398439;
+}
+
+.fileHosterStatusFetched {
+  color: #2a6496;
+}
+
+.fileHosterStatusFetchFailed {
+  color: #ac2925;
+}
+
+.fileHosterStatusNonFetched {
+  color: #ddd;
+}
+
+.fileHosterStatusHead {
+  color: #ddd;
+}

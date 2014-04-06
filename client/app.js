@@ -45,11 +45,26 @@ win.on("close", function() {
 NWAPP.hookDynamicBindings = function() {
   // console.log("app:hookDynamicBindings");
 
-  // a.href to clipboard bindings
+  $(".items_link").button();
+
+  // button data.href to clipboard bindings
   $(".items_link").off();
   $(".items_link").on("click", function(event) {
+
+    var btn = $(this);
+
+    // add to clipboard
+    clipboard.set(event.currentTarget.dataset.href, "text");
+    btn.button("loading");
+
+    // notify daemon that it was clicked!
+    process.mainModule.exports.NWmarkItemAsDownloaded(event.currentTarget.dataset.uuid);
+  });
+
+  $(".items_link_external").off();
+  $(".items_link_external").on("click", function(event) {
     event.preventDefault();
-    clipboard.set(event.target.href, "text");
+    gui.Shell.openExternal(event.target.href);
   });
 
   $(".keyword_link").off();
