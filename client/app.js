@@ -74,9 +74,7 @@ NWAPP.hookDynamicBindings = function() {
 
   $(".alert").off();
   $('.alert').bind('closed.bs.alert', function() {
-    //console.log("alert closed!");
     clearErrorMessage();
-    setDynamicStyles(); // recalc layout on close
   });
 
   setDynamicStyles();
@@ -162,6 +160,7 @@ function checkSearchToggleAddButton(text) {
 // 
 
 NWAPP.startCycle = function() {
+  clearErrorMessage();
   NProgress.start();
   NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
 };
@@ -208,8 +207,9 @@ NWAPP.printErrorMessage = function(error) {
   document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
 };
 
-function clearErrorMessage () {
+function clearErrorMessage() {
   document.getElementById("errorContainer").innerHTML = "";
+  setDynamicStyles();
 }
 
 window.NWAPP = NWAPP;
