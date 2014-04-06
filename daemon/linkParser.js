@@ -178,11 +178,11 @@ function parseHTML(html, items) {
     }
 
     linkParser.countCurrentFetchedLinks += 1;
-    console.log("linkparser: " + linkParser.countCurrentFetchedLinks + "/" + linkParser.countTotalLinksToFetch);
+    //console.log("linkparser: " + linkParser.countCurrentFetchedLinks + "/" + linkParser.countTotalLinksToFetch);
     linkParser.emit("progress", 0.5 + ((linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch)/2));
   }
 
-  // check for links that werent resolved and set a flag for them - maximal resolve.
+  // TODO: check for links that werent resolved and set a flag for them - maximal resolve.
 
   linkParser.nextULParse(); // done fetching!
 }
