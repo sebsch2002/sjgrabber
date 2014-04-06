@@ -28,11 +28,13 @@ var hookCycleListeners = _.once(function() {
   rssHandler.on("error", function(err) {
     // stop cycle immediately?
     console.error("controller:hookCycleListeners got rssHandler error: " + err);
+    cycleRunning = false;
   });
 
   linkParser.on("error", function(err) {
     // stop cycle immediately?
     console.error("controller:hookCycleListeners got linkParser error: " + err);
+    cycleRunning = false;
   });
 });
 
@@ -53,7 +55,7 @@ var hookCycleListeners = _.once(function() {
   cacheHandler.once("loaded", startCycle);
 
   cacheHandler.on("error", function(err) {
-    // stop cycle immediately?
+    // cacheHandler error? what to do?
     console.error("controller:startup got cacheHandler error: " + err);
   });
 
@@ -129,11 +131,13 @@ module.exports.NWReady = function() {
 // restricted to run only once.
 var hookNWListeners = _.once(function() {
   rssHandler.on("start", cycleStartsNW);
-  // linkParser.on("start", cycleStartsNW);
-  // rssHandler.on("fetched", cycleDoneNW);
   linkParser.on("fetched", cycleDoneNW);
   rssHandler.on("progress", cycleProgressNW);
   linkParser.on("progress", cycleProgressNW);
+
+  linkParser.on("error", cycleErrorNW);
+  rssHandler.on("error", cycleErrorNW);
+  cacheHandler.on("error", cycleErrorNW);
 
   cacheHandler.load(); // start cacheing now that localStorage is available.
 });
@@ -148,6 +152,13 @@ function cycleDoneNW() {
   NWAPP.endCycle();
   nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format("HH:mm:ss");
   printDynamicContentNW();
+}
+
+function cycleErrorNW(e) {
+  NWAPP.printErrorMessage({
+    errorMessage: e.toString()
+  });
+  cycleDoneNW();
 }
 
 function cycleProgressNW(progressCount) {

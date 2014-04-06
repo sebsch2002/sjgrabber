@@ -72,6 +72,13 @@ NWAPP.hookDynamicBindings = function() {
     process.mainModule.exports.NWremoveKeyword(event.target.parentElement.dataset.keyword);
   });
 
+  $(".alert").off();
+  $('.alert').bind('closed.bs.alert', function() {
+    //console.log("alert closed!");
+    clearErrorMessage();
+    setDynamicStyles(); // recalc layout on close
+  });
+
   setDynamicStyles();
 };
 
@@ -197,6 +204,14 @@ NWAPP.printSettings = function(config) {
   document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
 };
 
+NWAPP.printErrorMessage = function(error) {
+  document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
+};
+
+function clearErrorMessage () {
+  document.getElementById("errorContainer").innerHTML = "";
+}
+
 window.NWAPP = NWAPP;
 
 
@@ -207,6 +222,20 @@ window.NWAPP = NWAPP;
 function setDynamicStyles() {
   styleFavouritesAffixPadding();
   styleSearchboxAffixPadding();
+  setContentTopPosition();
+}
+
+function setContentTopPosition() {
+  var topHeight = $("#navigationHolder").outerHeight() +
+    $("#errorContainer").outerHeight();
+
+  $(".errorbox-content").css({
+    'top': $("#navigationHolder").outerHeight() + "px"
+  });
+
+  $(".tab-content").css({
+    'top': topHeight + "px"
+  });
 }
 
 // add padding based on affix

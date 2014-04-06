@@ -3,9 +3,9 @@
 <div id="app-border-left"></div><div id="app-border-right"></div>
 
 <!-- topLevelContainer holds the main application -->
-<div class="container-fluid topLevelContainer">
+<div id="navigationContainer" class="container-fluid">
   <!-- Navigation -->
-  <nav class="navbar navbar-inverse navbar-fixed-top disallowHighlighting" role="navigation">
+  <nav id="navigationHolder" class="navbar navbar-inverse navbar-fixed-top disallowHighlighting" role="navigation">
     <div class="container-fluid">
 
       <div class="row windowBar">
@@ -74,6 +74,8 @@
   </nav>
 </div>
 
+{{!-- Shows Error Messages (through template alertbox) --}}
+<div id="errorContainer" class="errorbox-content"></div>
 
 {{!-- Tab Content --}}
 <div id="mainContentContainer" class="tab-content">
