@@ -91,12 +91,12 @@ function getDownloadLinks(onlyFavourites, originlink) {
   if (onlyFavourites) {
     return _.where(_.filter(savedItems.toJSON(), helper.checkSavedItemJSONIsFavouriteLinkMissing), {
       'link': originlink,
-      'uploadedLink': false
+      'filehosterLinksFetched': false
     });
   } else {
     return _.where(savedItems.toJSON(), {
       'link': originlink,
-      'uploadedLink': false
+      'filehosterLinksFetched': false
     });
   }
 }
@@ -179,7 +179,7 @@ function parseHTML(html, items) {
 
     linkParser.countCurrentFetchedLinks += 1;
     //console.log("linkparser: " + linkParser.countCurrentFetchedLinks + "/" + linkParser.countTotalLinksToFetch);
-    linkParser.emit("progress", 0.5 + ((linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch)/2));
+    linkParser.emit("progress", 0.5 + ((linkParser.countCurrentFetchedLinks / linkParser.countTotalLinksToFetch) / 2));
   }
 
   // TODO: check for links that werent resolved and set a flag for them - maximal resolve.
@@ -192,9 +192,9 @@ function incrementRefetchCount(uuid) {
     uuid: uuid
   });
 
-  var currentSet = item.get("uploadedLinkRefetchCount");
+  var currentSet = item.get("filehosterLinksRefetchCount");
 
-  item.set("uploadedLinkRefetchCount", currentSet + 1);
+  item.set("filehosterLinksRefetchCount", currentSet + 1);
 }
 
 function parseItem() {
@@ -207,11 +207,27 @@ function parseItem() {
 
       $(this).parent().each(function(i, elem) {
 
-        process.stdout.write(".");
+        // get links array
+        //var filehosterLinks = that.currentSavedItem.get("filehosterLinks");
 
-        that.currentSavedItem.set("uploadedLink", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
+        that.currentSavedItem.addFilehosterItem("uploaded.com", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
           $(this).html().lastIndexOf("\" target=\"_blank\">")));
 
+        that.currentSavedItem.addFilehosterItem("test", "test");
+
+        // push item to array
+        // filehosterLinks.push({
+        //   provider: "uploaded.com",
+        //   link: $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
+        //     $(this).html().lastIndexOf("\" target=\"_blank\">"))
+        // });
+
+        // set success and link array
+        //that.currentSavedItem.set("filehosterLinks", filehosterLinks);
+        that.currentSavedItem.set("filehosterLinksFetched", true);
+
+        process.stdout.write(".");
+        console.log(that.currentSavedItem.get("title") +  " push! " + that.currentSavedItem.get("filehosterLinks").length);
         that.success = true;
 
       });

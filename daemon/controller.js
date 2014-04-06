@@ -150,7 +150,7 @@ function cycleStartsNW() {
 
 function cycleDoneNW() {
   NWAPP.endCycle();
-  nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format("HH:mm:ss");
+  nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format(config.format.clock);
   printDynamicContentNW();
 }
 

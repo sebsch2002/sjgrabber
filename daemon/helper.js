@@ -43,7 +43,7 @@ function checkSavedItemJSONIsFavouriteLinkMissing(JSONitem) {
 }
 
 function checkSavedItemJSONLinkMissing(JSONitem) {
-  return JSONitem.uploadedLink === false;
+  return JSONitem.filehosterLinksFetched === false;
 }
 
 function replaceAll(find, replace, str) {

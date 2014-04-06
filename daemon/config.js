@@ -10,6 +10,10 @@ module.exports = {
     stdoutCursorTo: false
   },
   rescheduleMS: 1800000,
+  format: {
+    clock: "HH:mm:ss",
+    date: "DD.MM.YYYY"
+  },
   publicCoin: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   mail: "xxxxxxx.xxxxxx@xxxxxx.com"
 };

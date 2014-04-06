@@ -79,7 +79,7 @@ RSSHandler.prototype.fetch = function() {
           title: item.title,
           link: item.link,
           date: moment(item.date).toDate(),
-          uploadedLink: false
+          filehosterLinksFetched: false
         });
 
         that.newItems += 1;

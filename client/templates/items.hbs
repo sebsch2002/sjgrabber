@@ -1,20 +1,37 @@
 {{#if items}}
 <table class="table table-hover table-condensed">
   <thead class="disallowHighlighting">
-    <td>Date</td>
-    <td>Title</td>
+    <td class="lead">date</td>
+    <td class="lead">release <small>({{items.length}} total)</small></td>
+    <td class="lead text-center"><i class="fa fa-link"></i></td>
   </thead>
   <tbody>
     {{! output each item}}
     {{#each items}}
-    <tr>
-      <td>{{date}}</td>
-      {{#if link}}
-        <td><a class="items_link" href="{{link}}">{{title}}</a></td>
-      {{else}}
+      <tr>
+        <td><small>{{date}}</small></td>
         <td>{{title}}</td>
-      {{/if}}
-    </tr>
+            {{#each filehosterLinks}}
+              
+              {{#if @first}}
+                <td>
+              {{/if}}
+              
+              <a class="items_link" href="{{link}}">{{provider}}</a>
+              
+              {{#unless @last}}
+                <br />
+              {{/unless}}
+              
+              {{#if @last}}
+                </td>
+              {{/if}}
+
+            {{else}}
+              <td class="text-center">-</td>
+            {{/each}}
+          </td>
+        </tr>
     {{/each}}
   </tbody>
 </table>

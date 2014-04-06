@@ -1,5 +1,9 @@
+var _ = require("lodash");
 var Backbone = require("backbone");
+var moment = require("moment");
+
 var helper = require("./helper");
+var config = require("./config");
 
 // Define model
 var SavedItemModel = Backbone.Model.extend({
@@ -8,8 +12,11 @@ var SavedItemModel = Backbone.Model.extend({
     title: "no title",
     link: "no link",
     date: null,
-    uploadedLink: false,
-    uploadedLinkRefetchCount: 0
+    filehosterLinks: [],
+    filehosterLinksFetched: false,
+    filehosterLinksRefetchCount: 0,
+    uploadedLink: false, // old
+    uploadedLinkRefetchCount: 0 // OLD ERASE IT!!!!
   },
   isFavourite: function() {
     return helper.checkSavedItemIsFavourite(this);
@@ -17,22 +24,33 @@ var SavedItemModel = Backbone.Model.extend({
   getPrintable: function() {
     return {
       title: helper.replaceAll(".", " ", this.get("title")),
-      date: convertDate(this.get("date")),
-      link: this.get("uploadedLink")
+      date: moment(this.get("date")).format(config.format.date),
+      link: this.get("link"),
+      filehosterLinks: this.get("filehosterLinks"),
+      filehosterLinksFetched: this.get("filehosterLinksFetched")
     };
   },
   stringMatchesTitle: function(str) {
     if (str.length === 0) {
       return true;
     } else {
-
       return helper.titleKeywordComparator(this.get("title"), str);
-
-      // if (helper.replaceAll(".", " ", this.get("title")).toLowerCase().indexOf(str.toLowerCase()) > -1) {
-      //   return true;
-      // }
-      // return false;
     }
+  },
+  addFilehosterItem: function(provider, dllink) {
+
+    // adding to arrays in backbone model must be done via clone
+    // else points to the same array within model!
+    // http://stackoverflow.com/questions/11661380/does-backbone-models-this-get-copy-an-entire-array-or-point-to-the-same-array
+
+    var newFilehosterLinks = _.clone(this.get("filehosterLinks"));
+    
+    newFilehosterLinks.push({
+      provider: provider,
+      link: dllink
+    });
+
+    this.set("filehosterLinks", newFilehosterLinks);
   }
 });
 
