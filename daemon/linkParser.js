@@ -162,13 +162,10 @@ function parseHTML(html, items) {
   for (i; i < len; i += 1) {
     //console.log(items[i].title);
     returnValue = _.bind(parseItem, {
-      item: items[i],
       currentSavedItem: savedItems.findWhere({
         uuid: items[i].uuid
       }),
-      success: false,
-      theHTML: parsedHTML,
-      realItemName: items[i].title.substring(items[i].title.lastIndexOf("] ") + 2)
+      currentHTML: parsedHTML
     })();
 
     if (returnValue === false) {
@@ -200,44 +197,71 @@ function incrementRefetchCount(uuid) {
 function parseItem() {
 
   var that = this;
+  this.success = false;
 
-  this.theHTML('p').find('strong').each(function(i, el) {
+  this.currentHTML('p').find('strong').each(function(i, el) {
 
-    if ($(this).text().indexOf(that.realItemName) !== -1) {
+    if ($(this).text().indexOf(that.currentSavedItem.getTitleWithoutTag()) !== -1) {
 
       $(this).parent().each(function(i, elem) {
 
-        // get links array
-        //var filehosterLinks = that.currentSavedItem.get("filehosterLinks");
+        // OLD WAY START
 
-        that.currentSavedItem.addFilehosterItem("uploaded.com", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
-          $(this).html().lastIndexOf("\" target=\"_blank\">")));
+        // that.currentSavedItem.addFilehosterItem("uploaded.com", $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
+        //   $(this).html().lastIndexOf("\" target=\"_blank\">")));
 
-        // ---
-        // TODO: add all links here!!!!!
-        // ---
+        // OLD WAY END
 
-        // that.currentSavedItem.addFilehosterItem("test", "test");
 
-        // push item to array
-        // filehosterLinks.push({
-        //   provider: "uploaded.com",
-        //   link: $(this).html().substring($(this).html().lastIndexOf("<a href=\"") + 9,
-        //     $(this).html().lastIndexOf("\" target=\"_blank\">"))
-        // });
+        // NEW WAY START
 
-        // set success and link array
-        //that.currentSavedItem.set("filehosterLinks", filehosterLinks);
-        that.currentSavedItem.set("filehosterLinksFetched", true);
+        try {
 
-        process.stdout.write(".");
-        console.log(that.currentSavedItem.get("title") +  " push! " + that.currentSavedItem.get("filehosterLinks").length);
-        that.success = true;
+          var providers = [];
+
+          // get each provider...
+          providers = $(this).text().split("Download: hier | ");
+          providers.splice(0, 1);
+
+          var links = [];
+          // get each link...
+          $(this).children().filter("a").each(function(i, elem) {
+            links.push($(this).attr("href"));
+          });
+
+          for (var inc = links.length - 1; inc >= 0; inc -= 1) {
+            that.currentSavedItem.addFilehosterItem(providers[inc], links[inc]);
+          }
+
+          // var inc = 0,
+          //   len = links.length;
+          // for (inc; inc < len; inc += 1) {
+          //   that.currentSavedItem.addFilehosterItem(providers[inc], links[inc]);
+          // }
+
+          that.currentSavedItem.set("filehosterLinksFetched", true);
+
+          process.stdout.write(".");
+          that.success = true;
+
+
+        } catch (e) {
+
+          linkParser.emit("error", "link parsing error (probably change in serienjunkies web-page) details:" + e);
+
+        }
+
+        // NEW WAY END
+
+
+        // FETCH SUCCESS!
+
+
 
       });
     }
 
   });
 
-  return that.success;
+  return this.success;
 }

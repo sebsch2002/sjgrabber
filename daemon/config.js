@@ -4,7 +4,17 @@ module.exports = {
   maxLinkRefetchRetrys: 1337,
   rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
   cache: {
-    enabled: true
+    enabled: true,
+    localStorageTargets: {
+      debug: {
+        favourites: "DEBUG_favourites",
+        items: "DEBUG_items"
+      },
+      productive: {
+        favourites: "PRODUCTIVE_favourites",
+        items: "PRODUCTIVE_items"
+      }
+    }
   },
   support: {
     stdoutCursorTo: false

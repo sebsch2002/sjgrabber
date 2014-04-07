@@ -7,20 +7,8 @@ var savedItems = require("./savedItems");
 var favourites = require("./favourites");
 var config = require("./config");
 
-// config productive / debug
-
-var LOCAL_STORAGE_TARGET_OBJECTS = {
-  debug: {
-    favourites: "DEBUG_favourites",
-    items: "DEBUG_items"
-  },
-  productive: {
-    favourites: "PRODUCTIVE_favourites",
-    items: "PRODUCTIVE_items"
-  }
-};
-
-var LSActive = LOCAL_STORAGE_TARGET_OBJECTS.productive;
+// target active from localstorage
+var activeLocalStorageTarget = config.cache.localStorageTargets.productive;
 
 var CacheHandler = function() {
   this.lastLoaded = false;
@@ -48,13 +36,13 @@ CacheHandler.prototype.load = function() {
     that.migrateBefore_v0_2_3();
 
     // load ITEMS from localStorage...
-    if (_.isUndefined(this.localStorage[LSActive.items]) === false) {
-      loadSavedItems(this.localStorage[LSActive.items]);
+    if (_.isUndefined(this.localStorage[activeLocalStorageTarget.items]) === false) {
+      loadSavedItems(this.localStorage[activeLocalStorageTarget.items]);
     }
 
     // load FAVOURITES from localStorage...
-    if (_.isUndefined(this.localStorage[LSActive.favourites]) === false) {
-      loadFavourites(this.localStorage[LSActive.favourites]);
+    if (_.isUndefined(this.localStorage[activeLocalStorageTarget.favourites]) === false) {
+      loadFavourites(this.localStorage[activeLocalStorageTarget.favourites]);
     }
 
     that.lastLoaded = new Date();
@@ -78,10 +66,10 @@ CacheHandler.prototype.save = function() {
   } else {
 
     // save ITEMS to localStorage...
-    this.localStorage[LSActive.items] = JSON.stringify(savedItems.toJSON());
+    this.localStorage[activeLocalStorageTarget.items] = JSON.stringify(savedItems.toJSON());
 
     // save FAVOURITES to localStorage...
-    this.localStorage[LSActive.favourites] = JSON.stringify(favourites.toJSON());
+    this.localStorage[activeLocalStorageTarget.favourites] = JSON.stringify(favourites.toJSON());
 
     that.lastSaved = new Date();
     that.emit("saved");
@@ -95,7 +83,7 @@ CacheHandler.prototype.linkLocalStorage = function(localStorage) {
   if (process.NWAPP_DEBUG === true) {
     console.log("cacheHandler:linkLocalStorage ---------- DEBUG MODE --------");
     // reset saving / loading items for DEBUG use, non production
-    LSActive = LOCAL_STORAGE_TARGET_OBJECTS.debug;
+    activeLocalStorageTarget = config.cache.localStorageTargets.debug;
   }
 
 };
@@ -106,14 +94,18 @@ CacheHandler.prototype.clear = function() {
   } else {
 
     // using remove each item individually
-    this.localStorage.removeItem((LSActive.items).toString());
-    this.localStorage.removeItem((LSActive.favourites).toString());
+    this.localStorage.removeItem((activeLocalStorageTarget.items).toString());
+    this.localStorage.removeItem((activeLocalStorageTarget.favourites).toString());
 
     this.lastLoaded = false;
     this.lastSaved = false;
     this.emit("cleared");
   }
 };
+
+// 
+// helpers
+// 
 
 function loadSavedItems(data) {
   var dataObject = parseJSONObject(data);
@@ -160,6 +152,11 @@ function parseJSONObject(data) {
 
   return dataObject;
 }
+
+
+//
+// migration
+// 
 
 // usage previous to v0.2.3 - migrate existing keywords
 CacheHandler.prototype.migrateBefore_v0_2_3 = function() {

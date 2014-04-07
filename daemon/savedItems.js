@@ -32,6 +32,9 @@ var SavedItemModel = Backbone.Model.extend({
       filehosterFetchPreviouslyFailed: (this.get("filehosterLinksRefetchCount") > 0) ? true : false
     };
   },
+  getTitleWithoutTag: function() {
+    return this.get("title").substring(this.get("title").lastIndexOf("] ") + 2);
+  },
   stringMatchesTitle: function(str) {
     if (str.length === 0) {
       return true;
