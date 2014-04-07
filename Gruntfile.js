@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         version: '0.9.2',
         zip: true,
         keep_nw: true,
-        mac_icns: "assets/SJ_logo.icns"
+        mac_icns: "assets/SJ_logo_mac.icns"
       },
       src: ['build/**/*'] // source
     },
