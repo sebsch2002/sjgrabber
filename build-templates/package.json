@@ -23,7 +23,8 @@
     "width": 800,
     "height": 560,
     "min_width": 800,
-    "min_height": 560
+    "min_height": 560,
+    "icon": "assets/SJ_logo.png"
   },
   "private": true
 }

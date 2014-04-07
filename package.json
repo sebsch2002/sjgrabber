@@ -1,5 +1,4 @@
 {
-  "NWAPP_DEBUG": true,
   "name": "SJgrapper",
   "version": "0.2.2",
   "description": "nw-app that fetches rss and links from serienjunkies.org",
@@ -40,7 +39,9 @@
     "width": 800,
     "height": 560,
     "min_width": 800,
-    "min_height": 560
+    "min_height": 560,
+    "icon": "assets/SJ_logo.png"
   },
-  "private": true
+  "private": true,
+  "NWAPP_DEBUG": true
 }

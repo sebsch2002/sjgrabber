@@ -50,6 +50,14 @@ module.exports = function(grunt) {
           src: ["*"],
           dest: "build/fonts/"
         }]
+      },
+      "assets": {
+        files: [{
+          expand: true,
+          cwd: "assets/",
+          src: ["**", "!dev/**"],
+          dest: "build/assets/"
+        }]
       }
     },
     uglify: {
