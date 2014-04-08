@@ -1,5 +1,6 @@
 var moment = require("moment");
 var _ = require("lodash");
+var async = require("async");
 
 var cacheHandler = require("./cacheHandler");
 var linkParser = require("./linkParser");

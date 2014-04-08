@@ -5,26 +5,26 @@
 
   <p class="jumbo_small">2. <i class='fa fa-star'></i> <small><em>(star)</em></small> keywords and grab download links.</p>
 
-  <p class="jumbo_small">3. every single <i class="fa fa-link"></i> <small><em>(filehoster link)</em></small> from your <i class='fa fa-star'></i> <small><em>(favourites)</em></small> gets <strong>automatically</strong> <i class='fa fa-cloud-download'></i> <small><em>(fetched)</em></small>!</p>
+  <p class="jumbo_small">3. every single <i class="fa fa-link"></i> <small><em>(filehoster link)</em></small> from your <i class='fa fa-star'></i> <small><em>(favourites)</em></small> gets <strong>automatically</strong> <i class='fa fa-refresh fa-spin'></i> <small><em>(fetched)</em></small>!</p>
 
   <p class="jumbo_small">4. click <i class="fa fa-link"></i> <small><em>(grapped links)</em></small> to <strong>copy them to your clipboard</strong> (and solve captcha in jDownloader).</p>
 
-  <p class="jumbo_small">5. <i class='fa fa-cloud'></i> <small><em>(refetch)</em></small> manually if you want, but <i class='fa fa-cloud-download'></i> <small><em>(fetching)</em></small> happen automatically every {{interval}} minutes.</p>
+  <p class="jumbo_small">5. <i class='fa fa-refresh fa-spin'></i> <small><em>(refetch)</em></small> manually if you want, but <i class='fa fa-refresh fa-spin'></i> <small><em>(fetching)</em></small> happen automatically every {{interval}} minutes.</p>
 </div>
 
 
 {{!-- {{#if fetchOnlyFavourites}}
-  <p class="text-center"><i class="fa fa-link"></i> <small><em>('links' e.g. uploaded.to)</em></small> from <i class='fa fa-star'></i> <small><em>('loved')</em></small> keywords in <i class="fa fa-star"></i> <small><em>('favourites')</em></small> will be <i class='fa fa-cloud-download'></i> <small><em>('fetched')</em></small>.</p>
+  <p class="text-center"><i class="fa fa-link"></i> <small><em>('links' e.g. uploaded.to)</em></small> from <i class='fa fa-star'></i> <small><em>('loved')</em></small> keywords in <i class="fa fa-star"></i> <small><em>('favourites')</em></small> will be <i class='fa fa-refresh fa-spin'></i> <small><em>('fetched')</em></small>.</p>
 {{else}}
-  <p class="text-center">all <i class="fa fa-link"></i> will be automatically <i class='fa fa-cloud-download'></i> <small>({{maxLinkRefetchRetrys}} retrys)</small>.</p>
+  <p class="text-center">all <i class="fa fa-link"></i> will be automatically <i class='fa fa-refresh fa-spin'></i> <small>({{maxLinkRefetchRetrys}} retrys)</small>.</p>
 {{/if}}  --}}
 
 <div class="settings_status settings_item jumbotron disallowHighlighting">
 
   {{#if nextFetchTime}}
-    <p class="text-center">next <i class='fa fa-cloud-download'></i> <small><em>(fetching)</em></small> will take place at {{nextFetchTime}}</p>
+    <p class="text-center">next <i class='fa fa-refresh fa-spin'></i> <small><em>(fetching)</em></small> will take place at {{nextFetchTime}}</p>
   {{else}}
-    <p class="text-center">next <i class='fa fa-cloud-download'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
+    <p class="text-center">next <i class='fa fa-refresh fa-spin'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
   {{/if}}
 
   {{!-- <p class="text-center">stable network recommended (connections timeout after {{requestTimeoutSec}} seconds).</p> --}}

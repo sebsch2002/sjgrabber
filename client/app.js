@@ -111,6 +111,7 @@ NWAPP.hookStaticBindings = function() {
 
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
+    document.getElementById("all_items").innerHTML = NWAPP.Templates.loading();
     checkSearchToggleAddButton($(this).val());
     process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
   });
@@ -187,11 +188,17 @@ NWAPP.updateProgress = function(progressCount) {
   NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
 };
 
+
+var buttonStateLoading = false; // save state manually
 NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
   if (available) {
+    buttonStateLoading = false;
     $(".appCycleDependent").button("reset");
   } else {
-    $(".appCycleDependent").button("loading");
+    if (buttonStateLoading === false) {
+      buttonStateLoading = true;
+      $(".appCycleDependent").button("loading");
+    }
   }
 };
 
