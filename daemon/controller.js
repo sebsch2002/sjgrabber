@@ -14,6 +14,11 @@ var favourites = require("./favourites");
 var rescheduleTimer;
 var cycleRunning = false;
 
+
+// -----------------------------------------------------------------------------
+// NODE GENERIC: controller handles whole system
+// -----------------------------------------------------------------------------
+
 // restricted to run only once.
 var hookCycleListeners = _.once(function() {
   rssHandler.on("fetched", function() {
@@ -95,7 +100,7 @@ module.exports.runFetchCycleNow = runFetchCycleNow;
 
 
 // -----------------------------------------------------------------------------
-// NODE-webkit startup handling and cycle event binding
+// NODE-WEBKIT SPECIFIC: client startup callback and cycle event binding
 // -----------------------------------------------------------------------------
 
 var nextFetchTime = false;
@@ -156,7 +161,7 @@ function cycleStartsNW() {
 function cycleDoneNW() {
   NWAPP.endCycle();
   nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format(config.format.clock);
-  printDynamicContentNW();
+  printDynamicContentNW(true);
 }
 
 function cycleErrorNW(e, suppressDefault) {
@@ -180,7 +185,7 @@ function cycleProgressNWUpdateUI(processCount) {
 
 
 // -----------------------------------------------------------------------------
-// Available API interfaces to daemon for NW
+// NODE-WEBKIT SPECIFIC: Available API interfaces
 // -----------------------------------------------------------------------------
 
 var searchString = "";
@@ -267,7 +272,7 @@ module.exports.clearCacheReset = function() {
 };
 
 // -----------------------------------------------------------------------------
-// Printing to NW UI -- START
+// NODE-WEBKIT SPECIFIC: Printing to client UI
 // -----------------------------------------------------------------------------
 
 var printQueue = [];
@@ -393,7 +398,7 @@ function printDynamicContentNW(suppressLoading) {
     },
     function(err, results) {
       if (err) {
-        console.error("printDynamicContentNW:async.series queue aborted!");
+        console.log("printDynamicContentNW:async.series queue aborted!");
       } else {
         console.log("printDynamicContentNW:async.series queue done.");
       }

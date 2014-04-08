@@ -205,6 +205,10 @@ nav and titlebar
   z-index: 999997; /* fix bug scrolled content breaks windowBar dragging */
 }
 
+.nav-pills > li + li {
+  margin-left: 0px;
+}
+
 /* -----------------------------------------------------------------------------
 settings 
 ----------------------------------------------------------------------------- */

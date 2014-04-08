@@ -8,6 +8,11 @@
   <nav id="navigationHolder" class="navbar navbar-inverse navbar-fixed-top disallowHighlighting" role="navigation">
     <div class="container-fluid">
 
+      {{!-- 
+        ------------------------------------------------------------------------
+        Window title bar
+        ------------------------------------------------------------------------
+      --}}
       <div class="row windowBar">
 
         <div class="col-xs-4 windowBarLeftCol">
@@ -21,12 +26,7 @@
               </ul>
             </form>
           {{else}}
-            {{!-- NW_controls: Refetch WIN or LINUX--}}  
-            <form class="navbar-left">
-              <ul class="nav nav-pills navbar-nav">
-                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="appCycleDependent dismissLinkAction nav_blue nwapp_menu_controls"><i class="fa fa-refresh"></i></a></li>
-              </ul>
-            </form>
+            {{!-- NW_controls: WIN or LINUX extra top controls --}}  
           {{/if}}
         </div>
 
@@ -41,12 +41,7 @@
 
         <div class="col-xs-4 windowBarRightCol">
           {{#if platform.mac}}
-            {{!-- NW_controls: Refetch MAC --}}  
-            <form class="navbar-right">
-              <ul class="nav nav-pills navbar-nav">
-                <li><a href="" id="refetch_button" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="appCycleDependent dismissLinkAction nav_blue nwapp_menu_controls"><i class="fa fa-refresh"></i></a></li>
-              </ul>
-            </form>
+            {{!-- NW_controls: MAC extra top controls --}}  
           {{else}}
             {{!-- NW_controls: System WIN or LINUX --}}
             <form class="navbar-right">
@@ -60,24 +55,54 @@
         </div>
 
       </div>
+      
+      {{!-- 
+        ------------------------------------------------------------------------
+        Navigation bar
+        ------------------------------------------------------------------------
+      --}}
 
       <div class="row">
+
+        {{!-- Refetch --}}
+        <div class="col-xs-1">
+          <form class="navbar-left">
+            <ul class="nav nav-pills navbar-nav">
+              <li class="text-center"><a href="" id="refetch_button" data-loading-text="<i class='fa fa-refresh fa-2x fa-spin'></i>" class="appCycleDependent dismissLinkAction nav_blue"><i class="fa fa-refresh fa-2x"></i></a></li>
+            </ul>
+          </form>
+        </div>
+
         {{!-- Main Navigation Tabs --}}
-        <ul class="nav nav-pills navbar-nav nav-justified" id="appNavigationTab">
-          <li><a href="#all_tab" data-toggle="tab"><i class="fa fa-search fa-2x"></i></a></li>
-          <li class="active"><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
-          <li><a href="#settings_tab" data-toggle="tab"><i class="fa fa-cog fa-2x"></i></a></li>
-        </ul>
+        <div class="col-xs-11">
+          <div class="row">
+            <ul class="nav nav-pills navbar-nav" id="appNavigationTab">
+              <li class="col-xs-5 text-center"><a href="#all_tab" data-toggle="tab"><i class="fa fa-search fa-2x"></i></a></li>
+              <li class="col-xs-5 text-center active"><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
+              <li class="col-xs-2 text-center"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-cog fa-2x"></i></a></li>
+            </ul>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
   </nav>
 </div>
 
-{{!-- Shows Error Messages (through template alertbox) --}}
+{{!-- 
+  ------------------------------------------------------------------------------
+  Error Messages (through template alertbox)
+  ------------------------------------------------------------------------------
+--}}
 <div id="errorContainer" class="errorbox-content"></div>
 
-{{!-- Tab Content --}}
+{{!-- 
+  ------------------------------------------------------------------------------
+  Tab Content
+  ------------------------------------------------------------------------------
+--}}
 <div id="mainContentContainer" class="tab-content">
   <div id="all_tab" class="tab-pane fade">
     <div class="container-fluid">
