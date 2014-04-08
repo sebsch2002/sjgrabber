@@ -104,6 +104,9 @@ NWAPP.hookDynamicBindings = function() {
     return false;
   });
 
+  // attach tooltips to copy link buttons
+  $(".items_link").tooltip();
+
   setDynamicStyles();
 };
 
@@ -126,9 +129,20 @@ NWAPP.hookStaticBindings = function() {
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
   });
 
+  // add keyword via ENTER
+  $('#search_input').keypress(function (event) {
+    if (event.which === 13) {
+      if(checkSearchInputValid($(this).val())) {
+        process.mainModule.exports.NWaddCurrentKeyword();
+        $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
+        return false;
+      }
+    }
+  });
+
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
-    checkSearchToggleAddButton($(this).val());
+    checkSearchInputValid($(this).val());
 
     if (currentSearchInput !== $(this).val()) {
       currentSearchInput = $(this).val();
@@ -200,11 +214,15 @@ function trimWhiteSpace(text) {
   return text.replace(/ {2,}/g, ' ').trim();
 }
 
-function checkSearchToggleAddButton(text) {
-  if (text.replace(/\s+/g, '') !== "") {
+function checkSearchInputValid(text) {
+  var concatWhiteSpace = text.replace(/\s+/g, '');
+
+  if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
     $("#addkeyword_button").removeClass("disabled");
+    return true;
   } else {
     $("#addkeyword_button").addClass("disabled");
+    return false;
   }
 }
 
