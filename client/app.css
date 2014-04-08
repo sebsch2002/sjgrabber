@@ -245,6 +245,34 @@ items
   vertical-align: middle !important;
 }
 
+.items_link {
+  font-size: 10px;
+}
+
+.items_link_group {
+  display: flex;
+  float: right;
+}
+
+.items_td_row {
+  display: inline;
+}
+
+.items_title {
+  display: inline;
+  margin: 0px;
+}
+
+.items_fetchFail {
+  display: inline;
+  margin: 0px;
+}
+
+.items_fetchFail_label {
+  font-weight: normal !important;
+}
+
+
 /* -----------------------------------------------------------------------------
 search/fav 
 ----------------------------------------------------------------------------- */
@@ -261,6 +289,7 @@ search/fav
   background-color: #eee;
   padding: 15px;
   width: 100%;
+  z-index: 1;
 }
 
 .fileHosterStatusSymbol {
