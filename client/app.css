@@ -108,7 +108,7 @@ application outer frameless borders
 }
 
 /* -----------------------------------------------------------------------------
-nprogress
+nprogress and spinning
 ----------------------------------------------------------------------------- */
 
 #nprogress .bar,
@@ -134,35 +134,35 @@ nprogress
 nav and titlebar
 ----------------------------------------------------------------------------- */
 
-.navbar-inverse .navbar-nav > li > a.nav_exit {
+.navbar .navbar-nav > li > a.nav_exit {
   color: #ac2925;
 } 
 
-.navbar-inverse .navbar-nav > li > a.nav_exit:hover {
+.navbar .navbar-nav > li > a.nav_exit:hover {
   color: #d9534f; 
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_minimize {
+.navbar .navbar-nav > li > a.nav_minimize {
   color: #DBC116;
 } 
 
-.navbar-inverse .navbar-nav > li > a.nav_minimize:hover {
+.navbar .navbar-nav > li > a.nav_minimize:hover {
   color: #FFE600;
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_maximize {
+.navbar .navbar-nav > li > a.nav_maximize {
   color: #61B329;
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_maximize:hover {
+.navbar .navbar-nav > li > a.nav_maximize:hover {
   color: #83F52C;
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_blue {
+.navbar .navbar-nav > li > a.nav_blue {
   color: #2a64ba;
 }
 
-.navbar-inverse .navbar-nav > li > a.nav_blue:hover {
+.navbar .navbar-nav > li > a.nav_blue:hover {
   color: #428bfd;
 }
 
@@ -306,11 +306,12 @@ search/fav
 }
 
 .removeKeyword {
-  color: #ac2925;
+  color: #ddd;
 }
 
 .subActionBar {
   background-color: #eee;
+  /*background-image: linear-gradient(to bottom, #3c3c3c 0%, #3c3c3c 100%);*/
   padding: 15px;
   width: 100%;
   z-index: 1;
@@ -318,18 +319,18 @@ search/fav
 
 .fileHosterStatusSymbol {
   font-size: 20px;
-}
+} 
 
 .fileHosterStatusDownloaded {
-  color: #398439;
+  color: #5cb85c;
 }
 
 .fileHosterStatusFetched {
-  color: #2a6496;
+  color: #aaa;
 }
 
 .fileHosterStatusFetchFailed {
-  color: #ac2925;
+  color: #d9534f;
 }
 
 .fileHosterStatusNonFetched {

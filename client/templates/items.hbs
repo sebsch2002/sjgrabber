@@ -1,7 +1,7 @@
 {{#if items}}
 <table class="table table-hover table-condensed">
   <thead class="disallowHighlighting">
-    <td class="lead text-center"><i class="fa fa-check-circle-o fileHosterStatusHead"></i></td>
+    <td class="lead text-center"><i class="fa fa-filter fileHosterStatusHead"></i></td>
     <td class="lead">date</td>
     <td class="lead">releases <small>({{items.length}} total)</small></td>
     {{!-- <td class="lead text-right"><i class="fa fa-link"></i></td> --}}
@@ -13,16 +13,16 @@
         
         {{!-- output status there/fetched/downloaded --}}
         {{#if filehosterLinksFetched}}
-          {{#if userClickedFilehosterLink}}
-            <td class="text-center"><i class="fa fa-check-circle-o fileHosterStatusSymbol fileHosterStatusDownloaded"></i></td>
+          {{#if userClickedFilehosterLink}} 
+            <td class="text-center"><i class="fa fa-check fileHosterStatusSymbol fileHosterStatusDownloaded"></i></td>
           {{else}}
-            <td class="text-center"><i class="fa fa-dot-circle-o fileHosterStatusSymbol fileHosterStatusFetched"></i></td>
+            <td class="text-center"><i class="fa fa-link fileHosterStatusSymbol fileHosterStatusFetched"></i></td>
           {{/if}}
         {{else}}
           {{#if filehosterFetchPreviouslyFailed}}
-            <td class="text-center"><i class="fa fa-exclamation-circle fileHosterStatusSymbol fileHosterStatusFetchFailed"></i></td>
+            <td class="text-center"><i class="fa fa-exclamation fileHosterStatusSymbol fileHosterStatusFetchFailed"></i></td>
           {{else}}
-            <td class="text-center"><i class="fa fa-circle-o fileHosterStatusSymbol fileHosterStatusNonFetched"></i></td>
+            <td class="text-center"><i class="fa fa-minus fileHosterStatusSymbol fileHosterStatusNonFetched"></i></td>
           {{/if}}
         {{/if}}
         
@@ -37,13 +37,14 @@
             {{#each filehosterLinks}}
               
               {{#if @first}}
-                <div class="btn-group items_link_group">
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i><strong> {{provider}}</strong></button>
-              {{else}}
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i> {{provider}}</button>
+                <div class="btn-group items_link_group">  
               {{/if}}
 
-                  
+                {{#if downloaded}}
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-success btn-xs items_link defaultCursorNoDrag"><i class='fa fa-check'></i> {{provider}}</button> 
+                {{else}}
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag"><i class='fa fa-clipboard'></i> {{provider}}</button> 
+                {{/if}}
               
               {{#if @last}}
                 </div>

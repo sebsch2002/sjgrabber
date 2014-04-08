@@ -239,13 +239,14 @@ module.exports.NWremoveKeyword = function(keyword) {
   printDynamicContentNW();
 };
 
-module.exports.NWmarkItemAsDownloaded = function(uuid) {
+module.exports.NWmarkItemAsDownloaded = function(uuid, url) {
   var updateItem = savedItems.findWhere({
     uuid: uuid
   });
 
   if (_.isUndefined(updateItem) === false) {
     updateItem.set("userClickedFilehosterLink", true);
+    updateItem.markUrlAsDownloaded(url);
 
     // save because it was updated
     cacheHandler.save();

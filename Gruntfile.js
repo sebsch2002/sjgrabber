@@ -6,8 +6,8 @@ module.exports = function(grunt) {
         build_dir: './release', // target
         mac: true,
         win: true,
-        linux32: true,
-        linux64: true,
+        linux32: false,
+        linux64: false,
         version: '0.9.2',
         zip: true,
         keep_nw: true,
@@ -156,30 +156,30 @@ module.exports = function(grunt) {
           dest: '',
         }]
       },
-      linux32: {
-        options: {
-          archive: "dist/SJgrapper_linux32_v" + grunt.file.readJSON('package.json').version + ".zip",
-          mode: 'zip'
-        },
-        files: [{
-          expand: true,
-          cwd: 'release/releases/SJgrapper/linux32/',
-          src: ['**'],
-          dest: '',
-        }]
-      },
-      linux64: {
-        options: {
-          archive: "dist/SJgrapper_linux64_v" + grunt.file.readJSON('package.json').version + ".zip",
-          mode: 'zip'
-        },
-        files: [{
-          expand: true,
-          cwd: 'release/releases/SJgrapper/linux64/',
-          src: ['**'],
-          dest: '',
-        }]
-      }
+      // linux32: {
+      //   options: {
+      //     archive: "dist/SJgrapper_linux32_v" + grunt.file.readJSON('package.json').version + ".zip",
+      //     mode: 'zip'
+      //   },
+      //   files: [{
+      //     expand: true,
+      //     cwd: 'release/releases/SJgrapper/linux32/',
+      //     src: ['**'],
+      //     dest: '',
+      //   }]
+      // },
+      // linux64: {
+      //   options: {
+      //     archive: "dist/SJgrapper_linux64_v" + grunt.file.readJSON('package.json').version + ".zip",
+      //     mode: 'zip'
+      //   },
+      //   files: [{
+      //     expand: true,
+      //     cwd: 'release/releases/SJgrapper/linux64/',
+      //     src: ['**'],
+      //     dest: '',
+      //   }]
+      // }
     },
     handlebars: {
       all: {

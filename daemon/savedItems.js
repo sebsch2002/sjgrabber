@@ -44,8 +44,8 @@ var SavedItemModel = Backbone.Model.extend({
   },
   addFilehosterItem: function(provider, dllink) {
 
-    // adding to arrays in backbone model must be done via clone
-    // else points to the same array within model!
+    // adding to arrays within backbone models must be done via clone
+    // else it points to the same array within model!
     // http://stackoverflow.com/questions/11661380/does-backbone-models-this-get-copy-an-entire-array-or-point-to-the-same-array
 
     var newFilehosterLinks = _.clone(this.get("filehosterLinks"));
@@ -57,6 +57,18 @@ var SavedItemModel = Backbone.Model.extend({
     });
 
     this.set("filehosterLinks", newFilehosterLinks);
+  },
+  markUrlAsDownloaded: function(url) {
+
+    var fhlinks = _.clone(this.get("filehosterLinks"));
+
+    _.each(fhlinks, function(fhlink) {
+      if(fhlink.link === url) {
+        fhlink.downloaded = true;
+      }
+    });
+
+    this.set("filehosterLinks", fhlinks);
   }
 });
 

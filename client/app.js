@@ -59,13 +59,13 @@ NWAPP.hookDynamicBindings = function() {
   $(".items_link").off();
   $(".items_link").on("click", function(event) {
 
-    var btn = $(this);
+    var dataset = event.currentTarget.dataset;
 
     // add to clipboard
-    clipboard.set(event.currentTarget.dataset.href, "text");
+    clipboard.set(dataset.href, "text");
 
     // notify daemon that it was clicked!
-    process.mainModule.exports.NWmarkItemAsDownloaded(event.currentTarget.dataset.uuid);
+    process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid, dataset.href);
   });
 
   $(".items_link_external").off();
@@ -156,9 +156,18 @@ NWAPP.hookStaticBindings = function() {
   });
 
   // set dynamic styles on resize change
-  $(window).resize(function() {
+  
+  var resizeTimer;
+  $(window).resize(function(event) {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeTimerFinished, 100);
     setDynamicStyles();
+    $(".windowBorder").hide();
   });
+
+  function resizeTimerFinished() {
+    $(".windowBorder").show();
+  }
 
   // NW for closing frameless windows
   $(".nav_exit").on("click", function() {
