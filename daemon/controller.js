@@ -92,9 +92,11 @@ function runFetchCycleNow() {
 module.exports.runFetchCycleNow = runFetchCycleNow;
 
 
-// ---
-// EXPORTED node-webkit ONLY
-// ---
+
+
+// -----------------------------------------------------------------------------
+// NODE-webkit startup handling and cycle event binding
+// -----------------------------------------------------------------------------
 
 var nextFetchTime = false;
 
@@ -174,113 +176,15 @@ function cycleProgressNWUpdateUI(processCount) {
   printDynamicContentNW(true);
 }
 
+
+
+
+// -----------------------------------------------------------------------------
+// Available API interfaces to daemon for NW
+// -----------------------------------------------------------------------------
+
 var searchString = "";
 var keywordString = "";
-
-// set clients dynamic content
-function printDynamicContentNW(suppressLoading) {
-  var allItems = [];
-  var favouriteItems = [];
-  var favouriteKeywords = [];
-  var totalCount = 0;
-
-  async.series({
-      printLoading: function(callback) {
-        _.defer(function(callback) {
-          if (!suppressLoading) {
-            NWAPP.printLoading();
-          }
-          callback(null);
-        }, callback);
-      },
-      computeFavourites: function(callback) {
-        _.defer(function(callback) {
-          favourites.each(function(fav) {
-            var favCount = 0;
-            savedItems.each(function(item) {
-              if (item.stringMatchesTitle(fav.get("keyword"))) {
-                favCount += 1;
-                totalCount += 1;
-              }
-            });
-            favouriteKeywords.push({
-              keyword: fav.get("keyword"),
-              count: favCount,
-              selected: (keywordString === fav.get("keyword")) ? true : false
-            });
-          });
-          callback(null);
-        }, callback);
-      },
-      printFavouriteKeywords: function(callback) {
-        _.defer(function(callback) {
-          NWAPP.printFavouriteKeywords({
-            favourites: favouriteKeywords,
-            noFilter: (keywordString === "") ? true : false,
-            totalCount: totalCount
-          });
-          callback(null);
-        }, callback);
-      },
-      computeItems: function(callback) {
-        _.defer(function(callback) {
-          savedItems.each(function(item) {
-            if (item.stringMatchesTitle(searchString)) {
-              allItems.push(item.getPrintable());
-            }
-            if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
-              favouriteItems.push(item.getPrintable());
-            }
-          });
-          callback(null);
-        }, callback);
-      },
-      printFavouriteItems: function(callback) {
-        _.defer(function(callback) {
-          NWAPP.printFavouriteItems({
-            items: favouriteItems
-          });
-          callback(null);
-        }, callback);
-      },
-      printAllItems: function(callback) {
-        _.defer(function(callback) {
-          NWAPP.printAllItems({
-            items: allItems
-          });
-          callback(null);
-        }, callback);
-      },
-      printSettings: function(callback) {
-        _.defer(function(callback) {
-          NWAPP.printSettings({
-            nextFetchTime: nextFetchTime,
-            interval: config.rescheduleMS / 1000 / 60,
-            fetchOnlyFavourites: config.fetchOnlyFavourites,
-            maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
-            requestTimeoutSec: config.requestTimeoutMS / 1000,
-            publicCoin: config.publicCoin,
-            mail: config.mail
-          });
-          callback(null);
-        }, callback);
-      },
-      hookDynamicBindings: function(callback) {
-        _.defer(function(callback) {
-          NWAPP.hookDynamicBindings();
-          callback(null);
-        }, callback);
-      }
-    },
-    function(err, results) {
-      if (err) {
-        console.error("ASYNC: GOT ERROR!");
-      } else {
-        console.log("ASYNC: DONE!");
-      }
-    }
-  );
-}
 
 // set search content
 module.exports.NWupdateSearchString = function(str) {
@@ -361,3 +265,138 @@ module.exports.clearCacheReset = function() {
   printDynamicContentNW();
   runFetchCycleNow();
 };
+
+// -----------------------------------------------------------------------------
+// Printing to NW UI -- START
+// -----------------------------------------------------------------------------
+
+var printQueue = [];
+
+function getNewPrintQueueIndex() {
+  var position = printQueue.length;
+
+  printQueue.push({
+    abort: null
+  });
+
+  return position;
+}
+
+function checkPrintQueueAbort(index) {
+  return printQueue[index].abort;
+}
+
+function abortAllPrintQueueOperations() {
+  _.each(printQueue, function (queue) {
+    queue.abort = true;
+  });
+}
+
+// set clients dynamic content
+function printDynamicContentNW(suppressLoading) {
+  var allItems = [];
+  var favouriteItems = [];
+  var favouriteKeywords = [];
+  var totalCount = 0;
+  var queueIndex;
+
+  abortAllPrintQueueOperations();
+  queueIndex = getNewPrintQueueIndex();
+
+  async.series({
+      printLoading: function(callback) {
+        _.defer(function(callback) {
+          if (!suppressLoading) {
+            NWAPP.printLoading();
+          }
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      computeFavourites: function(callback) {
+        _.defer(function(callback) {
+          favourites.each(function(fav) {
+            var favCount = 0;
+            savedItems.each(function(item) {
+              if (item.stringMatchesTitle(fav.get("keyword"))) {
+                favCount += 1;
+                totalCount += 1;
+              }
+            });
+            favouriteKeywords.push({
+              keyword: fav.get("keyword"),
+              count: favCount,
+              selected: (keywordString === fav.get("keyword")) ? true : false
+            });
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      printFavouriteKeywords: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printFavouriteKeywords({
+            favourites: favouriteKeywords,
+            noFilter: (keywordString === "") ? true : false,
+            totalCount: totalCount
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      computeItems: function(callback) {
+        _.defer(function(callback) {
+          savedItems.each(function(item) {
+            if (item.stringMatchesTitle(searchString)) {
+              allItems.push(item.getPrintable());
+            }
+            if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+              favouriteItems.push(item.getPrintable());
+            }
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      printFavouriteItems: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printFavouriteItems({
+            items: favouriteItems
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      printAllItems: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printAllItems({
+            items: allItems
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      printSettings: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printSettings({
+            nextFetchTime: nextFetchTime,
+            interval: config.rescheduleMS / 1000 / 60,
+            fetchOnlyFavourites: config.fetchOnlyFavourites,
+            maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
+            requestTimeoutSec: config.requestTimeoutMS / 1000,
+            publicCoin: config.publicCoin,
+            mail: config.mail
+          });
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
+      hookDynamicBindings: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.hookDynamicBindings();
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        console.error("printDynamicContentNW:async.series queue aborted!");
+      } else {
+        console.log("printDynamicContentNW:async.series queue done.");
+      }
+    }
+  );
+}
