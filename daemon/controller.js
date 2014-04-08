@@ -171,69 +171,115 @@ function cycleProgressNW(progressCount) {
 }
 
 function cycleProgressNWUpdateUI(processCount) {
-  printDynamicContentNW();
+  printDynamicContentNW(true);
 }
 
 var searchString = "";
 var keywordString = "";
 
 // set clients dynamic content
-function printDynamicContentNW() {
+function printDynamicContentNW(suppressLoading) {
   var allItems = [];
   var favouriteItems = [];
   var favouriteKeywords = [];
   var totalCount = 0;
 
-  savedItems.each(function(item) {
-    if (item.stringMatchesTitle(searchString)) {
-      allItems.push(item.getPrintable());
-    }
-    if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
-      favouriteItems.push(item.getPrintable());
-    }
-  });
-
-  favourites.each(function(fav) {
-    var favCount = 0;
-    savedItems.each(function(item) {
-      if (item.stringMatchesTitle(fav.get("keyword"))) {
-        favCount += 1;
-        totalCount += 1;
+  async.series({
+      printLoading: function(callback) {
+        _.defer(function(callback) {
+          if (!suppressLoading) {
+            NWAPP.printLoading();
+          }
+          callback(null);
+        }, callback);
+      },
+      computeFavourites: function(callback) {
+        _.defer(function(callback) {
+          favourites.each(function(fav) {
+            var favCount = 0;
+            savedItems.each(function(item) {
+              if (item.stringMatchesTitle(fav.get("keyword"))) {
+                favCount += 1;
+                totalCount += 1;
+              }
+            });
+            favouriteKeywords.push({
+              keyword: fav.get("keyword"),
+              count: favCount,
+              selected: (keywordString === fav.get("keyword")) ? true : false
+            });
+          });
+          callback(null);
+        }, callback);
+      },
+      printFavouriteKeywords: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printFavouriteKeywords({
+            favourites: favouriteKeywords,
+            noFilter: (keywordString === "") ? true : false,
+            totalCount: totalCount
+          });
+          callback(null);
+        }, callback);
+      },
+      computeItems: function(callback) {
+        _.defer(function(callback) {
+          savedItems.each(function(item) {
+            if (item.stringMatchesTitle(searchString)) {
+              allItems.push(item.getPrintable());
+            }
+            if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+              favouriteItems.push(item.getPrintable());
+            }
+          });
+          callback(null);
+        }, callback);
+      },
+      printFavouriteItems: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printFavouriteItems({
+            items: favouriteItems
+          });
+          callback(null);
+        }, callback);
+      },
+      printAllItems: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printAllItems({
+            items: allItems
+          });
+          callback(null);
+        }, callback);
+      },
+      printSettings: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.printSettings({
+            nextFetchTime: nextFetchTime,
+            interval: config.rescheduleMS / 1000 / 60,
+            fetchOnlyFavourites: config.fetchOnlyFavourites,
+            maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
+            requestTimeoutSec: config.requestTimeoutMS / 1000,
+            publicCoin: config.publicCoin,
+            mail: config.mail
+          });
+          callback(null);
+        }, callback);
+      },
+      hookDynamicBindings: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.hookDynamicBindings();
+          callback(null);
+        }, callback);
       }
-    });
-    favouriteKeywords.push({
-      keyword: fav.get("keyword"),
-      count: favCount,
-      selected: (keywordString === fav.get("keyword")) ? true : false
-    });
-  });
-
-  NWAPP.printFavouriteItems({
-    items: favouriteItems
-  });
-
-  NWAPP.printAllItems({
-    items: allItems
-  });
-
-  NWAPP.printFavouriteKeywords({
-    favourites: favouriteKeywords,
-    noFilter: (keywordString === "") ? true : false,
-    totalCount: totalCount
-  });
-
-  NWAPP.printSettings({
-    nextFetchTime: nextFetchTime,
-    interval: config.rescheduleMS / 1000 / 60,
-    fetchOnlyFavourites: config.fetchOnlyFavourites,
-    maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
-    requestTimeoutSec: config.requestTimeoutMS / 1000,
-    publicCoin: config.publicCoin,
-    mail: config.mail
-  });
-
-  // tell client to hook its listeners to the dynamic content
-  NWAPP.hookDynamicBindings();
+    },
+    function(err, results) {
+      if (err) {
+        console.error("ASYNC: GOT ERROR!");
+      } else {
+        console.log("ASYNC: DONE!");
+      }
+    }
+  );
 }
 
 // set search content
@@ -265,7 +311,6 @@ module.exports.NWaddCurrentKeyword = function() {
   // searchString to keyword string...
   NWupdateKeywordString(searchString);
 
-  //printDynamicContentNW();
   runFetchCycleNow();
 };
 
@@ -296,7 +341,7 @@ module.exports.NWmarkItemAsDownloaded = function(uuid) {
     // save because it was updated
     cacheHandler.save();
 
-    printDynamicContentNW();
+    printDynamicContentNW(true);
   } else {
     // error item with uuid not found!
     console.error("controller.NWmarkItemAsDownloaded item with uuid " + uuid + " not found!");

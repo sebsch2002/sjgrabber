@@ -6,6 +6,10 @@ var win = gui.Window.get();
 // NAMESPACE NWAPP
 var NWAPP = window.NWAPP || {};
 
+
+// fasted way to make loading available
+var compiledLoadingTemplate = NWAPP.Templates.loading();
+
 // 
 // startup
 // 
@@ -27,6 +31,12 @@ var NWAPP = window.NWAPP || {};
   if (NWAPP_DEBUG === true) {
     win.showDevTools();
   }
+
+  // force all other components into loading mode...
+  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+  document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
+  document.getElementById("settings").innerHTML = compiledLoadingTemplate;
 
 }());
 
@@ -96,6 +106,8 @@ function clearSearchInputValue() {
   $("#search_input").val("");
 }
 
+var currentSearchInput = "";
+
 NWAPP.hookStaticBindings = function() {
   // console.log("app:hookStaticBindings");
 
@@ -111,9 +123,12 @@ NWAPP.hookStaticBindings = function() {
 
   // search box to NWupdate
   $("#search_input").on("change keyup paste click", function() {
-    document.getElementById("all_items").innerHTML = NWAPP.Templates.loading();
     checkSearchToggleAddButton($(this).val());
-    process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
+
+    if(currentSearchInput !== $(this).val()) {
+      currentSearchInput = $(this).val();
+      process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
+    }
   });
 
   // for closing frameless windows
@@ -205,6 +220,12 @@ NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
 //
 // dynamic content: template helpers
 //
+
+NWAPP.printLoading = function() {
+  var compiledLoadingTemplate = NWAPP.Templates.loading();
+  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+};
 
 NWAPP.printFavouriteKeywords = function(favourites) {
   document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
