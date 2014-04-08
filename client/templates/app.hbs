@@ -66,24 +66,24 @@
 
         {{!-- Refetch --}}
         <div class="col-xs-1">
-          <form class="navbar-left">
+          <form class="navbar-left row mainNavLeftActions">
             <ul class="nav nav-pills navbar-nav">
-              <li class="text-center"><a href="" id="refetch_button" data-loading-text="<i class='fa fa-refresh fa-2x fa-spin'></i>" class="appCycleDependent dismissLinkAction nav_blue"><i class="fa fa-refresh fa-2x"></i></a></li>
+              <li class="col-xs-12 text-center mainNavLi"><a href="" id="refetch_button" data-loading-text="<i class='fa fa-refresh fa-2x fa-spin'></i>" class="appCycleDependent dismissLinkAction nav_blue"><i class="fa fa-refresh fa-2x"></i></a></li>
             </ul>
           </form>
         </div>
 
         {{!-- Main Navigation Tabs --}}
-        <div class="col-xs-11">
-          <div class="row">
+        {{!-- <div class="col-xs-11">
+          <div class="row"> --}}
             <ul class="nav nav-pills navbar-nav" id="appNavigationTab">
-              <li class="col-xs-5 text-center"><a href="#all_tab" data-toggle="tab"><i class="fa fa-search fa-2x"></i></a></li>
-              <li class="col-xs-5 text-center active"><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
-              <li class="col-xs-2 text-center"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-cog fa-2x"></i></a></li>
+              <li class="col-xs-5 text-center mainNavLi"><a href="#all_tab" data-toggle="tab"><i class="fa fa-search fa-2x"></i></a></li>
+              <li class="col-xs-5 text-center mainNavLi active"><a href="#favourites_tab" data-toggle="tab"><i class='fa fa-star fa-2x'></i></a></li>
+              <li class="col-xs-1 text-center mainNavLi"><a href="#settings_tab" data-toggle="tab"><i class="fa fa-cog fa-2x"></i></a></li>
             </ul>
-          </div>
+        {{!--   </div>
 
-        </div>
+        </div> --}}
 
       </div>
 

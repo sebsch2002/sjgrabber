@@ -209,6 +209,15 @@ nav and titlebar
   margin-left: 0px;
 }
 
+.mainNavLi {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.mainNavLeftActions {
+  float: initial !important;
+}
+
 /* -----------------------------------------------------------------------------
 settings 
 ----------------------------------------------------------------------------- */
