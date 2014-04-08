@@ -38,9 +38,12 @@
               
               {{#if @first}}
                 <div class="btn-group items_link_group">
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i><strong> {{provider}}</strong></button>
+              {{else}}
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i> {{provider}}</button>
               {{/if}}
 
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs  items_link" data-loading-text="<i class='fa fa-clipboard'></i> copied!"><i class='fa fa-clipboard'></i> {{provider}}</button>
+                  
               
               {{#if @last}}
                 </div>

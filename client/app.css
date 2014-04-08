@@ -33,6 +33,10 @@ a {
   cursor: default;
 }
 
+.defaultCursorNoDrag {
+  cursor: default;
+}
+
 
 /* -----------------------------------------------------------------------------
 fixed positioning + scrolling (attention top gets dynamically set!)
@@ -186,7 +190,6 @@ nav and titlebar
   padding-bottom: 3px !important;
   padding-left: 3px !important;
   padding-right: 3px !important;
-  cursor: default;
 }
 
 .windowBarLeftCol {

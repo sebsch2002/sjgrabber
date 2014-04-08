@@ -99,6 +99,11 @@ NWAPP.hookDynamicBindings = function() {
     clearErrorMessage();
   });
 
+  // bug, never remove it previously!
+  $(".defaultCursorNoDrag").on("mousedown", function(event) {
+    return false;
+  });
+
   setDynamicStyles();
 };
 
@@ -125,25 +130,10 @@ NWAPP.hookStaticBindings = function() {
   $("#search_input").on("change keyup paste click", function() {
     checkSearchToggleAddButton($(this).val());
 
-    if(currentSearchInput !== $(this).val()) {
+    if (currentSearchInput !== $(this).val()) {
       currentSearchInput = $(this).val();
       process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
     }
-  });
-
-  // for closing frameless windows
-  $(".nav_exit").on("click", function() {
-    win.close();
-  });
-
-  // for minimizing
-  $(".nav_minimize").on("click", function() {
-    win.minimize();
-  });
-
-  // for maximizing
-  $(".nav_maximize").on("click", function() {
-    win.maximize();
   });
 
   // certain links with this class shouldnt do their def. action
@@ -168,6 +158,32 @@ NWAPP.hookStaticBindings = function() {
   // set dynamic styles on resize change
   $(window).resize(function() {
     setDynamicStyles();
+  });
+
+  // NW for closing frameless windows
+  $(".nav_exit").on("click", function() {
+    win.close();
+  });
+
+  // NW for minimizing
+  $(".nav_minimize").on("click", function() {
+    win.minimize();
+  });
+
+  // NW for maximizing
+  $(".nav_maximize").on("click", function() {
+    win.maximize();
+  });
+
+  // NW for fullscreen
+  $(".nav_fullscreen").on("click", function() {
+    if (win.isFullscreen === false) {
+      $('.nav_fullscreen').button("fullscreen");
+      win.enterFullscreen();
+    } else {
+      $('.nav_fullscreen').button("windowed");
+      win.leaveFullscreen();
+    }
   });
 };
 
