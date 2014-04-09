@@ -309,6 +309,10 @@ tooltips
 search/fav 
 ----------------------------------------------------------------------------- */
 
+.highlight_keyword {
+  background-color: #FFFF88;
+}
+
 .removeKeyword:hover {
   color: #d9534f;
 }

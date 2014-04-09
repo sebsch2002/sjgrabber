@@ -20,10 +20,18 @@ var SavedItemModel = Backbone.Model.extend({
   isFavourite: function() {
     return helper.checkSavedItemIsFavourite(this);
   },
-  getPrintable: function() {
+  getPrintable: function(highlightKeyword) {
+    var title = helper.replaceAll(".", " ", this.get("title"));
+
+    if(highlightKeyword === "") {
+      title = helper.replaceAll(".", " ", this.get("title"));
+    } else {
+      title = helper.getHighlightedTitle(this.get("title"), highlightKeyword);
+    }
+
     return {
       uuid: this.get("uuid"),
-      title: helper.replaceAll(".", " ", this.get("title")),
+      title: title,
       date: moment(this.get("date")).format(config.format.date),
       link: this.get("link"),
       filehosterLinks: this.get("filehosterLinks"),

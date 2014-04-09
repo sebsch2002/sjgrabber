@@ -351,10 +351,10 @@ function printDynamicContentNW(suppressLoading) {
         _.defer(function(callback) {
           savedItems.each(function(item) {
             if (item.stringMatchesTitle(searchString)) {
-              allItems.push(item.getPrintable());
+              allItems.push(item.getPrintable(searchString));
             }
             if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
-              favouriteItems.push(item.getPrintable());
+              favouriteItems.push(item.getPrintable(keywordString));
             }
           });
           callback(checkPrintQueueAbort(queueIndex));
