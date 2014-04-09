@@ -23,7 +23,7 @@ var SavedItemModel = Backbone.Model.extend({
   getPrintable: function(highlightKeyword) {
     var title = helper.replaceAll(".", " ", this.get("title"));
 
-    if(highlightKeyword === "") {
+    if (highlightKeyword === "") {
       title = helper.replaceAll(".", " ", this.get("title"));
     } else {
       title = helper.getHighlightedTitle(this.get("title"), highlightKeyword);
@@ -32,6 +32,7 @@ var SavedItemModel = Backbone.Model.extend({
     return {
       uuid: this.get("uuid"),
       title: title,
+      tags: this.getTagObject(),
       date: moment(this.get("date")).format(config.format.date),
       link: this.get("link"),
       filehosterLinks: this.get("filehosterLinks"),
@@ -49,6 +50,27 @@ var SavedItemModel = Backbone.Model.extend({
     } else {
       return helper.titleKeywordComparator(this.get("title"), str);
     }
+  },
+  getTagObject: function() {
+    var tags = {
+      german: false,
+      english: false,
+      tv: false
+    };
+
+    if (this.get("title").indexOf("[DEUTSCH]") !== -1) {
+      tags.german = true;
+    }
+
+    if (this.get("title").indexOf("[ENGLISCH]") !== -1) {
+      tags.english = true;
+    }
+
+    if (this.get("title").indexOf("[TV-FILM]") !== -1) {
+      tags.tv = true;
+    }
+
+    return tags;
   },
   addFilehosterItem: function(provider, dllink) {
 
@@ -71,7 +93,7 @@ var SavedItemModel = Backbone.Model.extend({
     var fhlinks = _.clone(this.get("filehosterLinks"));
 
     _.each(fhlinks, function(fhlink) {
-      if(fhlink.link === url) {
+      if (fhlink.link === url) {
         fhlink.downloaded = true;
       }
     });

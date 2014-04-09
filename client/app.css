@@ -34,7 +34,8 @@ a {
 }
 
 .defaultCursorNoDrag {
-  cursor: default;
+  /* disabled dragging via jquery.. */
+  /* cursor: default; */
 }
 
 
@@ -190,6 +191,7 @@ nav and titlebar
   padding-bottom: 3px !important;
   padding-left: 3px !important;
   padding-right: 3px !important;
+  cursor: default; 
 }
 
 .windowBarLeftCol {

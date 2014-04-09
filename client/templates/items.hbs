@@ -2,6 +2,7 @@
 <table class="table table-hover table-condensed">
   <thead class="disallowHighlighting">
     <td class="lead text-center">{{!-- <i class="fa fa-filter fileHosterStatusHead"></i> --}}</td>
+    <td class="text-center">{{!-- <i class="fa fa-tag"></i> --}}</td>
     <td class="lead">date</td>
     <td class="lead">releases <small>({{items.length}} total)</small></td>
   </thead>
@@ -25,9 +26,23 @@
           {{/if}}
         {{/if}}
         
-        {{!-- static --}}
-        <td><small>{{date}}</small></td>
         
+        <td>
+          {{#if tags.english}}
+            <span class="item_tag"><img src="assets/i18n/gb.png" width="14px" /></span>
+          {{/if}}
+
+          {{#if tags.german}}
+            <span class="item_tag"><img src="assets/i18n/de.png" width="14px" /></span>
+          {{/if}}
+
+          {{#if tags.tv}}
+            <span class="item_tag"><i class="fa fa-youtube-play"></i></span>
+          {{/if}}
+        </td>
+
+        <td><small>{{date}}</small></td>
+
         <td>
           <div class="items_td_row">
             <p class="items_title">{{{title}}}</p>
