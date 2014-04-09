@@ -290,6 +290,10 @@ items
   font-weight: normal !important;
 }
 
+.item_tag {
+  font-size: 14px;
+}
+
 /* -----------------------------------------------------------------------------
 loading
 ----------------------------------------------------------------------------- */
@@ -320,7 +324,7 @@ search/fav
 }
 
 .removeKeyword {
-  color: #ddd;
+  color: #aaa;
 }
 
 .subActionBar {
