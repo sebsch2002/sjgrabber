@@ -2,17 +2,17 @@
 {{#if favourites}}
   <ul class="nav nav-pills">
     {{#if noFilter}}
-      <li class="active">
+      <li class="active keyword_link_li">
     {{else}}
-      <li>
+      <li class="keyword_link_li">
     {{/if}}
       <a href="" class="keyword_link keyword_showall" data-keyword=""><strong><i class="fa fa-star"></i></strong> <span class="badge">{{totalCount}}</span></a>
     </li>
     {{#each favourites}}
       {{#if selected}}
-        <li class="active">
+        <li class="active keyword_link_li">
       {{else}}
-        <li>
+        <li class="keyword_link_li">
       {{/if}}
           <a href="" class="keyword_link" data-keyword="{{keyword}}">{{keyword}} <span class="badge">{{count}}</span> <i class="fa fa-times removeKeyword"></i></a>
         </li>

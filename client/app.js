@@ -77,6 +77,11 @@ NWAPP.hookDynamicBindings = function() {
   $(".keyword_link").off();
   $(".keyword_link").on("click", function(event) {
     event.preventDefault();
+
+    // show in ui that it will be selected...
+    $(".keyword_link_li").removeClass("active"); // remove old active states
+    $(event.target.parentElement).addClass("active"); // add new
+    
     process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
   });
 

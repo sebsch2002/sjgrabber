@@ -325,7 +325,7 @@ function printDynamicContentNW(suppressLoading) {
             savedItems.each(function(item) {
               if (item.stringMatchesTitle(fav.get("keyword"))) {
                 favCount += 1;
-                totalCount += 1;
+                totalCount += 1; // TODO: fail should not count to total as the item could already be added to a previous favourite!
               }
             });
             favouriteKeywords.push({
