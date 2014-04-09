@@ -163,9 +163,11 @@ NWAPP.hookStaticBindings = function() {
 
   $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
     $("#search_input").focus();
+    // HACK HACK HACK
     $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
   });
   $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
+    // HACK HACK HACK
     $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
   });
 
