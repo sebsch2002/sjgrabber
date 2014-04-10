@@ -61,7 +61,7 @@ NWAPP.hookDynamicBindings = function() {
 
     if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
       $(event.currentTarget.parentNode).hasClass("active") === false) {
-      
+
       $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
       updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab, event.currentTarget.dataset.page);
     }
@@ -90,11 +90,13 @@ NWAPP.hookDynamicBindings = function() {
   $(".keyword_link").on("click", function(event) {
     event.preventDefault();
 
-    // show in ui that it will be selected...
-    $(".keyword_link_li").removeClass("active"); // remove old active states
-    $(event.target.parentElement).addClass("active"); // add new
+    if (event.target === event.currentTarget && $(event.currentTarget.parentNode).hasClass("active") === false) {
+      // show in ui that it will be selected...
+      $(".keyword_link_li").removeClass("active"); // remove old active states
+      $(event.target.parentElement).addClass("active"); // add new
 
-    process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
+      process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
+    }
   });
 
   // settings is dynamic for fetch time output!

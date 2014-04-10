@@ -233,8 +233,10 @@ module.exports.NWremoveKeyword = function(keyword) {
   // save because it was removed
   cacheHandler.save();
 
-  // no keyword selected anymore
-  keywordString = "";
+  // no keyword selected anymore if its the keywords thats removed!
+  if(keywordString === keyword) {
+    keywordString = "";
+  }
 
   printDynamicContentNW();
 };
