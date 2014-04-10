@@ -91,7 +91,11 @@ NWAPP.hookDynamicBindings = function() {
   $(".keyword_link").on("click", function(event) {
     event.preventDefault();
 
-    if (event.target === event.currentTarget && $(event.currentTarget.parentNode).hasClass("active") === false) {
+    if ($(event.currentTarget.parentNode).hasClass("active") === false && 
+      $(event.currentTarget).hasClass("removeKeyword") === false) {
+
+      console.log(event);
+      
       // show in ui that it will be selected...
       $(".keyword_link_li").removeClass("active"); // remove old active states
       $(event.target.parentElement).addClass("active"); // add new
