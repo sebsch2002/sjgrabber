@@ -1,6 +1,7 @@
 {{#if items}}
 
 {{!-- PAGINATION TOP --}}
+{{#if needsPagination}}
 <div class="paginator text-center">
   <ul class="pagination pagination-sm" data-tab="{{tab}}">
     {{#paginate pagination type="previous"}}
@@ -14,6 +15,7 @@
     {{/paginate}}
   </ul>
 </div>
+{{/if}}
 
 <table class="table table-hover table-condensed">
   <thead class="disallowHighlighting">
@@ -95,6 +97,7 @@
 </table>
 
 {{!-- PAGINATION Bottom --}}
+{{#if needsPagination}}
 <div class="paginator text-center">
   <ul class="pagination pagination-sm" data-tab="{{tab}}">
     {{#paginate pagination type="previous"}}
@@ -108,6 +111,7 @@
     {{/paginate}}
   </ul>
 </div>
+{{/if}}
 
 {{else}}
   <p class="text-center lead"><i class="fa fa-frown-o fa-5x"></i> no content.</p>

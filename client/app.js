@@ -63,6 +63,7 @@ NWAPP.hookDynamicBindings = function() {
       $(event.currentTarget.parentNode).hasClass("active") === false) {
 
       $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
+      //$(".tab-content").animate({ scrollTop: 0 }, 1000); // scroll top smoothly (only at bottom!)
       updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab, event.currentTarget.dataset.page);
     }
   });
@@ -339,6 +340,9 @@ function compileItemsWithPagination(options) {
     page: options.paginationItem.page,
     pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
   };
+
+  // give pagination needed to handlebars template
+  cachedItems.needsPagination = (cachedItems.items.length > PAGINATION_DEFAULTS.limit) ? true : false;
 
   // give slice the actual items to show
   cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) * PAGINATION_DEFAULTS.limit;
