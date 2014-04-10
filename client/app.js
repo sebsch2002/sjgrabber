@@ -59,7 +59,9 @@ NWAPP.hookDynamicBindings = function() {
   $(".paginationItem").on("click", function(event) {
     event.preventDefault();
 
-    if ($(event.currentTarget.parentNode).hasClass("disabled") === false) {
+    if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
+      $(event.currentTarget.parentNode).hasClass("active") === false) {
+      
       $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
       updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab, event.currentTarget.dataset.page);
     }

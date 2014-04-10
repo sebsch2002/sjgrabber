@@ -347,6 +347,12 @@ function printDynamicContentNW(suppressLoading) {
           callback(checkPrintQueueAbort(queueIndex));
         }, callback);
       },
+      hookDynamicBindingsFIXKeywords: function(callback) {
+        _.defer(function(callback) {
+          NWAPP.hookDynamicBindings();
+          callback(checkPrintQueueAbort(queueIndex));
+        }, callback);
+      },
       computeItems: function(callback) {
         _.defer(function(callback) {
           savedItems.each(function(item) {

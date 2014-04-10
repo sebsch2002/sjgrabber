@@ -341,6 +341,13 @@ search/fav
   color: #d9534f;
 }
 
+.keyword_link {
+  padding-top: 5px !important;
+  padding-right: 10px !important;
+  padding-bottom: 5px !important;
+  padding-left: 10px !important;
+}
+
 .removeKeyword {
   color: #aaa;
 }
