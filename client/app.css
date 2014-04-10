@@ -294,6 +294,24 @@ items
   font-size: 14px;
 }
 
+.pagination {
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
+}
+
+.item_fileHoster_td {
+  width: 30px;
+}
+
+.item_lang_td {
+  width: 25px;
+}
+
+.item_tag_date {
+  width: 65px;
+}
+
 /* -----------------------------------------------------------------------------
 loading
 ----------------------------------------------------------------------------- */
@@ -332,7 +350,7 @@ search/fav
   /*background-image: linear-gradient(to bottom, #3c3c3c 0%, #3c3c3c 100%);*/
   padding: 15px;
   width: 100%;
-  z-index: 1;
+  z-index: 3;
 }
 
 .fileHosterStatusSymbol {

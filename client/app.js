@@ -55,6 +55,16 @@ win.on("close", function() {
 NWAPP.hookDynamicBindings = function() {
   // console.log("app:hookDynamicBindings");
 
+  $(".paginationItem").off();
+  $(".paginationItem").on("click", function(event) {
+    event.preventDefault();
+
+    if ($(event.currentTarget.parentNode).hasClass("disabled") === false) {
+      $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
+      updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab, event.currentTarget.dataset.page);
+    }
+  });
+
   // button data.href to clipboard bindings
   $(".items_link").off();
   $(".items_link").on("click", function(event) {
@@ -81,7 +91,7 @@ NWAPP.hookDynamicBindings = function() {
     // show in ui that it will be selected...
     $(".keyword_link_li").removeClass("active"); // remove old active states
     $(event.target.parentElement).addClass("active"); // add new
-    
+
     process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
   });
 
@@ -124,6 +134,12 @@ var currentSearchInput = "";
 NWAPP.hookStaticBindings = function() {
   // console.log("app:hookStaticBindings");
 
+  // certain links with this class shouldnt do their def. action
+  $(".dismissLinkAction").off();
+  $(".dismissLinkAction").on("click", function() {
+    event.preventDefault();
+  });
+
   // refetch.click button bindings
   $("#refetch_button").click(function() {
     process.mainModule.exports.runFetchCycleNow();
@@ -135,9 +151,9 @@ NWAPP.hookStaticBindings = function() {
   });
 
   // add keyword via ENTER
-  $('#search_input').keypress(function (event) {
+  $('#search_input').keypress(function(event) {
     if (event.which === 13) {
-      if(checkSearchInputValid($(this).val())) {
+      if (checkSearchInputValid($(this).val())) {
         process.mainModule.exports.NWaddCurrentKeyword();
         $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
         return false;
@@ -153,11 +169,6 @@ NWAPP.hookStaticBindings = function() {
       currentSearchInput = $(this).val();
       process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
     }
-  });
-
-  // certain links with this class shouldnt do their def. action
-  $(".dismissLinkAction").on("click", function() {
-    event.preventDefault();
   });
 
   // set dynamicstyles every time a different tab is selected
@@ -177,7 +188,7 @@ NWAPP.hookStaticBindings = function() {
   });
 
   // set dynamic styles on resize change
-  
+
   var resizeTimer;
   $(window).resize(function(event) {
     clearTimeout(resizeTimer);
@@ -267,9 +278,85 @@ NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
   }
 };
 
+
+//
+// pagination handling
+//
+
+var PAGINATION_DEFAULTS = {
+  page: 1,
+  limit: 300
+};
+
+// hold currentPageInformation
+var paginationStore = {
+  all_items: {
+    id: "all_items",
+    page: PAGINATION_DEFAULTS.page,
+    cachedItems: []
+  },
+  favourite_items: {
+    id: "favourite_items",
+    page: PAGINATION_DEFAULTS.page,
+    cachedItems: []
+  }
+};
+
+function updatePagination(key, page) {
+  var paginationItem = paginationStore[key];
+  paginationItem.page = page;
+
+  compileItemsWithPagination({
+    paginationItem: paginationItem,
+    updateCache: false
+  });
+}
+
+function compileItemsWithPagination(options) {
+
+  var cachedItems = paginationStore[options.paginationItem.id].cachedItems;
+
+  // update cache if specified
+  if (options.updateCache === true && options.items) {
+
+    // server side update, pagination must reset!
+    paginationStore[options.paginationItem.id].page = 1;
+
+    // load new items into clientside cache
+    paginationStore[options.paginationItem.id].cachedItems = options.items;
+    cachedItems = paginationStore[options.paginationItem.id].cachedItems;
+  }
+
+  // give identifier to handlebars template
+  cachedItems.tab = options.paginationItem.id;
+
+  // give pagination options to handlebars template
+  cachedItems.pagination = {
+    page: options.paginationItem.page,
+    pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
+  };
+
+  // give slice the actual items to show
+  cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) * PAGINATION_DEFAULTS.limit;
+  cachedItems.itemsSliceLimit = PAGINATION_DEFAULTS.limit;
+
+  // printable items area count
+  cachedItems.itemsCountFrom = (cachedItems.items.length > cachedItems.itemsSliceOffset) ? (cachedItems.itemsSliceOffset + 1) : 0;
+  cachedItems.itemsCountTo = ((cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1) > cachedItems.items.length) ? cachedItems.items.length : (cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1);
+
+  // update templ
+  document.getElementById(options.paginationItem.id).innerHTML = NWAPP.Templates.items(cachedItems);
+
+  // hook bindings if this was a client-side only operation
+  if (options.updateCache === false) {
+    NWAPP.hookDynamicBindings();
+  }
+}
+
 //
 // dynamic content: template helpers
 //
+
 
 NWAPP.printLoading = function() {
   var compiledLoadingTemplate = NWAPP.Templates.loading();
@@ -277,16 +364,24 @@ NWAPP.printLoading = function() {
   document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
 };
 
-NWAPP.printFavouriteKeywords = function(favourites) {
-  document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
+NWAPP.printAllItems = function(items) {
+  compileItemsWithPagination({
+    items: items,
+    paginationItem: paginationStore.all_items,
+    updateCache: true
+  });
 };
 
 NWAPP.printFavouriteItems = function(items) {
-  document.getElementById("favourite_items").innerHTML = NWAPP.Templates.items(items);
+  compileItemsWithPagination({
+    items: items,
+    paginationItem: paginationStore.favourite_items,
+    updateCache: true
+  });
 };
 
-NWAPP.printAllItems = function(items) {
-  document.getElementById("all_items").innerHTML = NWAPP.Templates.items(items);
+NWAPP.printFavouriteKeywords = function(favourites) {
+  document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
 };
 
 NWAPP.printSettings = function(config) {

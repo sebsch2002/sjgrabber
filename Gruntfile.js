@@ -68,6 +68,7 @@ module.exports = function(grunt) {
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/nprogress/nprogress.js",
             "bower_components/handlebars/handlebars.runtime.js",
+            "client/hbhelpers.js",
             "client/templates.js",
             "client/contextMenu.js",
             "client/app.js"
@@ -191,6 +192,13 @@ module.exports = function(grunt) {
         namespace: 'NWAPP.Templates',
         processName: function(filePath) {
           return filePath.replace(/^client\/templates\//, '').replace(/\.hbs$/, '');
+        },
+        compilerOptions: {
+          knownHelpers: {
+            "paginate": true,
+            "slice": true
+          },
+          knownHelpersOnly: true
         }
       }
     },
