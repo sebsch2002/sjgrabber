@@ -510,8 +510,8 @@ function displayFirstStart() {
     title: "<i class='fa fa-info-circle'></i> Welcome to SJgrapper v" +
       gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
     content: NWAPP.Templates["static/firstStart"](),
-    dismissText: "no (quit)",
-    agreeText: "yes (continue)",
+    dismissText: "no I don't (quit)",
+    agreeText: "yes I agree to all terms (continue)",
     dismissable: dismissable,
     large: true
   });

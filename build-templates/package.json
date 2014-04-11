@@ -21,10 +21,10 @@
     "toolbar": false,
     "frame": false,
     "position": "center",
-    "width": 800,
-    "height": 560,
-    "min_width": 800,
-    "min_height": 560,
+    "width": 640,
+    "height": 480,
+    "min_width": 640,
+    "min_height": 480,
     "icon": "assets/SJ_logo.png"
   },
   "private": true
