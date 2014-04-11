@@ -236,6 +236,12 @@ NWAPP.hookStaticBindings = function() {
       win.leaveFullscreen();
     }
   });
+
+  // NW for info/welcome text
+  $(".nav_welcome").on("click", function() {
+    displayFirstStart();
+  });
+
 };
 
 function trimWhiteSpace(text) {
@@ -501,7 +507,8 @@ function displayFirstStart() {
   var dismissable = false;
 
   document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "Welcome to SJgrapper v" + gui.App.manifest.version,
+    title: "<i class='fa fa-info-circle'></i> Welcome to SJgrapper v" +
+      gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
     content: NWAPP.Templates["static/firstStart"](),
     dismissText: "no (quit)",
     agreeText: "yes (continue)",
@@ -518,11 +525,11 @@ function displayFirstStart() {
     });
   }
 
-  $("#modal_button_dismiss").on("click", function () {
+  $("#modal_button_dismiss").on("click", function() {
     win.close();
   });
 
-  $("#modal_button_agree").on("click", function () {
+  $("#modal_button_agree").on("click", function() {
     $('#currentModal').modal("hide");
   });
 
