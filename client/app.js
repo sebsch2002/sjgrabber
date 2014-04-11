@@ -45,11 +45,14 @@ var compiledLoadingTemplate = NWAPP.Templates.loading();
 
 win.on("close", function() {
   this.hide(); // Pretend to be closed already
-
-  console.log("TODO: cache now, window is closing...");
-
-  this.close(true);
+  console.log("window closes, informing daemon...");
+  process.mainModule.exports.NWapplicationCloses();
 });
+
+NWAPP.closeApplicationNow = function () {
+  console.log("closeApplicationNow - FORCE QUIT!");
+  win.close(true);
+};
 
 NWAPP.hookDynamicBindings = function() {
   // console.log("app:hookDynamicBindings");
@@ -506,8 +509,8 @@ NWAPP.displayLicenseAndUsageTerms = function() {
     title: "<i class='fa fa-info-circle'></i> Welcome to SJgrapper v" +
       gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
     content: NWAPP.Templates["static/firstStart"](),
-    dismissText: "no I don't (quit)",
-    agreeText: "yes I agree to all terms (continue)",
+    dismissText: "no I don't agree",
+    agreeText: "yes I understand & agree to ALL terms and conditions",
     dismissable: dismissable,
     large: true
   });

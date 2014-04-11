@@ -191,6 +191,16 @@ function cycleProgressNWUpdateUI(processCount) {
 // NODE-WEBKIT SPECIFIC: Available API interfaces
 // -----------------------------------------------------------------------------
 
+module.exports.NWapplicationCloses = function(boolagreed) {
+  cacheHandler.once("saved", exitAppImmediately);
+  cacheHandler.once("error", exitAppImmediately);
+  cacheHandler.save();
+};
+
+function exitAppImmediately() {
+  NWAPP.closeApplicationNow();
+}
+
 module.exports.NWsetTermsAgreed = function(boolagreed) {
   if (_.isBoolean(boolagreed) === true) {
     config.set("agreedToLicenseAndUsageTerms", boolagreed);
