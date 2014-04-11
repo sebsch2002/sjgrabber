@@ -1,6 +1,6 @@
 {
-  "name": "SJgrapper",
-  "version": "0.2.7",
+  "name": "SJgrabber",
+  "version": "0.2.8",
   "description": "nw-app that fetches rss and links from serienjunkies.org",
   "author": "the unknown",
   "license": "MIT",
@@ -16,7 +16,7 @@
   "main": "index.html",
   "node-main": "daemon/controller.js",
   "window": {
-    "title": "SJgrapper",
+    "title": "SJgrabber",
     "show": true,
     "toolbar": false,
     "frame": false,

@@ -1,4 +1,7 @@
 module.exports = function(grunt) {
+
+  var pkgJSON = grunt.file.readJSON('package.json');
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     nodewebkit: {
@@ -123,60 +126,60 @@ module.exports = function(grunt) {
     compress: {
       mac: {
         options: {
-          archive: "dist/SJgrapper_mac_v" + grunt.file.readJSON('package.json').version + ".zip",
+          archive: "dist/" + pkgJSON.name + "_mac_v" + pkgJSON.version + ".zip",
           mode: 'zip'
         },
         files: [{
           expand: true,
-          cwd: 'release/releases/SJgrapper/mac/',
+          cwd: 'release/releases/' + pkgJSON.name + '/mac/',
           src: ['**'],
           dest: '',
         }]
       },
       win: {
         options: {
-          archive: "dist/SJgrapper_win_v" + grunt.file.readJSON('package.json').version + ".zip",
+          archive: "dist/" + pkgJSON.name + "_win_v" + pkgJSON.version + ".zip",
           mode: 'zip'
         },
         files: [{
           expand: true,
-          cwd: 'release/releases/SJgrapper/win/',
+          cwd: 'release/releases/' + pkgJSON.name + '/win/',
           src: ['**'],
           dest: '',
         }]
       },
       nw: {
         options: {
-          archive: "dist/SJgrapper_nw_v" + grunt.file.readJSON('package.json').version + ".zip",
+          archive: "dist/" + pkgJSON.name + "_nw_v" + pkgJSON.version + ".zip",
           mode: 'zip'
         },
         files: [{
           expand: true,
-          cwd: 'release/releases/SJgrapper/',
+          cwd: 'release/releases/' + pkgJSON.name + '/',
           src: ['*'],
           dest: '',
         }]
       },
       // linux32: {
       //   options: {
-      //     archive: "dist/SJgrapper_linux32_v" + grunt.file.readJSON('package.json').version + ".zip",
+      //     archive: "dist/" + pkgJSON.name + "_linux32_v" + pkgJSON.version + ".zip",
       //     mode: 'zip'
       //   },
       //   files: [{
       //     expand: true,
-      //     cwd: 'release/releases/SJgrapper/linux32/',
+      //     cwd: 'release/releases/' + pkgJSON.name + '/linux32/',
       //     src: ['**'],
       //     dest: '',
       //   }]
       // },
       // linux64: {
       //   options: {
-      //     archive: "dist/SJgrapper_linux64_v" + grunt.file.readJSON('package.json').version + ".zip",
+      //     archive: "dist/" + pkgJSON.name + "_linux64_v" + pkgJSON.version + ".zip",
       //     mode: 'zip'
       //   },
       //   files: [{
       //     expand: true,
-      //     cwd: 'release/releases/SJgrapper/linux64/',
+      //     cwd: 'release/releases/' + pkgJSON.name + '/linux64/',
       //     src: ['**'],
       //     dest: '',
       //   }]
