@@ -224,6 +224,22 @@ nav and titlebar
 }
 
 /* -----------------------------------------------------------------------------
+remove responsive support from a few navbar items
+----------------------------------------------------------------------------- */
+
+.navbar-right {
+  float: right !important;
+}
+
+.navbar-nav {
+  margin: 0 !important;
+}
+
+.navbar-nav > li {
+  float: left !important;
+}
+
+/* -----------------------------------------------------------------------------
 settings 
 ----------------------------------------------------------------------------- */
 
@@ -313,10 +329,10 @@ items
 }
 
 /* -----------------------------------------------------------------------------
-loading
+loading - noContent notifies
 ----------------------------------------------------------------------------- */
 
-.loading-fullsize {
+.notifier-status {
   text-align: center;
   color: #aaa;
 }
@@ -382,4 +398,8 @@ search/fav
 
 .fileHosterStatusHead {
   color: #ddd;
+}
+
+.no_favourites {
+  margin-bottom: 0px;
 }

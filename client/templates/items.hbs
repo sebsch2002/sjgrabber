@@ -2,7 +2,7 @@
 
 {{!-- PAGINATION TOP --}}
 {{#if needsPagination}}
-<div class="paginator text-center">
+<div class="paginator text-center disallowHighlighting">
   <ul class="pagination pagination-sm" data-tab="{{tab}}">
     {{#paginate pagination type="previous"}}
       <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#"><i class="fa fa-caret-left"></i></a></li>
@@ -31,34 +31,34 @@
         {{!-- output status there/fetched/downloaded --}}
         {{#if filehosterLinksFetched}}
           {{#if userClickedFilehosterLink}} 
-            <td class="text-center item_fileHoster_td"><i class="fa fa-check fileHosterStatusSymbol fileHosterStatusDownloaded"></i></td>
+            <td class="text-center item_fileHoster_td disallowHighlighting"><i class="fa fa-check fileHosterStatusSymbol fileHosterStatusDownloaded"></i></td>
           {{else}}
-            <td class="text-center item_fileHoster_td"><i class="fa fa-link fileHosterStatusSymbol fileHosterStatusFetched"></i></td>
+            <td class="text-center item_fileHoster_td disallowHighlighting"><i class="fa fa-link fileHosterStatusSymbol fileHosterStatusFetched"></i></td>
           {{/if}}
         {{else}}
           {{#if filehosterFetchPreviouslyFailed}}
-            <td class="text-center item_fileHoster_td"><i class="fa fa-exclamation fileHosterStatusSymbol fileHosterStatusFetchFailed"></i></td>
+            <td class="text-center item_fileHoster_td disallowHighlighting"><i class="fa fa-exclamation fileHosterStatusSymbol fileHosterStatusFetchFailed"></i></td>
           {{else}}
-            <td class="text-center item_fileHoster_td"><i class="fa fa-minus fileHosterStatusSymbol fileHosterStatusNonFetched"></i></td>
+            <td class="text-center item_fileHoster_td disallowHighlighting"><i class="fa fa-minus fileHosterStatusSymbol fileHosterStatusNonFetched"></i></td>
           {{/if}}
         {{/if}}
         
         
         <td class="text-center item_lang_td">
           {{#if tags.english}}
-            <span class="item_tag"><img src="assets/i18n/gb.png" width="14px" /></span>
+            <span class="item_tag disallowHighlighting"><img src="assets/i18n/gb.png" width="14px" /></span>
           {{/if}}
 
           {{#if tags.german}}
-            <span class="item_tag"><img src="assets/i18n/de.png" width="14px" /></span>
+            <span class="item_tag disallowHighlighting"><img src="assets/i18n/de.png" width="14px" /></span>
           {{/if}}
 
           {{#if tags.tv}}
-            <span class="item_tag"><i class="fa fa-youtube-play"></i></span>
+            <span class="item_tag disallowHighlighting"><i class="fa fa-youtube-play"></i></span>
           {{/if}}
         </td>
 
-        <td class="item_tag_date"><small>{{date}}</small></td>
+        <td class="item_tag_date disallowHighlighting"><small>{{date}}</small></td>
 
         <td>
           <div class="items_td_row">
@@ -68,13 +68,13 @@
             {{#each filehosterLinks}}
               
               {{#if @first}}
-                <div class="btn-group items_link_group">  
+                <div class="btn-group items_link_group disallowHighlighting">  
               {{/if}}
 
                 {{#if downloaded}}
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-success btn-xs items_link defaultCursorNoDrag" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-check'></i> {{provider}}</button> 
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-success btn-xs items_link defaultCursorNoDrag disallowHighlighting" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-check'></i> {{provider}}</button> 
                 {{else}}
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-clipboard'></i> {{provider}}</button> 
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag disallowHighlighting" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-clipboard'></i> {{provider}}</button> 
                 {{/if}}
               
               {{#if @last}}
@@ -85,7 +85,7 @@
 
             {{#unless filehosterLinks}}
               {{#if filehosterFetchPreviouslyFailed}}
-                <div class="items_link_group"><p class="items_fetchFail"><a class="items_link_external" href="{{link}}" data-uuid="{{uuid}}">open in browser</a></p></div>
+                <div class="items_link_group disallowHighlighting"><p class="items_fetchFail"><a class="items_link_external" href="{{link}}" data-uuid="{{uuid}}">open in browser</a></p></div>
               {{/if}}
             {{/unless}}
           </div>
@@ -98,7 +98,7 @@
 
 {{!-- PAGINATION Bottom --}}
 {{#if needsPagination}}
-<div class="paginator text-center">
+<div class="paginator text-center disallowHighlighting">
   <ul class="pagination pagination-sm" data-tab="{{tab}}">
     {{#paginate pagination type="previous"}}
       <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#"><i class="fa fa-caret-left"></i></a></li>
@@ -114,5 +114,5 @@
 {{/if}}
 
 {{else}}
-  <p class="text-center lead"><i class="fa fa-frown-o fa-5x"></i> no content.</p>
+  <div class="notifier-status disallowHighlighting"><i class="fa fa-ban fa-5x"></i><br />no content</div>
 {{/if}}

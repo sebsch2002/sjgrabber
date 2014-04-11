@@ -1,6 +1,6 @@
 {
   "name": "SJgrapper",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "nw-app that fetches rss and links from serienjunkies.org",
   "keywords": [
     "serienjunkies.org"
@@ -39,8 +39,8 @@
     "position": "center",
     "width": 800,
     "height": 560,
-    "min_width": 800,
-    "min_height": 560,
+    "min_width": 640,
+    "min_height": 480,
     "icon": "assets/SJ_logo.png"
   },
   "private": true,

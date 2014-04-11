@@ -6,7 +6,7 @@
     {{else}}
       <li class="keyword_link_li">
     {{/if}}
-      <a href="" class="keyword_link keyword_showall" data-keyword=""><strong><i class="fa fa-star"></i></strong> <span class="badge">{{totalCount}}</span></a>
+      <a href="" class="keyword_link keyword_showall defaultCursorNoDrag" data-keyword=""><strong><i class="fa fa-star"></i></strong> <span class="badge">{{totalCount}}</span></a>
     </li>
     {{#each favourites}}
       {{#if selected}}
@@ -14,11 +14,17 @@
       {{else}}
         <li class="keyword_link_li">
       {{/if}}
-          <a href="" class="keyword_link" data-keyword="{{keyword}}">{{keyword}} <span class="badge">{{count}}</span> <i class="fa fa-times removeKeyword"></i></a>
+          <a href="" class="keyword_link defaultCursorNoDrag" data-keyword="{{keyword}}">{{keyword}} <span class="badge">{{count}}</span> <i class="fa fa-times removeKeyword"></i></a>
         </li>
     {{/each}}
   </ul>
 {{else}}
-  <p class="text-center lead">first <i class="fa fa-search fa-5x"></i> and <i class="fa fa-star fa-5x"></i> keywords.<br /></p>
+  <p class="text-center lead no_favourites">first <span class="fa-stack fa-2x">
+    <i class="fa fa-square fa-stack-2x"></i>
+    <i class="fa fa-search fa-stack-1x fa-inverse"></i>
+  </span> and <span class="fa-stack fa-2x">
+    <i class="fa fa-square fa-stack-2x"></i>
+    <i class="fa fa-star fa-stack-1x fa-inverse"></i>
+  </span> queries.</p>
 {{/if}}
 </div>
