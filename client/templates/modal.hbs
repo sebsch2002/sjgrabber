@@ -1,0 +1,17 @@
+<div id="currentModal" class="modal fade disallowHighlighting" tabindex="-1" role="dialog" aria-labelledby="currentModal_label" aria-hidden="true">
+  <div class="modal-dialog {{#if large}}modal-lg{{else}}modal-sm{{/if}}"> {{!-- modal-sm or  --}}
+    <div class="modal-content">
+      <div class="modal-header">
+        {{#if dismissable}}<button type="button" class="closeModalButton pull-right" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>{{/if}}
+        <p id="currentModal_label" class="modal-title"><i class="fa fa-info-circle"></i> {{title}}</p>
+      </div>
+      <div class="modal-body">
+        {{{content}}}
+      </div>
+      <div class="modal-footer">
+        <button id="modal_button_dismiss" type="button" class="btn btn-default" {{#if dismissable}}data-dismiss="modal"{{/if}}><i class="fa fa-times"></i> {{dismissText}}</button>
+        <button id="modal_button_agree" type="button" class="btn btn-primary"><i class="fa fa-check"></i> {{agreeText}}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -38,6 +38,7 @@ var compiledLoadingTemplate = NWAPP.Templates.loading();
   document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
   document.getElementById("settings").innerHTML = compiledLoadingTemplate;
 
+  displayFirstStart();
 }());
 
 // 
@@ -91,11 +92,11 @@ NWAPP.hookDynamicBindings = function() {
   $(".keyword_link").on("click", function(event) {
     event.preventDefault();
 
-    if ($(event.currentTarget.parentNode).hasClass("active") === false && 
+    if ($(event.currentTarget.parentNode).hasClass("active") === false &&
       $(event.currentTarget).hasClass("removeKeyword") === false) {
 
       console.log(event);
-      
+
       // show in ui that it will be selected...
       $(".keyword_link_li").removeClass("active"); // remove old active states
       $(event.target.parentElement).addClass("active"); // add new
@@ -489,4 +490,41 @@ function getScrollBarWidth() {
   document.body.removeChild(outer);
 
   return (w1 - w2);
+}
+
+// -----------------------------------------------------------------------------
+// modal related stuff
+// -----------------------------------------------------------------------------
+
+function displayFirstStart() {
+
+  var dismissable = false;
+
+  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+    title: "Welcome to SJgrapper v" + gui.App.manifest.version,
+    content: NWAPP.Templates["static/firstStart"](),
+    dismissText: "no (quit)",
+    agreeText: "yes (continue)",
+    dismissable: dismissable,
+    large: true
+  });
+
+  if (dismissable) {
+    $('#currentModal').modal();
+  } else {
+    $('#currentModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  $("#modal_button_dismiss").on("click", function () {
+    win.close();
+  });
+
+  $("#modal_button_agree").on("click", function () {
+    $('#currentModal').modal("hide");
+  });
+
+  $('#currentModal').modal("show");
 }

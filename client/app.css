@@ -403,3 +403,41 @@ search/fav
 .no_favourites {
   margin-bottom: 0px;
 }
+
+/* -----------------------------------------------------------------------------
+modal
+----------------------------------------------------------------------------- */
+
+.modal-body {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.modal-footer {
+  padding: 10px;
+  background: #eee;
+  text-align: right;
+  border-top: 0px;
+  margin-top: 0px;
+}
+
+.modal-header {
+  padding: 10px;
+  border-bottom: 0px;
+  background-image: linear-gradient(to bottom, #3c3c3c 0%, #222 100%);
+}
+
+.modal-title {
+  color: #eee;
+}
+
+.closeModalButton {
+  color: #fff;
+  background: transparent;
+  border: 0;
+  margin-top: -2px;
+}
+
+.closeModalButton:hover {
+  color: #d2322d;
+}
