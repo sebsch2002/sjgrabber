@@ -22,10 +22,12 @@
     "frame": false,
     "position": "center",
     "width": 800,
-    "height": 600,
+    "height": 580,
     "min_width": 640,
     "min_height": 480,
     "icon": "assets/SJ_logo.png"
   },
-  "private": true
+  "private": true,
+  "licenseURL": "http://XXXXXXXXXXXX.XXXXXX.XXX",
+  "githubURL": "http://XXXXXXXXX.XXXXXX.XXX"
 }

@@ -7,7 +7,7 @@
     {{#paginate pagination type="previous"}}
       <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#"><i class="fa fa-caret-left"></i></a></li>
     {{/paginate}}
-    {{#paginate pagination type="middle" limit="10"}}
+    {{#paginate pagination type="middle" limit="15"}}
       <li {{#if active}}class="active"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#">{{n}}</a></li>
     {{/paginate}}
     {{#paginate pagination type="next"}}
@@ -101,13 +101,13 @@
 <div class="paginator text-center disallowHighlighting">
   <ul class="pagination pagination-sm" data-tab="{{tab}}">
     {{#paginate pagination type="previous"}}
-      <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#"><i class="fa fa-caret-left"></i></a></li>
+      <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem paginationItemBottom" href="#"><i class="fa fa-caret-left"></i></a></li>
     {{/paginate}}
-    {{#paginate pagination type="middle" limit="10"}}
-      <li {{#if active}}class="active"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#">{{n}}</a></li>
+    {{#paginate pagination type="middle" limit="15"}}
+      <li {{#if active}}class="active"{{/if}}><a data-page="{{n}}" class="paginationItem paginationItemBottom" href="#">{{n}}</a></li>
     {{/paginate}}
     {{#paginate pagination type="next"}}
-      <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem" href="#"><i class="fa fa-caret-right"></i></a></li>
+      <li {{#if disabled}}class="disabled"{{/if}}><a data-page="{{n}}" class="paginationItem paginationItemBottom" href="#"><i class="fa fa-caret-right"></i></a></li>
     {{/paginate}}
   </ul>
 </div>

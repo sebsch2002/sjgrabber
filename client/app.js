@@ -1,545 +1,661 @@
-var gui = require("nw.gui");
-var clipboard = gui.Clipboard.get();
-var win = gui.Window.get();
+(function() {
 
+  // ---------------------------------------------------------------------------
+  // node-webkit
+  // ---------------------------------------------------------------------------
 
-// NAMESPACE NWAPP
-var NWAPP = window.NWAPP || {};
+  var gui = require("nw.gui");
+  var clipboard = gui.Clipboard.get();
+  var win = gui.Window.get();
 
+  // ---------------------------------------------------------------------------
+  // namespace and runtime variables
+  // ---------------------------------------------------------------------------
 
-// fasted way to make loading available
-var compiledLoadingTemplate = NWAPP.Templates.loading();
+  var NWAPP = window.NWAPP || {};
 
-// 
-// startup
-// 
+  // fasted way to make loading available
+  var compiledLoadingTemplate = NWAPP.Templates.loading();
 
-(function clientStartup() {
-  // add compile app template into app and settings div
-  document.getElementById("app").innerHTML = NWAPP.Templates.app({
-    name: gui.App.manifest.name,
-    version: gui.App.manifest.version,
-    platform: {
-      win: (process.platform === "win32") ? true : false,
-      mac: (process.platform === "darwin") ? true : false,
-      linux: (process.platform !== "win32" && process.platform !== "darwin") ? true : false
+  // hold current input in search box
+  var currentSearchInput = "";
+
+  // holds current button cycle state
+  var buttonStateLoading = false;
+
+  // pagination default constants
+  var PAGINATION_DEFAULTS = {
+    page: 1,
+    limit: 250
+  };
+
+  // holds dynamic items and favourites and pagination information
+  var paginationStore = {
+    all_items: {
+      id: "all_items",
+      page: PAGINATION_DEFAULTS.page,
+      cachedItems: []
     },
-    debugmode: NWAPP_DEBUG
+    favourite_items: {
+      id: "favourite_items",
+      page: PAGINATION_DEFAULTS.page,
+      cachedItems: []
+    }
+  };
+
+  var COUNT_MAX_LINKS_WO_WARNING = 50;
+
+  // ---------------------------------------------------------------------------
+  // startup
+  // ---------------------------------------------------------------------------
+
+  (function clientStartup() {
+    // add compile app template into app and settings div
+    document.getElementById("app").innerHTML = NWAPP.Templates.app({
+      name: gui.App.manifest.name,
+      version: gui.App.manifest.version,
+      platform: {
+        win: (process.platform === "win32") ? true : false,
+        mac: (process.platform === "darwin") ? true : false,
+        linux: (process.platform !== "win32" &&
+          process.platform !== "darwin") ? true : false
+      },
+      debugmode: NWAPP_DEBUG
+    });
+
+    // are we running in debug mode?
+    if (NWAPP_DEBUG === true) {
+      win.showDevTools();
+    }
+
+    // force all other components into loading mode...
+    document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
+    document.getElementById("settings").innerHTML = compiledLoadingTemplate;
+  }());
+
+  // ---------------------------------------------------------------------------
+  // window NW listener
+  // ---------------------------------------------------------------------------
+
+  win.on("close", function() {
+    this.hide(); // Pretend to be closed already
+    console.log("window closes, informing daemon...");
+    process.mainModule.exports.NWapplicationCloses();
   });
 
-  // are we running in debug mode?
-  if (NWAPP_DEBUG === true) {
-    win.showDevTools();
+  NWAPP.closeApplicationNow = function() {
+    console.log("closeApplicationNow - FORCE QUIT!");
+    win.close(true);
+  };
+
+  // ---------------------------------------------------------------------------
+  // dynamic bindings (hooked after dynamic content was printed)
+  // ---------------------------------------------------------------------------
+
+  NWAPP.hookDynamicBindings = function() {
+    // console.log("app:hookDynamicBindings");
+
+    $(".paginationItem").off();
+    $(".paginationItem").on("click", function(event) {
+      event.preventDefault();
+
+      if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
+        $(event.currentTarget.parentNode).hasClass("active") === false) {
+
+        if ($(event.currentTarget).hasClass("paginationItemBottom")) {
+          $(".tab-content").animate({
+            scrollTop: 0
+          }, 500); // scroll smoothly
+        } else {
+          $(".tab-content").scrollTop(0); // scroll instantly
+        }
+
+        updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab,
+          event.currentTarget.dataset.page);
+      }
+    });
+
+    // button data.href to clipboard bindings
+    $(".items_link").off();
+    $(".items_link").on("click", function(event) {
+
+      var dataset = event.currentTarget.dataset;
+
+      // add to clipboard
+      clipboard.set(dataset.href, "text");
+
+      // notify daemon that it was clicked!
+      process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid,
+        dataset.href);
+    });
+
+    $(".items_link_external").off();
+    $(".items_link_external").on("click", function(event) {
+      event.preventDefault();
+      gui.Shell.openExternal(event.target.href);
+    });
+
+    $(".keyword_link").off();
+    $(".keyword_link").on("click", function(event) {
+      event.preventDefault();
+
+      if ($(event.currentTarget.parentNode).hasClass("active") === false &&
+        $(event.currentTarget).hasClass("removeKeyword") === false) {
+
+        console.log(event);
+
+        // show in ui that it will be selected...
+        $(".keyword_link_li").removeClass("active"); // remove old active states
+        $(event.target.parentElement).addClass("active"); // add new
+
+        process.mainModule.exports.NWupdateKeywordString(
+          trimWhiteSpace(event.currentTarget.dataset.keyword));
+      }
+    });
+
+    // settings is dynamic for fetch time output!
+    $("#clearreset_button").off();
+    $("#clearreset_button").click(function() {
+      displayWarningResetApplication();
+    });
+
+    $(".removeKeyword").off();
+    $(".removeKeyword").click(function(event) {
+      event.preventDefault();
+      process.mainModule.exports.NWremoveKeyword(
+        event.target.parentElement.dataset.keyword);
+    });
+
+    $(".alert").off();
+    $('.alert').bind('closed.bs.alert', function() {
+      clearErrorMessage();
+    });
+
+    // bug, never remove it previously!
+    $(".defaultCursorNoDrag").on("mousedown", function(event) {
+      return false;
+    });
+
+    // attach tooltips to copy link buttons
+    $(".items_link").tooltip();
+
+    setDynamicStyles();
+  };
+
+  function clearSearchInputValue() {
+    $("#search_input").val("");
   }
 
-  // force all other components into loading mode...
-  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
-  document.getElementById("settings").innerHTML = compiledLoadingTemplate;
-}());
-
-// 
-// listeners
-// 
-
-win.on("close", function() {
-  this.hide(); // Pretend to be closed already
-  console.log("window closes, informing daemon...");
-  process.mainModule.exports.NWapplicationCloses();
-});
-
-NWAPP.closeApplicationNow = function () {
-  console.log("closeApplicationNow - FORCE QUIT!");
-  win.close(true);
-};
-
-NWAPP.hookDynamicBindings = function() {
-  // console.log("app:hookDynamicBindings");
-
-  $(".paginationItem").off();
-  $(".paginationItem").on("click", function(event) {
-    event.preventDefault();
-
-    if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
-      $(event.currentTarget.parentNode).hasClass("active") === false) {
-
-      $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
-      //$(".tab-content").animate({ scrollTop: 0 }, 1000); // scroll top smoothly (only at bottom!)
-      updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab, event.currentTarget.dataset.page);
-    }
-  });
-
-  // button data.href to clipboard bindings
-  $(".items_link").off();
-  $(".items_link").on("click", function(event) {
-
-    var dataset = event.currentTarget.dataset;
-
-    // add to clipboard
-    clipboard.set(dataset.href, "text");
-
-    // notify daemon that it was clicked!
-    process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid, dataset.href);
-  });
-
-  $(".items_link_external").off();
-  $(".items_link_external").on("click", function(event) {
-    event.preventDefault();
-    gui.Shell.openExternal(event.target.href);
-  });
-
-  $(".keyword_link").off();
-  $(".keyword_link").on("click", function(event) {
-    event.preventDefault();
-
-    if ($(event.currentTarget.parentNode).hasClass("active") === false &&
-      $(event.currentTarget).hasClass("removeKeyword") === false) {
-
-      console.log(event);
-
-      // show in ui that it will be selected...
-      $(".keyword_link_li").removeClass("active"); // remove old active states
-      $(event.target.parentElement).addClass("active"); // add new
-
-      process.mainModule.exports.NWupdateKeywordString(trimWhiteSpace(event.currentTarget.dataset.keyword));
-    }
-  });
-
-  // settings is dynamic for fetch time output!
-  $("#clearreset_button").off();
-  $("#clearreset_button").click(function() {
+  function resetApplication() {
     process.mainModule.exports.clearCacheReset();
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
     clearSearchInputValue();
-  });
+  }
 
-  $(".removeKeyword").off();
-  $(".removeKeyword").click(function(event) {
-    event.preventDefault();
-    process.mainModule.exports.NWremoveKeyword(event.target.parentElement.dataset.keyword);
-  });
+  // ---------------------------------------------------------------------------
+  // static bindings (non dynamic content)
+  // ---------------------------------------------------------------------------
 
-  $(".alert").off();
-  $('.alert').bind('closed.bs.alert', function() {
-    clearErrorMessage();
-  });
+  NWAPP.hookStaticBindings = function() {
+    // console.log("app:hookStaticBindings");
 
-  // bug, never remove it previously!
-  $(".defaultCursorNoDrag").on("mousedown", function(event) {
-    return false;
-  });
+    // certain links with this class shouldnt do their def. action
+    $(".dismissLinkAction").off();
+    $(".dismissLinkAction").on("click", function() {
+      event.preventDefault();
+    });
 
-  // attach tooltips to copy link buttons
-  $(".items_link").tooltip();
+    // refetch.click button bindings
+    $("#refetch_button").click(function() {
+      process.mainModule.exports.runFetchCycleNow();
+    });
 
-  setDynamicStyles();
-};
+    $("#addkeyword_button").click(function() {
+      addCurrentQueryAsKeyword();
+    });
 
-function clearSearchInputValue() {
-  $("#search_input").val("");
-}
-
-var currentSearchInput = "";
-
-NWAPP.hookStaticBindings = function() {
-  // console.log("app:hookStaticBindings");
-
-  // certain links with this class shouldnt do their def. action
-  $(".dismissLinkAction").off();
-  $(".dismissLinkAction").on("click", function() {
-    event.preventDefault();
-  });
-
-  // refetch.click button bindings
-  $("#refetch_button").click(function() {
-    process.mainModule.exports.runFetchCycleNow();
-  });
-
-  $("#addkeyword_button").click(function() {
-    process.mainModule.exports.NWaddCurrentKeyword();
-    $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
-  });
-
-  // add keyword via ENTER
-  $('#search_input').keypress(function(event) {
-    if (event.which === 13) {
-      if (checkSearchInputValid($(this).val())) {
-        process.mainModule.exports.NWaddCurrentKeyword();
-        $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
-        return false;
+    // add keyword via ENTER
+    $('#search_input').keypress(function(event) {
+      if (event.which === 13) {
+        if (checkSearchInputValid($(this).val())) {
+          addCurrentQueryAsKeyword();
+          return false;
+        }
       }
+    });
+
+    // search box to NWupdate
+    $("#search_input").on("change keyup paste click", function() {
+      checkSearchInputValid($(this).val());
+
+      if (currentSearchInput !== $(this).val()) {
+        currentSearchInput = $(this).val();
+        process.mainModule.exports.NWupdateSearchString(
+          trimWhiteSpace($(this).val()));
+      }
+    });
+
+    // set dynamicstyles every time a different tab is selected
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
+      $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
+      setDynamicStyles();
+    });
+
+    $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
+      $("#search_input").focus();
+      // HACK HACK HACK
+      $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+    });
+    $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
+      // HACK HACK HACK
+      $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+    });
+
+    // set dynamic styles on resize change
+
+    var resizeTimer;
+    $(window).resize(function(event) {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeTimerFinished, 100);
+      setDynamicStyles();
+      $(".windowBorder").hide();
+    });
+
+    function resizeTimerFinished() {
+      $(".windowBorder").show();
     }
-  });
 
-  // search box to NWupdate
-  $("#search_input").on("change keyup paste click", function() {
-    checkSearchInputValid($(this).val());
+    // NW for closing frameless windows
+    $(".nav_exit").on("click", function() {
+      win.close();
+    });
 
-    if (currentSearchInput !== $(this).val()) {
-      currentSearchInput = $(this).val();
-      process.mainModule.exports.NWupdateSearchString(trimWhiteSpace($(this).val()));
-    }
-  });
+    // NW for minimizing
+    $(".nav_minimize").on("click", function() {
+      win.minimize();
+    });
 
-  // set dynamicstyles every time a different tab is selected
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
-    $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
-    setDynamicStyles();
-  });
+    // NW for maximizing
+    $(".nav_maximize").on("click", function() {
+      win.maximize();
+    });
 
-  $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
-    $("#search_input").focus();
-    // HACK HACK HACK
-    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
-  });
-  $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
-    // HACK HACK HACK
-    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
-  });
+    // NW for fullscreen
+    $(".nav_fullscreen").on("click", function() {
+      if (win.isFullscreen === false) {
+        $('.nav_fullscreen').button("fullscreen");
+        win.enterFullscreen();
+      } else {
+        $('.nav_fullscreen').button("windowed");
+        win.leaveFullscreen();
+      }
+    });
 
-  // set dynamic styles on resize change
+    // NW for info/welcome text
+    $(".nav_welcome").on("click", function() {
+      NWAPP.displayLicenseAndUsageTerms();
+    });
 
-  var resizeTimer;
-  $(window).resize(function(event) {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeTimerFinished, 100);
-    setDynamicStyles();
-    $(".windowBorder").hide();
-  });
-
-  function resizeTimerFinished() {
-    $(".windowBorder").show();
-  }
-
-  // NW for closing frameless windows
-  $(".nav_exit").on("click", function() {
-    win.close();
-  });
-
-  // NW for minimizing
-  $(".nav_minimize").on("click", function() {
-    win.minimize();
-  });
-
-  // NW for maximizing
-  $(".nav_maximize").on("click", function() {
-    win.maximize();
-  });
-
-  // NW for fullscreen
-  $(".nav_fullscreen").on("click", function() {
-    if (win.isFullscreen === false) {
-      $('.nav_fullscreen').button("fullscreen");
-      win.enterFullscreen();
-    } else {
-      $('.nav_fullscreen').button("windowed");
-      win.leaveFullscreen();
-    }
-  });
-
-  // NW for info/welcome text
-  $(".nav_welcome").on("click", function() {
-    NWAPP.displayLicenseAndUsageTerms();
-  });
-
-};
-
-function trimWhiteSpace(text) {
-  return text.replace(/ {2,}/g, ' ').trim();
-}
-
-function checkSearchInputValid(text) {
-  var concatWhiteSpace = text.replace(/\s+/g, '');
-
-  if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
-    $("#addkeyword_button").removeClass("disabled");
-    return true;
-  } else {
-    $("#addkeyword_button").addClass("disabled");
-    return false;
-  }
-}
-
-// 
-// fetch cycle: update changes
-// 
-
-NWAPP.startCycle = function() {
-  clearErrorMessage();
-  NProgress.start();
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-};
-
-NWAPP.endCycle = function() {
-  NProgress.done();
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
-};
-
-NWAPP.updateProgress = function(progressCount) {
-  NProgress.set(progressCount);
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-};
-
-
-var buttonStateLoading = false; // save state manually
-NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
-  if (available) {
-    buttonStateLoading = false;
-    $(".appCycleDependent").button("reset");
-  } else {
-    if (buttonStateLoading === false) {
-      buttonStateLoading = true;
-      $(".appCycleDependent").button("loading");
-    }
-  }
-};
-
-
-//
-// pagination handling
-//
-
-var PAGINATION_DEFAULTS = {
-  page: 1,
-  limit: 300
-};
-
-// hold currentPageInformation
-var paginationStore = {
-  all_items: {
-    id: "all_items",
-    page: PAGINATION_DEFAULTS.page,
-    cachedItems: []
-  },
-  favourite_items: {
-    id: "favourite_items",
-    page: PAGINATION_DEFAULTS.page,
-    cachedItems: []
-  }
-};
-
-function updatePagination(key, page) {
-  var paginationItem = paginationStore[key];
-  paginationItem.page = page;
-
-  compileItemsWithPagination({
-    paginationItem: paginationItem,
-    updateCache: false
-  });
-}
-
-function compileItemsWithPagination(options) {
-
-  var cachedItems = paginationStore[options.paginationItem.id].cachedItems;
-
-  // update cache if specified
-  if (options.updateCache === true && options.items) {
-
-    // server side update, pagination must reset!
-    paginationStore[options.paginationItem.id].page = 1;
-
-    // load new items into clientside cache
-    paginationStore[options.paginationItem.id].cachedItems = options.items;
-    cachedItems = paginationStore[options.paginationItem.id].cachedItems;
-  }
-
-  // give identifier to handlebars template
-  cachedItems.tab = options.paginationItem.id;
-
-  // give pagination options to handlebars template
-  cachedItems.pagination = {
-    page: options.paginationItem.page,
-    pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
   };
 
-  // give pagination needed to handlebars template
-  cachedItems.needsPagination = (cachedItems.items.length > PAGINATION_DEFAULTS.limit) ? true : false;
+  // ---------------------------------------------------------------------------
+  // keyword adding (from search)
+  // ---------------------------------------------------------------------------
 
-  // give slice the actual items to show
-  cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) * PAGINATION_DEFAULTS.limit;
-  cachedItems.itemsSliceLimit = PAGINATION_DEFAULTS.limit;
+  function addCurrentQueryAsKeyword(overrideLengthCheck) {
+    if (paginationStore.all_items.cachedItems.items.length < COUNT_MAX_LINKS_WO_WARNING || overrideLengthCheck) {
 
-  // printable items area count
-  cachedItems.itemsCountFrom = (cachedItems.items.length > cachedItems.itemsSliceOffset) ? (cachedItems.itemsSliceOffset + 1) : 0;
-  cachedItems.itemsCountTo = ((cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1) > cachedItems.items.length) ? cachedItems.items.length : (cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1);
-
-  // update templ
-  document.getElementById(options.paginationItem.id).innerHTML = NWAPP.Templates.items(cachedItems);
-
-  // hook bindings if this was a client-side only operation
-  if (options.updateCache === false) {
-    NWAPP.hookDynamicBindings();
+      process.mainModule.exports.NWaddCurrentKeyword();
+      $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
+    } else {
+      // display warning model with proceed, many links to fetch!
+      displayWarningManyLinksToFetch();
+    }
   }
-}
 
-//
-// dynamic content: template helpers
-//
+  function trimWhiteSpace(text) {
+    return text.replace(/ {2,}/g, ' ').trim();
+  }
+
+  function checkSearchInputValid(text) {
+    var concatWhiteSpace = text.replace(/\s+/g, '');
+
+    if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
+      $("#addkeyword_button").removeClass("disabled");
+      return true;
+    } else {
+      $("#addkeyword_button").addClass("disabled");
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // fetch cycle: update changes
+  // ---------------------------------------------------------------------------
+
+  NWAPP.startCycle = function() {
+    clearErrorMessage();
+    NProgress.start();
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
+  };
+
+  NWAPP.endCycle = function() {
+    NProgress.done();
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
+  };
+
+  NWAPP.updateProgress = function(progressCount) {
+    NProgress.set(progressCount);
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
+  };
+
+  NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
+    if (available) {
+      buttonStateLoading = false;
+      $(".appCycleDependent").button("reset");
+    } else {
+      if (buttonStateLoading === false) {
+        buttonStateLoading = true;
+        $(".appCycleDependent").button("loading");
+      }
+    }
+  };
 
 
-NWAPP.printLoading = function() {
-  var compiledLoadingTemplate = NWAPP.Templates.loading();
-  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
-};
+  // ---------------------------------------------------------------------------
+  // pagination helper 
+  // ---------------------------------------------------------------------------
 
-NWAPP.printAllItems = function(items) {
-  compileItemsWithPagination({
-    items: items,
-    paginationItem: paginationStore.all_items,
-    updateCache: true
-  });
-};
+  function updatePagination(key, page) {
+    var paginationItem = paginationStore[key];
+    paginationItem.page = page;
 
-NWAPP.printFavouriteItems = function(items) {
-  compileItemsWithPagination({
-    items: items,
-    paginationItem: paginationStore.favourite_items,
-    updateCache: true
-  });
-};
-
-NWAPP.printFavouriteKeywords = function(favourites) {
-  document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
-};
-
-NWAPP.printSettings = function(config) {
-  document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
-};
-
-NWAPP.printErrorMessage = function(error) {
-  document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
-};
-
-function clearErrorMessage() {
-  document.getElementById("errorContainer").innerHTML = "";
-  setDynamicStyles();
-}
-
-
-// -----------------------------------------------------------------------------
-// styling related stuff
-// -----------------------------------------------------------------------------
-
-function setDynamicStyles() {
-  styleFavouritesAffixPadding();
-  styleSearchboxAffixPadding();
-  setContentTopPosition();
-}
-
-function setContentTopPosition() {
-  var topHeight = $("#navigationHolder").outerHeight() +
-    $("#errorContainer").outerHeight();
-
-  $(".errorbox-content").css({
-    'top': $("#navigationHolder").outerHeight() + "px"
-  });
-
-  $(".tab-content").css({
-    'top': topHeight + "px"
-  });
-}
-
-// add padding based on affix
-function styleFavouritesAffixPadding() {
-  var height = $("#favourite_keywords").outerHeight() + 15;
-  $("#favourite_items").css({
-    'paddingTop': height + "px"
-  });
-  handleScrollbarPositionFixed("#favourite_keywords");
-}
-
-function styleSearchboxAffixPadding() {
-  var height = $("#all_searchbox").outerHeight() + 15;
-  $("#all_items").css({
-    'paddingTop': height + "px"
-  });
-  handleScrollbarPositionFixed("#all_searchbox");
-}
-
-function handleScrollbarPositionFixed(divString) {
-
-  var scrollBarWidth = getScrollBarWidth();
-  var totalwidth = $("body").width() - scrollBarWidth;
-
-  $(divString).css({
-    right: scrollBarWidth + "px",
-    width: totalwidth + "px"
-  });
-}
-
-// get scrollbar width in every environment
-// from http://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
-function getScrollBarWidth() {
-  var inner = document.createElement('p');
-  inner.style.width = "100%";
-  inner.style.height = "200px";
-
-  var outer = document.createElement('div');
-  outer.style.position = "absolute";
-  outer.style.top = "0px";
-  outer.style.left = "0px";
-  outer.style.visibility = "hidden";
-  outer.style.width = "200px";
-  outer.style.height = "150px";
-  outer.style.overflow = "hidden";
-  outer.appendChild(inner);
-
-  document.body.appendChild(outer);
-  var w1 = inner.offsetWidth;
-  outer.style.overflow = 'scroll';
-  var w2 = inner.offsetWidth;
-  if (w1 == w2) w2 = outer.clientWidth;
-
-  document.body.removeChild(outer);
-
-  return (w1 - w2);
-}
-
-// -----------------------------------------------------------------------------
-// modal related stuff
-// -----------------------------------------------------------------------------
-
-NWAPP.displayLicenseAndUsageTerms = function() {
-
-  var dismissable = false;
-
-  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "<i class='fa fa-info-circle'></i> Welcome to SJgrapper v" +
-      gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
-    content: NWAPP.Templates["static/firstStart"](),
-    dismissText: "no I don't agree",
-    agreeText: "yes I understand & agree to ALL terms and conditions",
-    dismissable: dismissable,
-    large: true
-  });
-
-  if (dismissable) {
-    $('#currentModal').modal();
-  } else {
-    $('#currentModal').modal({
-      backdrop: 'static',
-      keyboard: false
+    compileItemsWithPagination({
+      paginationItem: paginationItem,
+      updateCache: false
     });
   }
 
-  $("#modal_button_dismiss").on("click", function() {
-    process.mainModule.exports.NWsetTermsAgreed(false);
-    win.close();
-  });
+  function compileItemsWithPagination(options) {
 
-  $("#modal_button_agree").on("click", function() {
-    process.mainModule.exports.NWsetTermsAgreed(true);
-    $('#currentModal').modal("hide");
-  });
+    var cachedItems = paginationStore[options.paginationItem.id].cachedItems;
 
-  $('#currentModal').modal("show");
-};
+    // update cache if specified
+    if (options.updateCache === true && options.items) {
+
+      // server side update, pagination must reset!
+      paginationStore[options.paginationItem.id].page = 1;
+
+      // load new items into clientside cache
+      paginationStore[options.paginationItem.id].cachedItems = options.items;
+      cachedItems = paginationStore[options.paginationItem.id].cachedItems;
+    }
+
+    // give identifier to handlebars template
+    cachedItems.tab = options.paginationItem.id;
+
+    // give pagination options to handlebars template
+    cachedItems.pagination = {
+      page: options.paginationItem.page,
+      pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
+    };
+
+    // give pagination needed to handlebars template
+    cachedItems.needsPagination = (cachedItems.items.length > PAGINATION_DEFAULTS.limit) ? true : false;
+
+    // give slice the actual items to show
+    cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) *
+      PAGINATION_DEFAULTS.limit;
+
+    cachedItems.itemsSliceLimit = PAGINATION_DEFAULTS.limit;
+
+    // printable items area count
+    cachedItems.itemsCountFrom = (cachedItems.items.length > cachedItems.itemsSliceOffset) ?
+      (cachedItems.itemsSliceOffset + 1) : 0;
+    cachedItems.itemsCountTo = ((cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1) > cachedItems.items.length) ?
+      cachedItems.items.length : (cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1);
+
+    // update templ
+    document.getElementById(options.paginationItem.id).innerHTML = NWAPP.Templates.items(cachedItems);
+
+    // hook bindings if this was a client-side only operation
+    if (options.updateCache === false) {
+      NWAPP.hookDynamicBindings();
+    }
+  }
 
 
-// -----------------------------------------------------------------------------
-// EXPORT to window
-// -----------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // dynamic content: template helpers
+  // ---------------------------------------------------------------------------
 
-window.NWAPP = NWAPP;
+  NWAPP.printLoading = function() {
+    var compiledLoadingTemplate = NWAPP.Templates.loading();
+    document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+  };
+
+  NWAPP.printAllItems = function(items) {
+    compileItemsWithPagination({
+      items: items,
+      paginationItem: paginationStore.all_items,
+      updateCache: true
+    });
+  };
+
+  NWAPP.printFavouriteItems = function(items) {
+    compileItemsWithPagination({
+      items: items,
+      paginationItem: paginationStore.favourite_items,
+      updateCache: true
+    });
+  };
+
+  NWAPP.printFavouriteKeywords = function(favourites) {
+    document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
+  };
+
+  NWAPP.printSettings = function(config) {
+    document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
+  };
+
+  NWAPP.printErrorMessage = function(error) {
+    document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
+  };
+
+  function clearErrorMessage() {
+    document.getElementById("errorContainer").innerHTML = "";
+    setDynamicStyles();
+  }
+
+  // ---------------------------------------------------------------------------
+  // styling related stuff
+  // ---------------------------------------------------------------------------
+
+  function setDynamicStyles() {
+    styleFavouritesAffixPadding();
+    styleSearchboxAffixPadding();
+    setContentTopPosition();
+  }
+
+  function setContentTopPosition() {
+    var topHeight = $("#navigationHolder").outerHeight() +
+      $("#errorContainer").outerHeight();
+
+    $(".errorbox-content").css({
+      'top': $("#navigationHolder").outerHeight() + "px"
+    });
+
+    $(".tab-content").css({
+      'top': topHeight + "px"
+    });
+  }
+
+  // add padding based on affix
+  function styleFavouritesAffixPadding() {
+    var height = $("#favourite_keywords").outerHeight() + 15;
+    $("#favourite_items").css({
+      'paddingTop': height + "px"
+    });
+    handleScrollbarPositionFixed("#favourite_keywords");
+  }
+
+  function styleSearchboxAffixPadding() {
+    var height = $("#all_searchbox").outerHeight() + 15;
+    $("#all_items").css({
+      'paddingTop': height + "px"
+    });
+    handleScrollbarPositionFixed("#all_searchbox");
+  }
+
+  function handleScrollbarPositionFixed(divString) {
+
+    var scrollBarWidth = getScrollBarWidth();
+    var totalwidth = $("body").width() - scrollBarWidth;
+
+    $(divString).css({
+      right: scrollBarWidth + "px",
+      width: totalwidth + "px"
+    });
+  }
+
+  // get scrollbar width in every environment
+  // from http://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
+  function getScrollBarWidth() {
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement('div');
+    outer.style.position = "absolute";
+    outer.style.top = "0px";
+    outer.style.left = "0px";
+    outer.style.visibility = "hidden";
+    outer.style.width = "200px";
+    outer.style.height = "150px";
+    outer.style.overflow = "hidden";
+    outer.appendChild(inner);
+
+    document.body.appendChild(outer);
+    var w1 = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    var w2 = inner.offsetWidth;
+    if (w1 == w2) w2 = outer.clientWidth;
+
+    document.body.removeChild(outer);
+
+    return (w1 - w2);
+  }
+
+  // ---------------------------------------------------------------------------
+  // modal related stuff
+  // ---------------------------------------------------------------------------
+
+  function configureModel(dismissable) {
+    if (dismissable) {
+      $('#currentModal').modal();
+    } else {
+      $('#currentModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+  }
+
+  function displayWarningResetApplication() {
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-exclamation-circle'></i> Erase data and reset",
+      content: NWAPP.Templates["modalContent/resetApplication"]({
+        appName: gui.App.manifest.name
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      large: false
+    });
+
+    configureModel(true);
+
+    $("#modal_button_dismiss").on("click", function() {
+      $('#currentModal').modal("hide");
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      $('#currentModal').modal("hide");
+      resetApplication();
+    });
+
+    $('#currentModal').modal("show");
+  }
+
+  function displayWarningManyLinksToFetch() {
+
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-exclamation-circle'></i> More than " +
+        COUNT_MAX_LINKS_WO_WARNING + " releases to parse",
+      content: NWAPP.Templates["modalContent/manyReleases"]({
+        countReleases: paginationStore.all_items.cachedItems.items.length
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      large: false
+    });
+
+    configureModel(true);
+
+    $("#modal_button_dismiss").on("click", function() {
+      $('#currentModal').modal("hide");
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      $('#currentModal').modal("hide");
+      addCurrentQueryAsKeyword(true);
+    });
+
+    $('#currentModal').modal("show");
+  }
+
+  NWAPP.displayLicenseAndUsageTerms = function() {
+
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-info-circle'></i> Welcome to " + gui.App.manifest.name + " v" +
+        gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
+      content: NWAPP.Templates["modalContent/firstStart"]({
+        appName: gui.App.manifest.name,
+        license: gui.App.manifest.license,
+        licenseURL: gui.App.manifest.licenseURL,
+        githubURL: gui.App.manifest.githubURL,
+        author: gui.App.manifest.author
+      }),
+      dismissText: "no I don't agree",
+      agreeText: "yes I understand & agree to ALL terms and conditions",
+      dismissable: false,
+      large: true
+    });
+
+    configureModel(false);
+
+    $("#modal_button_dismiss").on("click", function() {
+      process.mainModule.exports.NWsetTermsAgreed(false);
+      win.close();
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      process.mainModule.exports.NWsetTermsAgreed(true);
+      $('#currentModal').modal("hide");
+    });
+
+    $('#currentModal').modal("show");
+  };
+
+
+  // ---------------------------------------------------------------------------
+  // EXPORT to window
+  // ---------------------------------------------------------------------------
+
+  window.NWAPP = NWAPP;
+
+}());
