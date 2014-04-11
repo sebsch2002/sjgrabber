@@ -69,17 +69,21 @@ var hookCycleListeners = _.once(function() {
 
 // starts a cycle.
 function startCycle() {
-  hookCycleListeners();
-  cycleRunning = true;
-  rssHandler.fetch();
+  if (config.get("agreedToLicenseAndUsageTerms") === true) {
+    hookCycleListeners();
+    cycleRunning = true;
+    rssHandler.fetch();
+  } else {
+    NWAPP.displayLicenseAndUsageTerms();
+  }
 }
 
 function scheduleFetchCycle() {
   rescheduleTimer = setTimeout(function() {
     startCycle();
-  }, config.rescheduleMS);
+  }, config.get("rescheduleMS"));
   console.log("controller:scheduleFetchCycle next cycle will execute at " +
-    moment().add('milliseconds', config.rescheduleMS).toDate());
+    moment().add('milliseconds', config.get("rescheduleMS")).toDate());
 }
 
 function runFetchCycleNow() {
@@ -95,7 +99,6 @@ function runFetchCycleNow() {
 
 // EXPORTED immediately run a new cycle now
 module.exports.runFetchCycleNow = runFetchCycleNow;
-
 
 
 
@@ -132,12 +135,13 @@ module.exports.NWReady = function() {
   // manage node-webkit listeners
   hookNWListeners();
 
-  // print the dynamic output initially...
+  // print the dynamic output...
   printDynamicContentNW();
 };
 
 // restricted to run only once.
 var hookNWListeners = _.once(function() {
+
   rssHandler.on("start", cycleStartsNW);
   linkParser.on("fetched", cycleDoneNW);
 
@@ -160,7 +164,7 @@ function cycleStartsNW() {
 
 function cycleDoneNW() {
   NWAPP.endCycle();
-  nextFetchTime = moment().add('milliseconds', config.rescheduleMS).format(config.format.clock);
+  nextFetchTime = moment().add('milliseconds', config.get("rescheduleMS")).format(config.get("format").clock);
   printDynamicContentNW(true);
 }
 
@@ -183,10 +187,19 @@ function cycleProgressNWUpdateUI(processCount) {
 
 
 
-
 // -----------------------------------------------------------------------------
 // NODE-WEBKIT SPECIFIC: Available API interfaces
 // -----------------------------------------------------------------------------
+
+module.exports.NWsetTermsAgreed = function(boolagreed) {
+  if (_.isBoolean(boolagreed) === true) {
+    config.set("agreedToLicenseAndUsageTerms", boolagreed);
+    cacheHandler.save();
+    if (boolagreed === true && cycleRunning === false) {
+      startCycle();
+    }
+  }
+};
 
 var searchString = "";
 var keywordString = "";
@@ -234,7 +247,7 @@ module.exports.NWremoveKeyword = function(keyword) {
   cacheHandler.save();
 
   // no keyword selected anymore if its the keywords thats removed!
-  if(keywordString === keyword) {
+  if (keywordString === keyword) {
     keywordString = "";
   }
 
@@ -264,6 +277,12 @@ module.exports.NWmarkItemAsDownloaded = function(uuid, url) {
 // settings, reset everything.
 module.exports.clearCacheReset = function() {
   cacheHandler.clear();
+
+  // reset config model to its defaults!
+  _.each(_.keys(config.defaults), function (key) {
+    config.set(key, config.defaults[key]);
+  });
+
   savedItems.reset();
   favourites.reset();
 
@@ -295,7 +314,7 @@ function checkPrintQueueAbort(index) {
 }
 
 function abortAllPrintQueueOperations() {
-  _.each(printQueue, function (queue) {
+  _.each(printQueue, function(queue) {
     queue.abort = true;
   });
 }
@@ -388,12 +407,12 @@ function printDynamicContentNW(suppressLoading) {
         _.defer(function(callback) {
           NWAPP.printSettings({
             nextFetchTime: nextFetchTime,
-            interval: config.rescheduleMS / 1000 / 60,
-            fetchOnlyFavourites: config.fetchOnlyFavourites,
-            maxLinkRefetchRetrys: config.maxLinkRefetchRetrys,
-            requestTimeoutSec: config.requestTimeoutMS / 1000,
-            publicCoin: config.publicCoin,
-            mail: config.mail
+            interval: config.get("rescheduleMS") / 1000 / 60,
+            fetchOnlyFavourites: config.get("fetchOnlyFavourites"),
+            maxLinkRefetchRetrys: config.get("maxLinkRefetchRetrys"),
+            requestTimeoutSec: config.get("requestTimeoutMS") / 1000,
+            publicCoin: config.get("publicCoin"),
+            mail: config.get("mail")
           });
           callback(checkPrintQueueAbort(queueIndex));
         }, callback);

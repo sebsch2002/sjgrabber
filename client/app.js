@@ -37,8 +37,6 @@ var compiledLoadingTemplate = NWAPP.Templates.loading();
   document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
   document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
   document.getElementById("settings").innerHTML = compiledLoadingTemplate;
-
-  displayFirstStart();
 }());
 
 // 
@@ -239,7 +237,7 @@ NWAPP.hookStaticBindings = function() {
 
   // NW for info/welcome text
   $(".nav_welcome").on("click", function() {
-    displayFirstStart();
+    NWAPP.displayLicenseAndUsageTerms();
   });
 
 };
@@ -416,8 +414,6 @@ function clearErrorMessage() {
   setDynamicStyles();
 }
 
-window.NWAPP = NWAPP;
-
 
 // -----------------------------------------------------------------------------
 // styling related stuff
@@ -502,7 +498,7 @@ function getScrollBarWidth() {
 // modal related stuff
 // -----------------------------------------------------------------------------
 
-function displayFirstStart() {
+NWAPP.displayLicenseAndUsageTerms = function() {
 
   var dismissable = false;
 
@@ -526,12 +522,21 @@ function displayFirstStart() {
   }
 
   $("#modal_button_dismiss").on("click", function() {
+    process.mainModule.exports.NWsetTermsAgreed(false);
     win.close();
   });
 
   $("#modal_button_agree").on("click", function() {
+    process.mainModule.exports.NWsetTermsAgreed(true);
     $('#currentModal').modal("hide");
   });
 
   $('#currentModal').modal("show");
-}
+};
+
+
+// -----------------------------------------------------------------------------
+// EXPORT to window
+// -----------------------------------------------------------------------------
+
+window.NWAPP = NWAPP;

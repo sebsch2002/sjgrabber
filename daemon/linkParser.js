@@ -25,17 +25,17 @@ LinkParser.prototype.getUploadedLinks = function() {
 
   this.emit("start");
 
-  this.uniqueLinks = getUnionedLinksToFetch(config.fetchOnlyFavourites);
+  this.uniqueLinks = getUnionedLinksToFetch(config.get("fetchOnlyFavourites"));
   this.currentLinkIndex = 0;
 
   this.countCurrentFetchedLinks = 0;
-  this.countTotalLinksToFetch = getCountLinksMissing(config.fetchOnlyFavourites);
+  this.countTotalLinksToFetch = getCountLinksMissing(config.get("fetchOnlyFavourites"));
 
   console.log("linkParser:getUploadedLinks (in progress) |" +
-    getCountLinksMissing(config.fetchOnlyFavourites) + " links - " +
+    getCountLinksMissing(config.get("fetchOnlyFavourites")) + " links - " +
     this.uniqueLinks.length + " sites|");
 
-  if (getCountLinksMissing(config.fetchOnlyFavourites) === 0) {
+  if (getCountLinksMissing(config.get("fetchOnlyFavourites")) === 0) {
     console.log("linkParser:getUploadedLinks done, nothing to fetch!");
     this.emit("fetched");
     return;
@@ -51,7 +51,7 @@ LinkParser.prototype.nextULParse = function() {
   if (this.currentLinkIndex >= this.uniqueLinks.length) {
     // all done!
     this.currentLinkIndex = 0;
-    console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.fetchOnlyFavourites) + " ul items missing.");
+    console.log("linkParser:nextULParse done, " + getCountLinksMissing(config.get("fetchOnlyFavourites")) + " ul items missing.");
 
     this.emit("fetched");
   } else {
@@ -103,7 +103,7 @@ function getDownloadLinks(onlyFavourites, originlink) {
 
 function parseURLForULLinks() {
   var link = linkParser.uniqueLinks[linkParser.currentLinkIndex];
-  var toParseItems = getDownloadLinks(config.fetchOnlyFavourites, link),
+  var toParseItems = getDownloadLinks(config.get("fetchOnlyFavourites"), link),
     linkRequest;
 
   process.stdout.write("fetching " + linkParser.uniqueLinks[linkParser.currentLinkIndex] + " | ");
@@ -112,7 +112,7 @@ function parseURLForULLinks() {
 
     request({
       uri: link,
-      timeout: config.requestTimeoutMS,
+      timeout: config.get("requestTimeoutMS"),
       encoding: null,
       headers: {
         'Accept-Encoding': 'gzip',

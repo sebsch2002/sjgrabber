@@ -22,8 +22,8 @@ util.inherits(RSSHandler, EventEmitter);
 
 RSSHandler.prototype.fetch = function() {
   var req = request({
-    uri: config.rssUrl,
-    timeout: config.requestTimeoutMS
+    uri: config.get("rssUrl"),
+    timeout: config.get("requestTimeoutMS")
   });
   var feedparser = new FeedParser({
     normalize: true,
@@ -98,7 +98,7 @@ RSSHandler.prototype.fetch = function() {
         that.emit("progress", (that.allItems / AVERAGE_ITEMS_IN_RSS_FEED) * 0.5);
       }
 
-      if(config.support.stdoutCursorTo) {
+      if(config.get("support").stdoutCursorTo) {
         process.stdout.cursorTo(32);
         process.stdout.write("total: " + that.allItems + " - new: " + that.newItems);
       }

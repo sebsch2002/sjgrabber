@@ -5,10 +5,11 @@ var moment = require("moment"); // might take out, was only needed for migration
 
 var savedItems = require("./savedItems");
 var favourites = require("./favourites");
+
 var config = require("./config");
 
 // target active from localstorage
-var activeLocalStorageTarget = config.cache.localStorageTargets.productive;
+var activeLocalStorageTarget = config.get("cache").localStorageTargets.productive;
 
 var CacheHandler = function() {
   this.lastLoaded = false;
@@ -23,7 +24,7 @@ CacheHandler.prototype.load = function() {
 
   var that = this;
 
-  if (config.cache.enabled === false) {
+  if (config.get("cache").enabled === false) {
     that.emit("loaded");
     return;
   }
@@ -32,7 +33,12 @@ CacheHandler.prototype.load = function() {
     this.emit("error", "cacheHandler:load localStorage is not linked to cacheHandler!");
   } else {
 
-    // migration script
+    // load config from localStorage...
+    if (_.isUndefined(this.localStorage[activeLocalStorageTarget.config]) === false) {
+      loadConfig(this.localStorage[activeLocalStorageTarget.config]);
+    }
+
+    // migration script for items
     that.migrateBefore_v0_2_3();
 
     // load ITEMS from localStorage...
@@ -56,7 +62,7 @@ CacheHandler.prototype.save = function() {
 
   var that = this;
 
-  if (config.cache.enabled === false) {
+  if (config.get("cache").enabled === false) {
     that.emit("saved");
     return;
   }
@@ -64,6 +70,9 @@ CacheHandler.prototype.save = function() {
   if (_.isUndefined(this.localStorage) === true) {
     this.emit("error", "cacheHandler:save localStorage is not linked to cacheHandler!");
   } else {
+
+    // save CONFIG to localStorage...
+    this.localStorage[activeLocalStorageTarget.config] = JSON.stringify(config.toJSON());
 
     // save ITEMS to localStorage...
     this.localStorage[activeLocalStorageTarget.items] = JSON.stringify(savedItems.toJSON());
@@ -83,7 +92,7 @@ CacheHandler.prototype.linkLocalStorage = function(localStorage) {
   if (process.NWAPP_DEBUG === true) {
     console.log("cacheHandler:linkLocalStorage ---------- DEBUG MODE --------");
     // reset saving / loading items for DEBUG use, non production
-    activeLocalStorageTarget = config.cache.localStorageTargets.debug;
+    activeLocalStorageTarget = config.get("cache").localStorageTargets.debug;
   }
 
 };
@@ -94,6 +103,7 @@ CacheHandler.prototype.clear = function() {
   } else {
 
     // using remove each item individually
+    this.localStorage.removeItem((activeLocalStorageTarget.config).toString());
     this.localStorage.removeItem((activeLocalStorageTarget.items).toString());
     this.localStorage.removeItem((activeLocalStorageTarget.favourites).toString());
 
@@ -106,6 +116,16 @@ CacheHandler.prototype.clear = function() {
 // 
 // helpers
 // 
+
+function loadConfig(data) {
+  var dataObject = parseJSONObject(data);
+
+  if (_.isUndefined(dataObject) === false) {
+    _.each(_.keys(dataObject), function (key) {
+      config.set(key, dataObject[key]);
+    });
+  }
+}
 
 function loadSavedItems(data) {
   var dataObject = parseJSONObject(data);

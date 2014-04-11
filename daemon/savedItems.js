@@ -33,7 +33,7 @@ var SavedItemModel = Backbone.Model.extend({
       uuid: this.get("uuid"),
       title: title,
       tags: this.getTagObject(),
-      date: moment(this.get("date")).format(config.format.date),
+      date: moment(this.get("date")).format(config.get("format").date),
       link: this.get("link"),
       filehosterLinks: this.get("filehosterLinks"),
       filehosterLinksFetched: this.get("filehosterLinksFetched"),
