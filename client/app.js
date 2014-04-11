@@ -458,6 +458,7 @@
   };
 
   NWAPP.printSettings = function(config) {
+    config.appName = gui.App.manifest.name;
     document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
   };
 
