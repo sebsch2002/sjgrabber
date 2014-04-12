@@ -428,6 +428,24 @@
 
 
   // ---------------------------------------------------------------------------
+  // update
+  // ---------------------------------------------------------------------------
+
+  NWAPP.updateIsAvailable = function(updateObj) {
+    $(".updateAvailable").removeClass("hidden");
+
+    if(process.platform === "darwin") {
+      $(".updateAvailable").append("v" +
+      updateObj.version + " available <i class='fa fa-download'></i>");
+    } else {
+      $(".updateAvailable").append("<i class='fa fa-download'></i> v" +
+      updateObj.version + " available");
+    }
+
+    $(".updateAvailable").attr("href", updateObj.link);
+  };
+
+  // ---------------------------------------------------------------------------
   // dynamic content: template helpers
   // ---------------------------------------------------------------------------
 

@@ -167,6 +167,10 @@ nav and titlebar
   color: #428bfd;
 }
 
+.navbar .navbar-nav > li > a.updateAvailable:hover {
+  color: #428bfd;
+}
+
 .navbar-nav.nav-justified > li{
   float:none;
 }

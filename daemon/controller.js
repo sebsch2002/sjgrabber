@@ -8,12 +8,12 @@ var rssHandler = require("./rssHandler");
 var config = require("./config");
 var savedItems = require("./savedItems");
 var favourites = require("./favourites");
+var updateChecker = require("./updateChecker");
 
 // runtime variables managing state
 
 var rescheduleTimer;
 var cycleRunning = false;
-
 
 // -----------------------------------------------------------------------------
 // NODE GENERIC: controller handles whole system
@@ -49,10 +49,11 @@ var hookCycleListeners = _.once(function() {
 
   console.log("controller:startup");
 
-  // check for debug flag...
+  // check for debug flag and version update
   try {
     var pjson = require("../package.json");
     process.NWAPP_DEBUG = (_.isUndefined(pjson.NWAPP_DEBUG) === false) ? pjson.NWAPP_DEBUG : false;
+
   } catch (e) {
     process.NWAPP_DEBUG = false;
   }
@@ -137,6 +138,15 @@ module.exports.NWReady = function() {
 
   // print the dynamic output...
   printDynamicContentNW();
+
+  
+  // if updates already found, notify NWapp now!
+  if (updateChecker.checked && _.isUndefined(updateChecker.updateObj) === false) {
+    NWAPP.updateIsAvailable(updateChecker.updateObj);
+  }
+
+  // check for updates...
+  checkUpdates();
 };
 
 // restricted to run only once.
@@ -156,6 +166,23 @@ var hookNWListeners = _.once(function() {
   cacheHandler.load(); // start cacheing now that localStorage is available.
 });
 
+// restricted to run only once.
+var checkUpdates = _.once(function() {
+  try {
+    var pjson = require("../package.json");
+
+    updateChecker.on("updateFound", function(updateObj) {
+      // pass to NWAPP to display...
+      //console.log("controller updateFound: " + updateObj);
+      NWAPP.updateIsAvailable(updateObj);
+    });
+
+    updateChecker.checkForUpdates(pjson.version);
+
+  } catch (e) {
+    console.log("error with checkUpdates");
+  }
+});
 
 function cycleStartsNW() {
   nextFetchTime = false;
@@ -289,7 +316,7 @@ module.exports.clearCacheReset = function() {
   cacheHandler.clear();
 
   // reset config model to its defaults!
-  _.each(_.keys(config.defaults), function (key) {
+  _.each(_.keys(config.defaults), function(key) {
     config.set(key, config.defaults[key]);
   });
 
