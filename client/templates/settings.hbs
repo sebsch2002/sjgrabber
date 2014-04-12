@@ -1,7 +1,7 @@
 <div class="settings_what settings_item jumbotron disallowHighlighting">
-  <p class="text-center">getting releases from serienjunkies.org is <strong>pain? {{appName}} assists you!</strong></p>
+  <p class="text-center"><strong>{{appName}}</strong> - <strong><em>your</em> favourite releases</strong> from serienjunkies.org</p>
 
-  <p class="jumbo_small">1. <i class="fa fa-search"></i> <small><em>(search)</em></small> through new releases from serienjunkies.org.</p>
+  {{!-- <p class="jumbo_small">1. <i class="fa fa-search"></i> <small><em>(search)</em></small> through new releases from serienjunkies.org.</p>
 
   <p class="jumbo_small">2. <i class='fa fa-star'></i> <small><em>(star)</em></small> keywords and grab download links.</p>
 
@@ -9,7 +9,7 @@
 
   <p class="jumbo_small">4. click <i class="fa fa-link"></i> <small><em>(grapped links)</em></small> to <strong>copy them to your clipboard</strong> (and solve captcha in jDownloader).</p>
 
-  <p class="jumbo_small">5. <i class='fa fa-refresh'></i> <small><em>(refetch)</em></small> manually if you want, but <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> happen automatically every {{interval}} minutes.</p>
+  <p class="jumbo_small">5. <i class='fa fa-refresh'></i> <small><em>(refetch)</em></small> manually if you want, but <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> happen automatically every {{interval}} minutes.</p> --}}
 </div>
 
 
@@ -22,21 +22,39 @@
 <div class="settings_status settings_item jumbotron disallowHighlighting">
 
   {{#if nextFetchTime}}
-    <p class="text-center">next <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> will take place at {{nextFetchTime}}</p>
+    <p class="text-center">next <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> will automatically take place at {{nextFetchTime}}</p>
   {{else}}
     <p class="text-center">next <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
   {{/if}}
 
   {{!-- <p class="text-center">stable network recommended (connections timeout after {{requestTimeoutSec}} seconds).</p> --}}
 
-  <p class="text-center">problems with <i class="fa fa-bug"></i> <small><em>(bugs)</em></small>? press <button type="button" id="clearreset_button" data-loading-text="erase data and reset application" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset application</button></p>
+  <p class="text-center">problems with <i class="fa fa-bug"></i> <small><em>(bugs)</em></small>? <button type="button" id="clearreset_button" data-loading-text="erase data and reset application" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset application</button></p>
   {{!-- <p class="text-center"><button type="button" id="clearreset_button" data-loading-text="clear cache, remove favourites, reset settings and fetch" class="btn btn-danger btn-lg appCycleDependent">clear cache, remove favourites, reset settings and fetch</<button></button>n></p> --}}
 
 </div>
 
 <div class="settings_contact settings_item jumbotron">
 
-  <p class="text-center disallowHighlighting"><strong>no fucking ads!</strong> <i class="fa fa-smile-o fa-5x"></i> <small><em>(like)</em></small> it?</br> <strong>support me by donating</strong> <i class="fa fa-btc fa-5x"></i> <small><em>(bitcoins)</em></small> to</p><p class="text-center">{{publicCoin}}</p>
-  <p class="text-center disallowHighlighting"><strong>requests, bugs and disgust</strong> <i class="fa fa-envelope fa-4x"></i> <small><em>(send)</em></small> to</p><p class="text-center">{{mail}}</p>
+  <p class="text-center disallowHighlighting">{{!-- <strong>no fucking ads!</strong> <i class="fa fa-smile-o fa-5x"></i> <small><em>(like)</em></small> it?</br>  --}}<strong>support {{appName}} by donating</strong> <i class="fa fa-btc fa-2x"></i> <small><em>(bitcoins)</em></small> to</p><p class="text-center">{{publicCoin}}</p>
+  <p class="text-center disallowHighlighting"><strong>requests, bugs and disgust</strong> <i class="fa fa-envelope"></i> <small><em>(send)</em></small> to</p><p class="text-center">{{mail}}</p>
 
 </div>
+
+
+{{!-- <div class="settings_item jumbotron settings_status">
+  <div class="adOptionsHolder">
+    <div class="radio disallowHighlighting">
+      <label>
+        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+        <strong>Pay respect</strong> to serienjunkies.org by showing ONE ad at the bottom of each page.
+      </label>
+    </div>
+    <div class="radio disallowHighlighting">
+      <label>
+        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+        <strong>Don't care</strong> about serienjunkies.org and hide the tiny ad from serienjunkies.org!
+      </label>
+    </div>
+  </div>
+</div> --}}

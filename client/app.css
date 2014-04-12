@@ -2,8 +2,8 @@
 Application global css config
 ----------------------------------------------------------------------------- */
 
-html, body{
-  height: 100%; /* always use full available height (fixes footer)*/
+html, body {
+  height: 100%; /* always use full available height (fixes footer) */
   overflow: hidden;
 }
 
@@ -38,18 +38,47 @@ a {
   /* cursor: default; */
 }
 
+/* -----------------------------------------------------------------------------
+wrapp maincontent and set a fixed height footer
+----------------------------------------------------------------------------- */
+
+#app {
+  height: 100%;
+}
+
+.footerText {
+  margin: 0px;
+  vertical-align: middle;
+  height: 100%;
+  color: #eee;
+  font-size: 11px;
+  font-weight: 200;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto;
+  margin: 0 auto -18px; /* set FOOTER WIDTH */
+  padding: 0 0 18px; /* set FOOTER WIDTH */
+}
+
+#footer {
+  /*-webkit-app-region: drag;*/ /* ATTENTION button presses get bugged with enabled! */
+  height: 18px; /* set FOOTER WIDTH */
+  background-image: linear-gradient(to bottom, #3c3c3c 0%, #222 100%);
+}
 
 /* -----------------------------------------------------------------------------
 fixed positioning + scrolling (attention top gets dynamically set!)
 ----------------------------------------------------------------------------- */
 
 .tab-content { /* only allow scrolling on tab-content item */
+  bottom: 18px; /* set FOOTER WIDTH */
   overflow-y: scroll;
   overflow-x: auto;
   position: absolute;
   width: 100%;
   /*top: 0px;*/ /* top gets dynamically set */
-  bottom: 0;
 }
 
 .errorbox-content {
@@ -339,6 +368,7 @@ loading - noContent notifies
 .notifier-status {
   text-align: center;
   color: #aaa;
+  padding-bottom: 15px;
 }
 
 /* -----------------------------------------------------------------------------

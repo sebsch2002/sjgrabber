@@ -122,6 +122,9 @@ module.exports.NWReady = function() {
   // sets the link to the clientApp.
   NWAPP = window.NWAPP;
 
+  // donate adress
+  NWAPP.setCoinPublicKey(config.get("publicCoin"));
+
   // initial set on page load...
   NWAPP.hookStaticBindings();
 
@@ -190,7 +193,8 @@ function cycleStartsNW() {
 }
 
 function cycleDoneNW() {
-  NWAPP.endCycle();
+  var fetchedDate = moment();
+  NWAPP.endCycle(fetchedDate.format(config.get("format").date) + " " + fetchedDate.format(config.get("format").clock));
   nextFetchTime = moment().add('milliseconds', config.get("rescheduleMS")).format(config.get("format").clock);
   printDynamicContentNW(true);
 }

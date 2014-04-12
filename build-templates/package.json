@@ -1,6 +1,6 @@
 {
   "name": "SJgrabber",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "author": "the unknown",
   "license": "MIT",
@@ -21,8 +21,8 @@
     "toolbar": false,
     "frame": false,
     "position": "center",
-    "width": 800,
-    "height": 580,
+    "width": 640,
+    "height": 480,
     "min_width": 640,
     "min_height": 480,
     "icon": "assets/SJ_logo.png"
