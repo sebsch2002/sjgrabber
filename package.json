@@ -1,6 +1,6 @@
 {
   "name": "SJgrabber",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "keywords": [
     "serienjunkies.org"
