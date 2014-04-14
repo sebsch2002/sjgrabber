@@ -1,10 +1,10 @@
 {
   "name": "SJgrabber",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "authors": [
-    "the unknown"
+    "majodev"
   ],
-  "description": "see package.json",
+  "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "license": "MIT",
   "private": true,
   "dependencies": {

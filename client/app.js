@@ -65,6 +65,7 @@ function paintApplication() {
   document.getElementById("app").innerHTML = NWAPP.Templates.app({
     name: gui.App.manifest.name,
     version: gui.App.manifest.version,
+    btc: gui.App.manifest.NWAPP_CONST.btc,
     platform: {
       win: (process.platform === "win32") ? true : false,
       mac: (process.platform === "darwin") ? true : false,
@@ -373,10 +374,6 @@ NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
   }
 };
 
-NWAPP.setCoinPublicKey = function(publicKey) {
-  $("#status_right").append(publicKey);
-};
-
 // ---------------------------------------------------------------------------
 // pagination helper 
 // ---------------------------------------------------------------------------
@@ -490,6 +487,8 @@ NWAPP.printFavouriteKeywords = function(favourites) {
 
 NWAPP.printSettings = function(config) {
   config.appName = gui.App.manifest.name;
+  config.btc = gui.App.manifest.NWAPP_CONST.btc;
+  config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
   document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
 };
 
@@ -684,9 +683,8 @@ NWAPP.displayLicenseAndUsageTerms = function() {
     content: NWAPP.Templates["modalContent/firstStart"]({
       appName: gui.App.manifest.name,
       license: gui.App.manifest.license,
-      licenseURL: gui.App.manifest.licenseURL,
-      githubURL: gui.App.manifest.githubURL,
-      author: gui.App.manifest.author
+      licenseURL: gui.App.manifest.NWAPP_CONST.licenseURL,
+      githubURL: gui.App.manifest.NWAPP_CONST.githubURL
     }),
     dismissText: "no I don't agree",
     agreeText: "yes I understand & agree to ALL terms and conditions",

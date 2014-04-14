@@ -42,7 +42,7 @@
           <div class="col-xs-4 windowBarMiddleCol">
             {{!-- Titlebar --}}
             {{#if debugmode}}
-              <p class="windowtitle text-center disabled"><img src="assets/SJ_logo_window.png" width="15px" height="15px" /> {{name}} v{{version}} (debug)</p>
+              <p class="windowtitle text-center disabled"><img src="assets/SJ_logo_window.png" width="15px" height="15px" /> {{name}} v{{version}} <small>(debug)</small></p>
             {{else}}
               <p class="windowtitle text-center disabled"><img src="assets/SJ_logo_window.png" width="15px" height="15px" /> {{name}} v{{version}}</p>
             {{/if}}
@@ -165,7 +165,7 @@
     <div class="row">
       <p id="status_left" class="footerText col-xs-4 disallowHighlighting">never fetched</p>
       {{!-- <p id="status_middle" class="footerText text-center col-xs-4 disallowHighlighting"></p> --}}
-      <p id="status_right" class="footerText text-right col-xs-8"><i class="fa fa-btc"></i> </p>
+      <p id="status_right" class="footerText text-right col-xs-8">wanna support? donate <i class="fa fa-btc"></i> to {{btc}}</p>
     </div>
   </div>
 </div>

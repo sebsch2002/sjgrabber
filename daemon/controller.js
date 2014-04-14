@@ -122,9 +122,6 @@ module.exports.NWReady = function() {
   // sets the link to the clientApp.
   NWAPP = window.NWAPP;
 
-  // donate adress
-  NWAPP.setCoinPublicKey(config.get("publicCoin"));
-
   // initial set on page load...
   NWAPP.hookStaticBindings();
 
@@ -142,7 +139,6 @@ module.exports.NWReady = function() {
   // print the dynamic output...
   printDynamicContentNW();
 
-  
   // if updates already found, notify NWapp now!
   if (updateChecker.checked && _.isUndefined(updateChecker.updateObj) === false) {
     NWAPP.updateIsAvailable(updateChecker.updateObj);
@@ -180,7 +176,7 @@ var checkUpdates = _.once(function() {
       NWAPP.updateIsAvailable(updateObj);
     });
 
-    updateChecker.checkForUpdates(pjson.version);
+    updateChecker.checkForUpdates(pjson.version, pjson.NWAPP_CONST.updateURL);
 
   } catch (e) {
     console.log("error with checkUpdates");
@@ -451,9 +447,7 @@ function printDynamicContentNW(suppressLoading) {
             interval: config.get("rescheduleMS") / 1000 / 60,
             fetchOnlyFavourites: config.get("fetchOnlyFavourites"),
             maxLinkRefetchRetrys: config.get("maxLinkRefetchRetrys"),
-            requestTimeoutSec: config.get("requestTimeoutMS") / 1000,
-            publicCoin: config.get("publicCoin"),
-            mail: config.get("mail")
+            requestTimeoutSec: config.get("requestTimeoutMS") / 1000
           });
           callback(checkPrintQueueAbort(queueIndex));
         }, callback);

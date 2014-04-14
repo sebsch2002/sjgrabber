@@ -29,8 +29,6 @@ var ConfigModel = Backbone.Model.extend({
       clock: "HH:mm:ss",
       date: "DD.MM.YYYY"
     },
-    publicCoin: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    mail: "xxxxxxx.xxxxxx@xxxxxx.com",
     agreedToLicenseAndUsageTerms: false
   }
 });

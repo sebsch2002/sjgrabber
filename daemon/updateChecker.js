@@ -13,9 +13,9 @@ var UpdateChecker = function() {
 
 util.inherits(UpdateChecker, EventEmitter);
 
-UpdateChecker.prototype.checkForUpdates = function(version) {
+UpdateChecker.prototype.checkForUpdates = function(version, updateURL) {
   request({
-    uri: "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/update-manifest.json",
+    uri: updateURL,
     timeout: config.get("requestTimeoutMS"),
     encoding: null,
     headers: {

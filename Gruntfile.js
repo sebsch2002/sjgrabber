@@ -9,8 +9,8 @@ module.exports = function(grunt) {
         build_dir: './release', // target
         mac: true,
         win: true,
-        linux32: false,
-        linux64: false,
+        linux32: true,
+        linux64: true,
         version: '0.9.2',
         zip: true,
         keep_nw: true,
@@ -160,30 +160,30 @@ module.exports = function(grunt) {
           dest: '',
         }]
       },
-      // linux32: {
-      //   options: {
-      //     archive: "dist/" + pkgJSON.name + "_linux32_v" + pkgJSON.version + ".zip",
-      //     mode: 'zip'
-      //   },
-      //   files: [{
-      //     expand: true,
-      //     cwd: 'release/releases/' + pkgJSON.name + '/linux32/',
-      //     src: ['**'],
-      //     dest: '',
-      //   }]
-      // },
-      // linux64: {
-      //   options: {
-      //     archive: "dist/" + pkgJSON.name + "_linux64_v" + pkgJSON.version + ".zip",
-      //     mode: 'zip'
-      //   },
-      //   files: [{
-      //     expand: true,
-      //     cwd: 'release/releases/' + pkgJSON.name + '/linux64/',
-      //     src: ['**'],
-      //     dest: '',
-      //   }]
-      // }
+      linux32: {
+        options: {
+          archive: "dist/" + pkgJSON.name + "_linux32_v" + pkgJSON.version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/' + pkgJSON.name + '/linux32/',
+          src: ['**'],
+          dest: '',
+        }]
+      },
+      linux64: {
+        options: {
+          archive: "dist/" + pkgJSON.name + "_linux64_v" + pkgJSON.version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/' + pkgJSON.name + '/linux64/',
+          src: ['**'],
+          dest: '',
+        }]
+      }
     },
     handlebars: {
       all: {
