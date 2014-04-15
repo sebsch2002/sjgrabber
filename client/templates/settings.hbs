@@ -24,21 +24,21 @@
   {{#if nextFetchTime}}
     <p class="text-center">next <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> will automatically take place at {{nextFetchTime}}</p>
   {{else}}
-    <p class="text-center">next <i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
+    <p class="text-center"><i class='fa fa-refresh'></i> <small><em>(fetching)</em></small> takes place <strong>now</strong>.</p>
   {{/if}}
 
   {{!-- <p class="text-center">stable network recommended (connections timeout after {{requestTimeoutSec}} seconds).</p> --}}
 
-  <p class="text-center">problems with <i class="fa fa-bug"></i> <small><em>(bugs)</em></small>? <button type="button" id="clearreset_button" data-loading-text="erase data and reset application" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset application</button></p>
+  <p class="text-center">problems with <i class="fa fa-bug"></i> <small><em>(bugs)</em></small>? <button type="button" id="clearreset_button" data-loading-text="erase data and reset {{appName}}" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset {{appName}}</button></p>
   {{!-- <p class="text-center"><button type="button" id="clearreset_button" data-loading-text="clear cache, remove favourites, reset settings and fetch" class="btn btn-danger btn-lg appCycleDependent">clear cache, remove favourites, reset settings and fetch</<button></button>n></p> --}}
 
 </div>
 
 <div class="settings_contact settings_item jumbotron">
 
-  <p class="text-center disallowHighlighting"><strong>no f***ing ads!</strong> <i class="fa fa-smile-o fa"></i> <small><em>(like)</em></small> it?</p>
+  <p class="text-center disallowHighlighting"><strong>no f***ing ads!</strong> <i class="fa fa-heart"></i> <small><em>(love)</em></small> it? <a href="http://ctt.ec/ji0a6" class="items_link_external"><i class="fa fa-twitter"></i> to gain awesomeness</a>!</p>
 
-  <p class="text-center"><strong>support {{appName}} by donating</strong> <i class="fa fa-btc fa"></i> <small><em>(bitcoins)</em></small> to<br />{{btc}}</p>
+  <p class="text-center disallowHighlighting"><strong>support {{appName}} by donating</strong> <i class="fa fa-btc fa"></i> <small><em>(bitcoins)</em></small> to<br /><span class="btcText allowHighlighting">{{btc}}</span></p>
 
   <p class="text-center disallowHighlighting"><strong>requests, bugs or disgust?</strong> open an issue on <a class="items_link_external" href="{{githubURL}}"><i class="fa fa-github"></i> GitHub</a>!</p>
 

@@ -1,6 +1,6 @@
 {
   "name": "SJgrabber",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "keywords": [
     "serienjunkies.org"
@@ -46,8 +46,8 @@
   "private": true,
   "NWAPP_DEBUG": true,
   "NWAPP_CONST": {
-    "licenseURL": "http://XXXXXXXXXXXX.XXXXXX.XXX",
-    "githubURL": "http://XXXXXXXXX.XXXXXX.XXX",
+    "licenseURL": "https://raw.githubusercontent.com/majodev/sjgrabber/master/LICENSE.txt",
+    "githubURL": "https://github.com/majodev/sjgrabber",
     "btc": "1KaeuK2WpwkhK9T3eURK7uxB3frgD8Z4HV",
     "updateURL": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/update-manifest.json"
   }

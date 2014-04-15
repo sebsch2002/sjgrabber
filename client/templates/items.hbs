@@ -72,9 +72,9 @@
               {{/if}}
 
                 {{#if downloaded}}
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-success btn-xs items_link defaultCursorNoDrag disallowHighlighting" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-check'></i> {{provider}}</button> 
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-success btn-xs items_link defaultCursorNoDrag" data-toggle="tooltip" data-placement="top" title="copy link to clipboard"><i class='fa fa-check'></i> {{provider}}</button> 
                 {{else}}
-                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag disallowHighlighting" data-toggle="tooltip" data-placement="top" title="copy link"><i class='fa fa-clipboard'></i> {{provider}}</button> 
+                  <button type="button" data-uuid="{{uuid}}" data-href="{{link}}" class="btn btn-default btn-xs items_link defaultCursorNoDrag" data-toggle="tooltip" data-placement="top" title="copy link to clipboard"><i class='fa fa-clipboard'></i> {{provider}}</button> 
                 {{/if}}
               
               {{#if @last}}

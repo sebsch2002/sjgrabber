@@ -1,14 +1,21 @@
-Welcome to SJgrapper!
+Welcome to SJgrabber!
 
-* Installing? *
-There is no need to explicitly install SJgrapper. Copy it anywhere you want or just run it!
+* About *
+SJgrabber parses RSS feeds and HTML pages from serienjunkies.org. 
+It assists you to GRAB LINKS from THE LATEST episodes for your FAVOURITE TV shows.
 
-* Upgrading? *
-Your current configuration, favourites and releases are kept separately, just launch a newer version of SJgrapper and you are set! (Feel free to delete the previous version or overwrite its contents with the newer one.)
+* Downloading *
+Get SJgrabber for YOUR platform from https://github.com/majodev/sjgrabber/releases
 
-* Problems? *
+* Installing *
+There is no need to explicitly install SJgrabber. Copy it anywhere you want and run it!
+
+* Upgrading *
+Your current configuration, fetched favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set! (feel free to delete previous versions of SJgrabber)
+
+* Problems *
 Open an issue on GitHub!
 
 * LICENSES *
-see LICENSE.txt for SJgrapper specific licenses
-see credits.html for node-webkit redistributable licenses
+see LICENSE.txt for SJgrabber specific licenses
+see credits.html for node-webkit redistributable licenses (within redistributed apps)

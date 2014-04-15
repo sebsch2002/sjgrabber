@@ -1,723 +1,732 @@
 (function() {
 
-// ---------------------------------------------------------------------------
-// node-webkit
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // node-webkit
+  // ---------------------------------------------------------------------------
 
-var gui = require("nw.gui");
-var clipboard = gui.Clipboard.get();
-var win = gui.Window.get();
+  var gui = require("nw.gui");
+  var clipboard = gui.Clipboard.get();
+  var win = gui.Window.get();
 
-// ---------------------------------------------------------------------------
-// namespace and runtime variables
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // namespace and runtime variables
+  // ---------------------------------------------------------------------------
 
-var NWAPP = window.NWAPP || {};
+  var NWAPP = window.NWAPP || {};
 
-// fasted way to make loading available
-var compiledLoadingTemplate = NWAPP.Templates.loading();
+  // fasted way to make loading available
+  var compiledLoadingTemplate = NWAPP.Templates.loading();
 
-// hold current input in search box
-var currentSearchInput = "";
+  // hold current input in search box
+  var currentSearchInput = "";
 
-// holds current button cycle state
-var buttonStateLoading = false;
+  // holds current button cycle state
+  var buttonStateLoading = false;
 
-// pagination default constants
-var PAGINATION_DEFAULTS = {
-  page: 1,
-  limit: 250
-};
-
-// holds dynamic items and favourites and pagination information
-var paginationStore = {
-  all_items: {
-    id: "all_items",
-    page: PAGINATION_DEFAULTS.page,
-    cachedItems: []
-  },
-  favourite_items: {
-    id: "favourite_items",
-    page: PAGINATION_DEFAULTS.page,
-    cachedItems: []
-  }
-};
-
-var COUNT_MAX_LINKS_WO_WARNING = 50;
-
-// ---------------------------------------------------------------------------
-// startup and main app painting
-// ---------------------------------------------------------------------------
-
-(function clientStartup() {
-  // are we running in debug mode?
-  if (NWAPP_DEBUG === true) {
-    win.showDevTools();
-  }
-
-  paintApplication();
-}());
-
-
-function paintApplication() {
-
-  // add compile app template into app and settings div
-  document.getElementById("app").innerHTML = NWAPP.Templates.app({
-    name: gui.App.manifest.name,
-    version: gui.App.manifest.version,
-    btc: gui.App.manifest.NWAPP_CONST.btc,
-    platform: {
-      win: (process.platform === "win32") ? true : false,
-      mac: (process.platform === "darwin") ? true : false,
-      linux: (process.platform !== "win32" &&
-        process.platform !== "darwin") ? true : false
-    },
-    debugmode: NWAPP_DEBUG
-  });
-
-  // force all other components into loading mode...
-  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
-  document.getElementById("settings").innerHTML = compiledLoadingTemplate;
-  setDynamicStyles();
-}
-
-// ---------------------------------------------------------------------------
-// window NW listener
-// ---------------------------------------------------------------------------
-
-win.on("close", function() {
-  this.hide(); // Pretend to be closed already
-  console.log("window closes, informing daemon...");
-  process.mainModule.exports.NWapplicationCloses();
-});
-
-NWAPP.closeApplicationNow = function() {
-  console.log("closeApplicationNow - FORCE QUIT!");
-  win.close(true);
-};
-
-// ---------------------------------------------------------------------------
-// dynamic bindings (hooked after dynamic content was printed)
-// ---------------------------------------------------------------------------
-
-NWAPP.hookDynamicBindings = function() {
-  // console.log("app:hookDynamicBindings");
-
-  $(".paginationItem").off();
-  $(".paginationItem").on("click", function(event) {
-    event.preventDefault();
-
-    if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
-      $(event.currentTarget.parentNode).hasClass("active") === false) {
-
-      if ($(event.currentTarget).hasClass("paginationItemBottom")) {
-        $(".tab-content").animate({
-          scrollTop: 0
-        }, 500); // scroll smoothly
-      } else {
-        $(".tab-content").scrollTop(0); // scroll instantly
-      }
-
-      updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab,
-        event.currentTarget.dataset.page);
-    }
-  });
-
-  // button data.href to clipboard bindings
-  $(".items_link").off();
-  $(".items_link").on("click", function(event) {
-
-    var dataset = event.currentTarget.dataset;
-
-    // add to clipboard
-    clipboard.set(dataset.href, "text");
-
-    // notify daemon that it was clicked!
-    process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid,
-      dataset.href);
-  });
-
-  $(".items_link_external").off();
-  $(".items_link_external").on("click", function(event) {
-    event.preventDefault();
-    gui.Shell.openExternal(event.target.href);
-  });
-
-  $(".keyword_link").off();
-  $(".keyword_link").on("click", function(event) {
-    event.preventDefault();
-
-    if ($(event.currentTarget.parentNode).hasClass("active") === false &&
-      $(event.currentTarget).hasClass("removeKeyword") === false) {
-
-      console.log(event);
-
-      // show in ui that it will be selected...
-      $(".keyword_link_li").removeClass("active"); // remove old active states
-      $(event.target.parentElement).addClass("active"); // add new
-
-      process.mainModule.exports.NWupdateKeywordString(
-        trimWhiteSpace(event.currentTarget.dataset.keyword));
-    }
-  });
-
-  // settings is dynamic for fetch time output!
-  $("#clearreset_button").off();
-  $("#clearreset_button").click(function() {
-    displayModalWarningResetApplication();
-  });
-
-  $(".removeKeyword").off();
-  $(".removeKeyword").click(function(event) {
-    event.preventDefault();
-    displayModalWarningRemoveKeyword(event.target.parentElement.dataset.keyword);
-  });
-
-  $(".alert").off();
-  $('.alert').bind('closed.bs.alert', function() {
-    clearErrorMessage();
-  });
-
-  // bug, never remove it previously!
-  $(".defaultCursorNoDrag").on("mousedown", function(event) {
-    return false;
-  });
-
-  // attach tooltips to copy link buttons
-  $(".items_link").tooltip();
-
-  setDynamicStyles();
-};
-
-function clearSearchInputValue() {
-  $("#search_input").val("");
-}
-
-function resetApplication() {
-  process.mainModule.exports.clearCacheReset();
-  $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
-  clearSearchInputValue();
-}
-
-// ---------------------------------------------------------------------------
-// static bindings (non dynamic content)
-// ---------------------------------------------------------------------------
-
-NWAPP.hookStaticBindings = function() {
-  // console.log("app:hookStaticBindings");
-
-  // certain links with this class shouldnt do their def. action
-  $(".dismissLinkAction").off();
-  $(".dismissLinkAction").on("click", function() {
-    event.preventDefault();
-  });
-
-  // refetch.click button bindings
-  $("#refetch_button").click(function() {
-    process.mainModule.exports.runFetchCycleNow();
-  });
-
-  $("#addkeyword_button").click(function() {
-    addCurrentQueryAsKeyword();
-  });
-
-  // add keyword via ENTER
-  $('#search_input').keypress(function(event) {
-    if (event.which === 13) {
-      if (checkSearchInputValid($(this).val())) {
-        addCurrentQueryAsKeyword();
-        return false;
-      }
-    }
-  });
-
-  // search box to NWupdate
-  $("#search_input").on("change keyup paste click", function() {
-    checkSearchInputValid($(this).val());
-
-    if (currentSearchInput !== $(this).val()) {
-      currentSearchInput = $(this).val();
-      process.mainModule.exports.NWupdateSearchString(
-        trimWhiteSpace($(this).val()));
-    }
-  });
-
-  // set dynamicstyles every time a different tab is selected
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
-    $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
-    setDynamicStyles();
-  });
-
-  $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
-    $("#search_input").focus();
-    // HACK HACK HACK
-    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
-  });
-  $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
-    // HACK HACK HACK
-    $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
-  });
-
-  // set dynamic styles on resize change
-
-  var resizeTimer;
-  $(window).resize(function(event) {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeTimerFinished, 100);
-    setDynamicStyles();
-    $(".windowBorder").hide();
-  });
-
-  function resizeTimerFinished() {
-    $(".windowBorder").show();
-  }
-
-  // NW for closing frameless windows
-  $(".nav_exit").on("click", function() {
-    win.close();
-  });
-
-  // NW for minimizing
-  $(".nav_minimize").on("click", function() {
-    win.minimize();
-  });
-
-  // NW for maximizing
-  $(".nav_maximize").on("click", function() {
-    console.log("max");
-    win.maximize();
-  });
-
-  // NW for fullscreen
-  $(".nav_fullscreen").on("click", function() {
-    if (win.isFullscreen === false) {
-      $('.nav_fullscreen').button("fullscreen");
-      win.enterFullscreen();
-    } else {
-      $('.nav_fullscreen').button("windowed");
-      win.leaveFullscreen();
-    }
-  });
-
-  // NW for info/welcome text
-  $(".nav_welcome").on("click", function() {
-    NWAPP.displayLicenseAndUsageTerms();
-  });
-
-};
-
-// ---------------------------------------------------------------------------
-// keyword adding (from search)
-// ---------------------------------------------------------------------------
-
-function addCurrentQueryAsKeyword(overrideLengthCheck) {
-  if (paginationStore.all_items.cachedItems.items.length < COUNT_MAX_LINKS_WO_WARNING || overrideLengthCheck) {
-
-    process.mainModule.exports.NWaddCurrentKeyword();
-    $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
-  } else {
-    // display warning model with proceed, many links to fetch!
-    displayModalWarningManyLinksToFetch();
-  }
-}
-
-function trimWhiteSpace(text) {
-  return text.replace(/ {2,}/g, ' ').trim();
-}
-
-function checkSearchInputValid(text) {
-  var concatWhiteSpace = text.replace(/\s+/g, '');
-
-  if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
-    $("#addkeyword_button").removeClass("disabled");
-    return true;
-  } else {
-    $("#addkeyword_button").addClass("disabled");
-    return false;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// fetch cycle: update changes
-// ---------------------------------------------------------------------------
-
-NWAPP.startCycle = function() {
-  clearErrorMessage();
-  NProgress.start();
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-  $("#status_left").text("fetching in progress...");
-};
-
-NWAPP.endCycle = function(fetchedDateString) {
-  NProgress.done();
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
-  $("#status_left").text("last fetched at " + fetchedDateString);
-};
-
-NWAPP.updateProgress = function(progressCount) {
-  NProgress.set(progressCount);
-  NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-  $("#status_left").text("fetching in progress... (" + parseInt(progressCount*100) + "%)");
-};
-
-NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
-  if (available) {
-    buttonStateLoading = false;
-    $(".appCycleDependent").button("reset");
-  } else {
-    if (buttonStateLoading === false) {
-      buttonStateLoading = true;
-      $(".appCycleDependent").button("loading");
-    }
-  }
-};
-
-// ---------------------------------------------------------------------------
-// pagination helper 
-// ---------------------------------------------------------------------------
-
-function updatePagination(key, page) {
-  var paginationItem = paginationStore[key];
-  paginationItem.page = page;
-
-  compileItemsWithPagination({
-    paginationItem: paginationItem,
-    updateCache: false
-  });
-}
-
-function compileItemsWithPagination(options) {
-
-  var cachedItems = paginationStore[options.paginationItem.id].cachedItems;
-
-  // update cache if specified
-  if (options.updateCache === true && options.items) {
-
-    // server side update, pagination must reset!
-    paginationStore[options.paginationItem.id].page = 1;
-
-    // load new items into clientside cache
-    paginationStore[options.paginationItem.id].cachedItems = options.items;
-    cachedItems = paginationStore[options.paginationItem.id].cachedItems;
-  }
-
-  // give identifier to handlebars template
-  cachedItems.tab = options.paginationItem.id;
-
-  // give pagination options to handlebars template
-  cachedItems.pagination = {
-    page: options.paginationItem.page,
-    pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
+  // pagination default constants
+  var PAGINATION_DEFAULTS = {
+    page: 1,
+    limit: 250
   };
 
-  // give pagination needed to handlebars template
-  cachedItems.needsPagination = (cachedItems.items.length > PAGINATION_DEFAULTS.limit) ? true : false;
+  // holds dynamic items and favourites and pagination information
+  var paginationStore = {
+    all_items: {
+      id: "all_items",
+      page: PAGINATION_DEFAULTS.page,
+      cachedItems: []
+    },
+    favourite_items: {
+      id: "favourite_items",
+      page: PAGINATION_DEFAULTS.page,
+      cachedItems: []
+    }
+  };
 
-  // give slice the actual items to show
-  cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) *
-    PAGINATION_DEFAULTS.limit;
+  var COUNT_MAX_LINKS_WO_WARNING = 50;
 
-  cachedItems.itemsSliceLimit = PAGINATION_DEFAULTS.limit;
+  // ---------------------------------------------------------------------------
+  // startup and main app painting
+  // ---------------------------------------------------------------------------
 
-  // printable items area count
-  cachedItems.itemsCountFrom = (cachedItems.items.length > cachedItems.itemsSliceOffset) ?
-    (cachedItems.itemsSliceOffset + 1) : 0;
-  cachedItems.itemsCountTo = ((cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1) > cachedItems.items.length) ?
-    cachedItems.items.length : (cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1);
+  (function clientStartup() {
+    // are we running in debug mode?
+    if (NWAPP_DEBUG === true) {
+      win.showDevTools();
+    }
 
-  // update templ
-  document.getElementById(options.paginationItem.id).innerHTML = NWAPP.Templates.items(cachedItems);
+    paintApplication();
+  }());
 
-  // hook bindings if this was a client-side only operation
-  if (options.updateCache === false) {
-    NWAPP.hookDynamicBindings();
+
+  function paintApplication() {
+
+    // add compile app template into app and settings div
+    document.getElementById("app").innerHTML = NWAPP.Templates.app({
+      name: gui.App.manifest.name,
+      version: gui.App.manifest.version,
+      btc: gui.App.manifest.NWAPP_CONST.btc,
+      platform: {
+        win: (process.platform === "win32") ? true : false,
+        mac: (process.platform === "darwin") ? true : false,
+        linux: (process.platform !== "win32" &&
+          process.platform !== "darwin") ? true : false
+      },
+      debugmode: NWAPP_DEBUG
+    });
+
+    // force all other components into loading mode...
+    document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_keywords").innerHTML = compiledLoadingTemplate;
+    document.getElementById("settings").innerHTML = compiledLoadingTemplate;
+    setDynamicStyles();
   }
-}
 
+  // ---------------------------------------------------------------------------
+  // window NW listener
+  // ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-// update
-// ---------------------------------------------------------------------------
+  win.on("close", function() {
+    this.hide(); // Pretend to be closed already
+    console.log("window closes, informing daemon...");
+    process.mainModule.exports.NWapplicationCloses();
+  });
 
-NWAPP.updateIsAvailable = function(updateObj) {
-  $(".updateAvailable").removeClass("hidden");
+  NWAPP.closeApplicationNow = function() {
+    console.log("closeApplicationNow - FORCE QUIT!");
+    win.close(true);
+  };
 
-  if (process.platform === "darwin") {
-    $(".updateAvailable").append("v" +
-      updateObj.version + " available <i class='fa fa-download'></i>");
-  } else {
-    $(".updateAvailable").append("<i class='fa fa-download'></i> v" +
-      updateObj.version + " available");
+  // ---------------------------------------------------------------------------
+  // dynamic bindings (hooked after dynamic content was printed)
+  // ---------------------------------------------------------------------------
+
+  NWAPP.hookDynamicBindings = function() {
+
+    // remove any prior shown tooltip that's still attached to the body
+    $(".tooltip").hide();
+
+    $(".paginationItem").off();
+    $(".paginationItem").on("click", function(event) {
+      event.preventDefault();
+
+      if ($(event.currentTarget.parentNode).hasClass("disabled") === false &&
+        $(event.currentTarget.parentNode).hasClass("active") === false) {
+
+        if ($(event.currentTarget).hasClass("paginationItemBottom")) {
+          $(".tab-content").animate({
+            scrollTop: 0
+          }, 500); // scroll smoothly
+        } else {
+          $(".tab-content").scrollTop(0); // scroll instantly
+        }
+
+        updatePagination(event.currentTarget.parentNode.parentNode.dataset.tab,
+          event.currentTarget.dataset.page);
+      }
+    });
+
+    // button data.href to clipboard bindings
+    $(".items_link").off();
+    $(".items_link").on("click", function(event) {
+
+      var dataset = event.currentTarget.dataset;
+
+      // add to clipboard
+      clipboard.set(dataset.href, "text");
+
+      // notify daemon that it was clicked!
+      process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid,
+        dataset.href);
+    });
+
+    $(".items_link_external").off();
+    $(".items_link_external").on("click", function(event) {
+      event.preventDefault();
+      gui.Shell.openExternal(event.target.href);
+    });
+
+    $(".keyword_link").off();
+    $(".keyword_link").on("click", function(event) {
+      event.preventDefault();
+
+      if ($(event.currentTarget.parentNode).hasClass("active") === false &&
+        $(event.currentTarget).hasClass("removeKeyword") === false) {
+
+        console.log(event);
+
+        // show in ui that it will be selected...
+        $(".keyword_link_li").removeClass("active"); // remove old active states
+        $(event.target.parentElement).addClass("active"); // add new
+
+        process.mainModule.exports.NWupdateKeywordString(
+          trimWhiteSpace(event.currentTarget.dataset.keyword));
+      }
+    });
+
+    // settings is dynamic for fetch time output!
+    $("#clearreset_button").off();
+    $("#clearreset_button").click(function() {
+      displayModalWarningResetApplication();
+    });
+
+    $(".removeKeyword").off();
+    $(".removeKeyword").click(function(event) {
+      event.preventDefault();
+      displayModalWarningRemoveKeyword(event.target.parentElement.dataset.keyword);
+    });
+
+    $(".alert").off();
+    $('.alert').bind('closed.bs.alert', function() {
+      clearErrorMessage();
+    });
+
+    // bug, never remove it previously!
+    $(".defaultCursorNoDrag").on("mousedown", function(event) {
+      return false;
+    });
+
+    // attach tooltips to copy link buttons
+    $(".items_link").tooltip({
+      container: 'body'
+    });
+
+    setDynamicStyles();
+  };
+
+  function clearSearchInputValue() {
+    $("#search_input").val("");
   }
 
-  $(".updateAvailable").attr("href", updateObj.link);
-};
+  function resetApplication() {
+    process.mainModule.exports.clearCacheReset();
+    $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
+    clearSearchInputValue();
+    $("#status_left").text("never fetched");
+  }
 
-// ---------------------------------------------------------------------------
-// dynamic content: template helpers
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // static bindings (non dynamic content)
+  // ---------------------------------------------------------------------------
 
-NWAPP.printLoading = function() {
-  var compiledLoadingTemplate = NWAPP.Templates.loading();
-  document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
-  document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
-};
+  NWAPP.hookStaticBindings = function() {
 
-NWAPP.printAllItems = function(items) {
-  compileItemsWithPagination({
-    items: items,
-    paginationItem: paginationStore.all_items,
-    updateCache: true
-  });
-};
+    // certain links with this class shouldnt do their def. action
+    $(".dismissLinkAction").off();
+    $(".dismissLinkAction").on("click", function() {
+      event.preventDefault();
+    });
 
-NWAPP.printFavouriteItems = function(items) {
-  compileItemsWithPagination({
-    items: items,
-    paginationItem: paginationStore.favourite_items,
-    updateCache: true
-  });
-};
+    // refetch.click button bindings
+    $("#refetch_button").click(function() {
+      process.mainModule.exports.runFetchCycleNow();
+    });
 
-NWAPP.printFavouriteKeywords = function(favourites) {
-  document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
-};
+    $("#addkeyword_button").click(function() {
+      addCurrentQueryAsKeyword();
+    });
 
-NWAPP.printSettings = function(config) {
-  config.appName = gui.App.manifest.name;
-  config.btc = gui.App.manifest.NWAPP_CONST.btc;
-  config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
-  document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
-};
+    // add keyword via ENTER
+    $('#search_input').keypress(function(event) {
+      if (event.which === 13) {
+        if (checkSearchInputValid($(this).val())) {
+          addCurrentQueryAsKeyword();
+          return false;
+        }
+      }
+    });
 
-NWAPP.printErrorMessage = function(error) {
-  document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
-};
+    // search box to NWupdate
+    $("#search_input").on("change keyup paste click", function() {
+      checkSearchInputValid($(this).val());
 
-function clearErrorMessage() {
-  document.getElementById("errorContainer").innerHTML = "";
-  setDynamicStyles();
-}
+      if (currentSearchInput !== $(this).val()) {
+        currentSearchInput = $(this).val();
+        process.mainModule.exports.NWupdateSearchString(
+          trimWhiteSpace($(this).val()));
+      }
+    });
 
-// ---------------------------------------------------------------------------
-// styling related stuff
-// ---------------------------------------------------------------------------
+    // set dynamicstyles every time a different tab is selected
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(event) {
+      $(".tab-content").scrollTop(0); // scroll to the top everytime it hops
+      setDynamicStyles();
+    });
 
-function setDynamicStyles() {
-  styleFavouritesAffixPadding();
-  styleSearchboxAffixPadding();
-  setContentTopPosition();
-}
+    $('#appNavigationTab a[href="#all_tab"]').on('shown.bs.tab', function(event) {
+      $("#search_input").focus();
+      // HACK HACK HACK
+      $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+    });
+    $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
+      // HACK HACK HACK
+      $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+    });
 
-function setContentTopPosition() {
-  var topHeight = $("#navigationHolder").outerHeight() +
-    $("#errorContainer").outerHeight();
+    // set dynamic styles on resize change
 
-  $(".errorbox-content").css({
-    'top': $("#navigationHolder").outerHeight() + "px"
-  });
+    var resizeTimer;
+    $(window).resize(function(event) {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeTimerFinished, 100);
+      setDynamicStyles();
+      $(".windowBorder").hide();
+    });
 
-  $(".tab-content").css({
-    'top': topHeight + "px"
-  });
-}
+    function resizeTimerFinished() {
+      $(".windowBorder").show();
+    }
 
-// add padding based on affix
-function styleFavouritesAffixPadding() {
-  var height = $("#favourite_keywords").outerHeight() + 15;
-  $("#favourite_items").css({
-    'paddingTop': height + "px"
-  });
-  handleScrollbarPositionFixed("#favourite_keywords");
-}
+    // NW for closing frameless windows
+    $(".nav_exit").on("click", function() {
+      win.close();
+    });
 
-function styleSearchboxAffixPadding() {
-  var height = $("#all_searchbox").outerHeight() + 15;
-  $("#all_items").css({
-    'paddingTop': height + "px"
-  });
-  handleScrollbarPositionFixed("#all_searchbox");
-}
+    // NW for minimizing
+    $(".nav_minimize").on("click", function() {
+      win.minimize();
+    });
 
-function handleScrollbarPositionFixed(divString) {
+    // NW for maximizing
+    $(".nav_maximize").on("click", function() {
+      console.log("max");
+      win.maximize();
+    });
 
-  var scrollBarWidth = getScrollBarWidth();
-  var totalwidth = $("body").width() - scrollBarWidth;
+    // NW for fullscreen
+    $(".nav_fullscreen").on("click", function() {
+      if (win.isFullscreen === false) {
+        $('.nav_fullscreen').button("fullscreen");
+        win.enterFullscreen();
+      } else {
+        $('.nav_fullscreen').button("windowed");
+        win.leaveFullscreen();
+      }
+    });
 
-  $(divString).css({
-    right: scrollBarWidth + "px",
-    width: totalwidth + "px"
-  });
-}
+    // NW for info/welcome text
+    $(".nav_welcome").on("click", function() {
+      NWAPP.displayLicenseAndUsageTerms();
+    });
 
-// get scrollbar width in every environment
-// from http://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
-function getScrollBarWidth() {
-  var inner = document.createElement('p');
-  inner.style.width = "100%";
-  inner.style.height = "200px";
 
-  var outer = document.createElement('div');
-  outer.style.position = "absolute";
-  outer.style.top = "0px";
-  outer.style.left = "0px";
-  outer.style.visibility = "hidden";
-  outer.style.width = "200px";
-  outer.style.height = "150px";
-  outer.style.overflow = "hidden";
-  outer.appendChild(inner);
+    // bind the addKeyword button to a tooltip
+    $("#addkeyword_button").tooltip({
+      container: 'body'
+    });
+  };
 
-  document.body.appendChild(outer);
-  var w1 = inner.offsetWidth;
-  outer.style.overflow = 'scroll';
-  var w2 = inner.offsetWidth;
-  if (w1 == w2) w2 = outer.clientWidth;
+  // ---------------------------------------------------------------------------
+  // keyword adding (from search)
+  // ---------------------------------------------------------------------------
 
-  document.body.removeChild(outer);
+  function addCurrentQueryAsKeyword(overrideLengthCheck) {
+    if (paginationStore.all_items.cachedItems.items.length < COUNT_MAX_LINKS_WO_WARNING || overrideLengthCheck) {
 
-  return (w1 - w2);
-}
+      process.mainModule.exports.NWaddCurrentKeyword();
+      $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
+    } else {
+      // display warning model with proceed, many links to fetch!
+      displayModalWarningManyLinksToFetch();
+    }
+  }
 
-// ---------------------------------------------------------------------------
-// modal related stuff
-// ---------------------------------------------------------------------------
+  function trimWhiteSpace(text) {
+    return text.replace(/ {2,}/g, ' ').trim();
+  }
 
-function configureModel(dismissable) {
-  if (dismissable) {
-    $('#currentModal').modal();
-  } else {
-    $('#currentModal').modal({
-      backdrop: 'static',
-      keyboard: false
+  function checkSearchInputValid(text) {
+    var concatWhiteSpace = text.replace(/\s+/g, '');
+
+    if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
+      $("#addkeyword_button").removeClass("disabled");
+      return true;
+    } else {
+      $("#addkeyword_button").addClass("disabled");
+      return false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // fetch cycle: update changes
+  // ---------------------------------------------------------------------------
+
+  NWAPP.startCycle = function() {
+    clearErrorMessage();
+    NProgress.start();
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
+    $("#status_left").text("fetching in progress...");
+  };
+
+  NWAPP.endCycle = function(fetchedDateString) {
+    NProgress.done();
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
+    $("#status_left").text("last fetched at " + fetchedDateString);
+  };
+
+  NWAPP.updateProgress = function(progressCount) {
+    NProgress.set(progressCount);
+    NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
+    $("#status_left").text("fetching in progress... (" + parseInt(progressCount * 100) + "%)");
+  };
+
+  NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
+    if (available) {
+      buttonStateLoading = false;
+      $(".appCycleDependent").button("reset");
+    } else {
+      if (buttonStateLoading === false) {
+        buttonStateLoading = true;
+        $(".appCycleDependent").button("loading");
+      }
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // pagination helper 
+  // ---------------------------------------------------------------------------
+
+  function updatePagination(key, page) {
+    var paginationItem = paginationStore[key];
+    paginationItem.page = page;
+
+    compileItemsWithPagination({
+      paginationItem: paginationItem,
+      updateCache: false
     });
   }
-}
 
-function displayModalWarningRemoveKeyword(keyword) {
-  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "<i class='fa fa-exclamation-circle'></i> Remove starred query",
-    content: NWAPP.Templates["modalContent/removeKeyword"]({
-      keyword: keyword
-    }),
-    dismissText: "cancel",
-    agreeText: "proceed",
-    dismissable: true,
-    large: false
-  });
+  function compileItemsWithPagination(options) {
 
-  configureModel(true);
+    var cachedItems = paginationStore[options.paginationItem.id].cachedItems;
 
-  $("#modal_button_dismiss").on("click", function() {
-    $('#currentModal').modal("hide");
-  });
+    // update cache if specified
+    if (options.updateCache === true && options.items) {
 
-  $("#modal_button_agree").on("click", function() {
-    $('#currentModal').modal("hide");
-    process.mainModule.exports.NWremoveKeyword(keyword);
-  });
+      // server side update, pagination must reset!
+      paginationStore[options.paginationItem.id].page = 1;
 
-  $('#currentModal').modal("show");
-}
+      // load new items into clientside cache
+      paginationStore[options.paginationItem.id].cachedItems = options.items;
+      cachedItems = paginationStore[options.paginationItem.id].cachedItems;
+    }
 
-function displayModalWarningResetApplication() {
-  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "<i class='fa fa-exclamation-circle'></i> Erase data and reset",
-    content: NWAPP.Templates["modalContent/resetApplication"]({
-      appName: gui.App.manifest.name
-    }),
-    dismissText: "cancel",
-    agreeText: "proceed",
-    dismissable: true,
-    large: false
-  });
+    // give identifier to handlebars template
+    cachedItems.tab = options.paginationItem.id;
 
-  configureModel(true);
+    // give pagination options to handlebars template
+    cachedItems.pagination = {
+      page: options.paginationItem.page,
+      pageCount: Math.ceil(cachedItems.items.length / PAGINATION_DEFAULTS.limit)
+    };
 
-  $("#modal_button_dismiss").on("click", function() {
-    $('#currentModal').modal("hide");
-  });
+    // give pagination needed to handlebars template
+    cachedItems.needsPagination = (cachedItems.items.length > PAGINATION_DEFAULTS.limit) ? true : false;
 
-  $("#modal_button_agree").on("click", function() {
-    $('#currentModal').modal("hide");
-    resetApplication();
-  });
+    // give slice the actual items to show
+    cachedItems.itemsSliceOffset = (options.paginationItem.page - 1) *
+      PAGINATION_DEFAULTS.limit;
 
-  $('#currentModal').modal("show");
-}
+    cachedItems.itemsSliceLimit = PAGINATION_DEFAULTS.limit;
 
-function displayModalWarningManyLinksToFetch() {
+    // printable items area count
+    cachedItems.itemsCountFrom = (cachedItems.items.length > cachedItems.itemsSliceOffset) ?
+      (cachedItems.itemsSliceOffset + 1) : 0;
+    cachedItems.itemsCountTo = ((cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1) > cachedItems.items.length) ?
+      cachedItems.items.length : (cachedItems.itemsCountFrom + PAGINATION_DEFAULTS.limit - 1);
 
-  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "<i class='fa fa-exclamation-circle'></i> More than " +
-      COUNT_MAX_LINKS_WO_WARNING + " releases to parse",
-    content: NWAPP.Templates["modalContent/manyReleases"]({
-      countReleases: paginationStore.all_items.cachedItems.items.length
-    }),
-    dismissText: "cancel",
-    agreeText: "proceed",
-    dismissable: true,
-    large: false
-  });
+    // update templ
+    document.getElementById(options.paginationItem.id).innerHTML = NWAPP.Templates.items(cachedItems);
 
-  configureModel(true);
-
-  $("#modal_button_dismiss").on("click", function() {
-    $('#currentModal').modal("hide");
-  });
-
-  $("#modal_button_agree").on("click", function() {
-    $('#currentModal').modal("hide");
-    addCurrentQueryAsKeyword(true);
-  });
-
-  $('#currentModal').modal("show");
-}
-
-NWAPP.displayLicenseAndUsageTerms = function() {
-
-  document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
-    title: "<i class='fa fa-info-circle'></i> Welcome to " + gui.App.manifest.name + " v" +
-      gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
-    content: NWAPP.Templates["modalContent/firstStart"]({
-      appName: gui.App.manifest.name,
-      license: gui.App.manifest.license,
-      licenseURL: gui.App.manifest.NWAPP_CONST.licenseURL,
-      githubURL: gui.App.manifest.NWAPP_CONST.githubURL
-    }),
-    dismissText: "no I don't agree",
-    agreeText: "yes I understand & agree to ALL terms and conditions",
-    dismissable: false,
-    large: true
-  });
-
-  configureModel(false);
-
-  $("#modal_button_dismiss").on("click", function() {
-    process.mainModule.exports.NWsetTermsAgreed(false);
-    win.close();
-  });
-
-  $("#modal_button_agree").on("click", function() {
-    process.mainModule.exports.NWsetTermsAgreed(true);
-    $('#currentModal').modal("hide");
-  });
-
-  $(".items_link_external").off();
-  $(".items_link_external").on("click", function(event) {
-    event.preventDefault();
-    gui.Shell.openExternal(event.target.href);
-  });
-
-  $('#currentModal').modal("show");
-};
+    // hook bindings if this was a client-side only operation
+    if (options.updateCache === false) {
+      NWAPP.hookDynamicBindings();
+    }
+  }
 
 
-// ---------------------------------------------------------------------------
-// EXPORT to window
-// ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // update
+  // ---------------------------------------------------------------------------
 
-window.NWAPP = NWAPP;
+  NWAPP.updateIsAvailable = function(updateObj) {
+    $(".updateAvailable").removeClass("hidden");
+
+    if (process.platform === "darwin") {
+      $(".updateAvailable").append("v" +
+        updateObj.version + " available <i class='fa fa-download'></i>");
+    } else {
+      $(".updateAvailable").append("<i class='fa fa-download'></i> v" +
+        updateObj.version + " available");
+    }
+
+    $(".updateAvailable").attr("href", updateObj.link);
+  };
+
+  // ---------------------------------------------------------------------------
+  // dynamic content: template helpers
+  // ---------------------------------------------------------------------------
+
+  NWAPP.printLoading = function() {
+    var compiledLoadingTemplate = NWAPP.Templates.loading();
+    document.getElementById("all_items").innerHTML = compiledLoadingTemplate;
+    document.getElementById("favourite_items").innerHTML = compiledLoadingTemplate;
+  };
+
+  NWAPP.printAllItems = function(items) {
+    compileItemsWithPagination({
+      items: items,
+      paginationItem: paginationStore.all_items,
+      updateCache: true
+    });
+  };
+
+  NWAPP.printFavouriteItems = function(items) {
+    compileItemsWithPagination({
+      items: items,
+      paginationItem: paginationStore.favourite_items,
+      updateCache: true
+    });
+  };
+
+  NWAPP.printFavouriteKeywords = function(favourites) {
+    document.getElementById("favourite_keywords").innerHTML = NWAPP.Templates.favourites(favourites);
+  };
+
+  NWAPP.printSettings = function(config) {
+    config.appName = gui.App.manifest.name;
+    config.btc = gui.App.manifest.NWAPP_CONST.btc;
+    config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
+    document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
+  };
+
+  NWAPP.printErrorMessage = function(error) {
+    document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
+  };
+
+  function clearErrorMessage() {
+    document.getElementById("errorContainer").innerHTML = "";
+    setDynamicStyles();
+  }
+
+  // ---------------------------------------------------------------------------
+  // styling related stuff
+  // ---------------------------------------------------------------------------
+
+  function setDynamicStyles() {
+    styleFavouritesAffixPadding();
+    styleSearchboxAffixPadding();
+    setContentTopPosition();
+  }
+
+  function setContentTopPosition() {
+    var topHeight = $("#navigationHolder").outerHeight() +
+      $("#errorContainer").outerHeight();
+
+    $(".errorbox-content").css({
+      'top': $("#navigationHolder").outerHeight() + "px"
+    });
+
+    $(".tab-content").css({
+      'top': topHeight + "px"
+    });
+  }
+
+  // add padding based on affix
+  function styleFavouritesAffixPadding() {
+    var height = $("#favourite_keywords").outerHeight() + 15;
+    $("#favourite_items").css({
+      'paddingTop': height + "px"
+    });
+    handleScrollbarPositionFixed("#favourite_keywords");
+  }
+
+  function styleSearchboxAffixPadding() {
+    var height = $("#all_searchbox").outerHeight() + 15;
+    $("#all_items").css({
+      'paddingTop': height + "px"
+    });
+    handleScrollbarPositionFixed("#all_searchbox");
+  }
+
+  function handleScrollbarPositionFixed(divString) {
+
+    var scrollBarWidth = getScrollBarWidth();
+    var totalwidth = $("body").width() - scrollBarWidth;
+
+    $(divString).css({
+      right: scrollBarWidth + "px",
+      width: totalwidth + "px"
+    });
+  }
+
+  // get scrollbar width in every environment
+  // from http://stackoverflow.com/questions/986937/how-can-i-get-the-browsers-scrollbar-sizes
+  function getScrollBarWidth() {
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement('div');
+    outer.style.position = "absolute";
+    outer.style.top = "0px";
+    outer.style.left = "0px";
+    outer.style.visibility = "hidden";
+    outer.style.width = "200px";
+    outer.style.height = "150px";
+    outer.style.overflow = "hidden";
+    outer.appendChild(inner);
+
+    document.body.appendChild(outer);
+    var w1 = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    var w2 = inner.offsetWidth;
+    if (w1 == w2) w2 = outer.clientWidth;
+
+    document.body.removeChild(outer);
+
+    return (w1 - w2);
+  }
+
+  // ---------------------------------------------------------------------------
+  // modal related stuff
+  // ---------------------------------------------------------------------------
+
+  function configureModel(dismissable) {
+    if (dismissable) {
+      $('#currentModal').modal();
+    } else {
+      $('#currentModal').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+    }
+  }
+
+  function displayModalWarningRemoveKeyword(keyword) {
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-exclamation-circle'></i> Remove starred query",
+      content: NWAPP.Templates["modalContent/removeKeyword"]({
+        keyword: keyword
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      large: false
+    });
+
+    configureModel(true);
+
+    $("#modal_button_dismiss").on("click", function() {
+      $('#currentModal').modal("hide");
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      $('#currentModal').modal("hide");
+      process.mainModule.exports.NWremoveKeyword(keyword);
+    });
+
+    $('#currentModal').modal("show");
+  }
+
+  function displayModalWarningResetApplication() {
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-exclamation-circle'></i> Erase data and reset",
+      content: NWAPP.Templates["modalContent/resetApplication"]({
+        appName: gui.App.manifest.name
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      large: false
+    });
+
+    configureModel(true);
+
+    $("#modal_button_dismiss").on("click", function() {
+      $('#currentModal').modal("hide");
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      $('#currentModal').modal("hide");
+      resetApplication();
+    });
+
+    $('#currentModal').modal("show");
+  }
+
+  function displayModalWarningManyLinksToFetch() {
+
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-exclamation-circle'></i> More than " +
+        COUNT_MAX_LINKS_WO_WARNING + " releases to parse",
+      content: NWAPP.Templates["modalContent/manyReleases"]({
+        countReleases: paginationStore.all_items.cachedItems.items.length
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      large: false
+    });
+
+    configureModel(true);
+
+    $("#modal_button_dismiss").on("click", function() {
+      $('#currentModal').modal("hide");
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      $('#currentModal').modal("hide");
+      addCurrentQueryAsKeyword(true);
+    });
+
+    $('#currentModal').modal("show");
+  }
+
+  NWAPP.displayLicenseAndUsageTerms = function() {
+
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-info-circle'></i> Welcome to " + gui.App.manifest.name + " v" +
+        gui.App.manifest.version + ((NWAPP_DEBUG === true) ? " (debug)" : ""),
+      content: NWAPP.Templates["modalContent/firstStart"]({
+        appName: gui.App.manifest.name,
+        license: gui.App.manifest.license,
+        licenseURL: gui.App.manifest.NWAPP_CONST.licenseURL,
+        githubURL: gui.App.manifest.NWAPP_CONST.githubURL
+      }),
+      dismissText: "NO I DO NOT AGREE (quit)",
+      agreeText: "YES I UNDERSTAND & AGREE (continue)",
+      dismissable: false,
+      large: true
+    });
+
+    configureModel(false);
+
+    $("#modal_button_dismiss").on("click", function() {
+      process.mainModule.exports.NWsetTermsAgreed(false);
+      win.close();
+    });
+
+    $("#modal_button_agree").on("click", function() {
+      process.mainModule.exports.NWsetTermsAgreed(true);
+      $('#currentModal').modal("hide");
+    });
+
+    $(".items_link_external").off();
+    $(".items_link_external").on("click", function(event) {
+      event.preventDefault();
+      gui.Shell.openExternal(event.target.href);
+    });
+
+    $('#currentModal').modal("show");
+  };
+
+
+  // ---------------------------------------------------------------------------
+  // EXPORT to window
+  // ---------------------------------------------------------------------------
+
+  window.NWAPP = NWAPP;
 
 }());
