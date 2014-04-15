@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
-  var pkgJSON = grunt.file.readJSON('package.json');
+  var pkgJSON = grunt.file.readJSON("package.json");
+  var nwBuildVersion = "0.9.2";
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -11,9 +12,9 @@ module.exports = function(grunt) {
         win: true,
         linux32: true,
         linux64: true,
-        version: '0.9.2',
+        version: nwBuildVersion,
         zip: true,
-        keep_nw: true,
+        keep_nw: false,
         mac_icns: "assets/SJ_logo_mac.icns"
       },
       src: ['build/**/*'] // source
@@ -29,6 +30,7 @@ module.exports = function(grunt) {
           "bower_components/bootstrap/dist/css/bootstrap-theme.css",
           "bower_components/nprogress/nprogress.css",
           "bower_components/font-awesome/css/font-awesome.css",
+          "client/webfonts/css/fonts.css",
           "client/app.css"
         ],
         dest: "build/css/app.min.css"
@@ -46,10 +48,18 @@ module.exports = function(grunt) {
           dest: "build/"
         }]
       },
-      "fonts": {
+      "bower_fonts": {
         files: [{
           expand: true,
           cwd: "bower_components/font-awesome/fonts/",
+          src: ["*"],
+          dest: "build/fonts/"
+        }]
+      },
+      "client_fonts": {
+        files: [{
+          expand: true,
+          cwd: "client/webfonts/fonts/",
           src: ["*"],
           dest: "build/fonts/"
         }]
@@ -60,6 +70,41 @@ module.exports = function(grunt) {
           cwd: "assets/",
           src: ["**", "!dev/**"],
           dest: "build/assets/"
+        }]
+      },
+      "licenses": {
+        files: [{
+          src: ["README.txt", "LICENSE.txt"],
+          dest: 'release/releases/' + pkgJSON.name + '/linux32/'
+        }, {
+          src: ["*.html"],
+          cwd: "release/cache/linux32/" + nwBuildVersion + "/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/linux32/'
+        }, {
+          src: ["README.txt", "LICENSE.txt"],
+          dest: 'release/releases/' + pkgJSON.name + '/linux64/'
+        }, {
+          src: ["*.html"],
+          cwd: "release/cache/linux64/" + nwBuildVersion + "/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/linux64/'
+        }, {
+          src: ["README.txt", "LICENSE.txt"],
+          dest: 'release/releases/' + pkgJSON.name + '/mac/'
+        }, {
+          src: ["*.html"],
+          cwd: "release/cache/mac/" + nwBuildVersion + "/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/mac/'
+        }, {
+          src: ["README.txt", "LICENSE.txt"],
+          dest: 'release/releases/' + pkgJSON.name + '/win/'
+        }, {
+          src: ["*.html"],
+          cwd: "release/cache/win/" + nwBuildVersion + "/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/win/'
         }]
       }
     },
@@ -148,18 +193,18 @@ module.exports = function(grunt) {
           dest: '',
         }]
       },
-      nw: {
-        options: {
-          archive: "dist/" + pkgJSON.name + "_nw_v" + pkgJSON.version + ".zip",
-          mode: 'zip'
-        },
-        files: [{
-          expand: true,
-          cwd: 'release/releases/' + pkgJSON.name + '/',
-          src: ['*'],
-          dest: '',
-        }]
-      },
+      // nw: {
+      //   options: {
+      //     archive: "dist/" + pkgJSON.name + "_nw_v" + pkgJSON.version + ".zip",
+      //     mode: 'zip'
+      //   },
+      //   files: [{
+      //     expand: true,
+      //     cwd: 'release/releases/' + pkgJSON.name + '/',
+      //     src: ['*'],
+      //     dest: '',
+      //   }]
+      // },
       linux32: {
         options: {
           archive: "dist/" + pkgJSON.name + "_linux32_v" + pkgJSON.version + ".zip",
@@ -228,7 +273,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask("default", ["clean:pre", "handlebars", "htmlmin", "cssmin",
-    "uglify:clientjs", "install-dependencies", "copy", "uglify:daemonjs",
-    "nodewebkit", "compress", "clean:post"
+    "uglify:clientjs", "install-dependencies",
+    "copy:build-templates", "copy:bower_fonts", "copy:client_fonts", "copy:assets",
+    "uglify:daemonjs", "nodewebkit", "copy:licenses", "compress", "clean:post"
   ]);
 };

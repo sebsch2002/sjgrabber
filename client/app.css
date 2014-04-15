@@ -39,7 +39,23 @@ a {
 }
 
 /* -----------------------------------------------------------------------------
-wrapp maincontent and set a fixed height footer
+font styles
+----------------------------------------------------------------------------- */
+
+body {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.lead {
+  font-weight: 300 !important;
+}
+
+.jumbotron p {
+  font-weight: 300 !important;
+}
+
+/* -----------------------------------------------------------------------------
+wrap maincontent and set a fixed height footer
 ----------------------------------------------------------------------------- */
 
 #app {
