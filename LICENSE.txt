@@ -36,6 +36,18 @@ THE SOFTWARE.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
+################################################################################
+################################################################################
+################################################################################
+#### YOU HAVE TO READ AND AGREE TO ALL NODE-WEBKIT REDISTRIBUTABLE LICENSES ####
+#### THESE COME PACKAGED WITH EVERY COMPILED APPLICATION , SEE credits.html ####
+################################################################################
+################################################################################
+################################################################################
+
+(node-webkit)
+node-webkit: MIT License AND OTHER licenses (within credits.html in packaged apps)
+
 (client)
 bootstrap: MIT License
 font awesome: SIL OFL 1.1 (fonts) / MIT License (css) / CC BY 3.0 License (docs)
@@ -52,10 +64,6 @@ feedparser: MIT License
 lodash: MIT License
 moment: MIT License
 request: Apache License, Version 2.0
-
-(node-webkit)
-node-webkit: MIT License
-!!! info of node-webkit redistributable 3rd party licenses, see credits.html !!!
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

@@ -704,6 +704,12 @@ NWAPP.displayLicenseAndUsageTerms = function() {
     $('#currentModal').modal("hide");
   });
 
+  $(".items_link_external").off();
+  $(".items_link_external").on("click", function(event) {
+    event.preventDefault();
+    gui.Shell.openExternal(event.target.href);
+  });
+
   $('#currentModal').modal("show");
 };
 
