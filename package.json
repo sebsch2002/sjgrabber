@@ -43,6 +43,7 @@
     "min_height": 480,
     "icon": "assets/SJ_logo.png"
   },
+  "chromium-args": "--enable-direct-write",
   "private": true,
   "NWAPP_DEBUG": true,
   "NWAPP_CONST": {

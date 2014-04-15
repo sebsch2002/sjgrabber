@@ -27,6 +27,7 @@
     "min_height": 480,
     "icon": "assets/SJ_logo.png"
   },
+  "chromium-args": "--enable-direct-write",
   "private": true,
   "NWAPP_CONST": {
     "licenseURL": "https://raw.githubusercontent.com/majodev/sjgrabber/master/LICENSE.txt",

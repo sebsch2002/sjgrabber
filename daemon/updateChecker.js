@@ -53,9 +53,9 @@ function checkVersionUpToDate(manifestObject, currentVersion) {
 
   if (manifestObject.version !== currentVersion) {
     if (_.isUndefined(manifestObject.platforms[process.platform]) === false) {
-      //console.log("update for platform " + process.platform + " available! link=" +
-      //  manifestObject.platforms[process.platform]);
-  
+
+      // found update for specific platform
+
       updateChecker.updateObj = {
         version: manifestObject.version,
         link: manifestObject.platforms[process.platform]
@@ -64,10 +64,18 @@ function checkVersionUpToDate(manifestObject, currentVersion) {
       updateChecker.emit("updateFound", updateChecker.updateObj);
 
     } else {
-      console.log("updates are available but not for your platform!");
+      if (_isUndefined(manifestObject.generic) === false) {
+
+        // found update push link to generic release page
+
+        updateChecker.updateObj = {
+          version: manifestObject.version,
+          link: manifestObject.allReleases
+        };
+
+        updateChecker.emit("updateFound", updateChecker.updateObj);
+      }
     }
-  } else {
-    // no update available.
   }
 
   updateChecker.checked = true;
