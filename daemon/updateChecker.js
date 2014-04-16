@@ -50,6 +50,8 @@ UpdateChecker.prototype.checkForUpdates = function(version, updateURL) {
 
 function checkVersionUpToDate(manifestObject, currentVersion) {
 
+  var platformToCheck = (process.platform === "linux") ? process.platform + "_" + process.arch : process.platform;
+
   if (_.isUndefined(manifestObject.version) || _.isUndefined(manifestObject.platforms)) {
     updateChecker.checked = true;
     return;
@@ -57,19 +59,22 @@ function checkVersionUpToDate(manifestObject, currentVersion) {
 
   if (isVersionNewer(currentVersion, manifestObject.version) === true) {
     console.log("updateChecker: UPDATE FOUND, currentVersion: " + currentVersion + " manifestVersion: " + manifestObject.version);
-    if (_.isUndefined(manifestObject.platforms[process.platform]) === false) {
+
+    if (_.isUndefined(manifestObject.platforms[platformToCheck]) === false) {
 
       // found update for specific platform
 
       updateChecker.updateObj = {
         version: manifestObject.version,
-        link: manifestObject.platforms[process.platform],
+        link: manifestObject.platforms[platformToCheck],
         changes: _.isUndefined(manifestObject.changes) ? "" : manifestObject.changes
       };
 
       updateChecker.emit("updateFound", updateChecker.updateObj);
-      console.log("updateChecker: emitting update for platform " + process.platform);
+      console.log("updateChecker: emitting update for platform " + platformToCheck);
+
     } else {
+
       if (_.isUndefined(manifestObject.allReleases) === false) {
 
         // found update push link to generic release page
@@ -83,6 +88,7 @@ function checkVersionUpToDate(manifestObject, currentVersion) {
         updateChecker.emit("updateFound", updateChecker.updateObj);
         console.log("updateChecker: emitting update to RELEASEPAGE (platform not found)");
       }
+
     }
   } else {
     console.log("updateChecker: NO UPDATE FOUND, currentVersion: " + currentVersion + " manifestVersion: " + manifestObject.version);
