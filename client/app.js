@@ -451,17 +451,30 @@
   // ---------------------------------------------------------------------------
 
   NWAPP.updateIsAvailable = function(updateObj) {
-    $(".updateAvailable").removeClass("hidden");
+    $("#updateAppLink").removeClass("hidden");
 
     if (process.platform === "darwin") {
-      $(".updateAvailable").append("v" +
+      $("#updateAppLink").append("v" +
         updateObj.version + " available <i class='fa fa-download'></i>");
     } else {
-      $(".updateAvailable").append("<i class='fa fa-download'></i> v" +
+      $("#updateAppLink").append("<i class='fa fa-download'></i> v" +
         updateObj.version + " available");
     }
 
-    $(".updateAvailable").attr("href", updateObj.link);
+    $("#updateAppLink").attr("href", updateObj.link);
+
+    if (updateObj.changes !== "") {
+      $("#updateAppLink").tooltip({
+        container: "body",
+        html: true,
+        title: "cool update ahead!<br /><br />changes:<br />" + updateObj.changes
+      });
+    }
+
+    $("#updateAppLink").on("click", function(event) {
+      event.preventDefault();
+      gui.Shell.openExternal(event.target.href);
+    });
   };
 
   // ---------------------------------------------------------------------------

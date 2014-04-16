@@ -49,36 +49,75 @@ UpdateChecker.prototype.checkForUpdates = function(version, updateURL) {
 };
 
 function checkVersionUpToDate(manifestObject, currentVersion) {
-  console.log("version: " + manifestObject.version);
 
-  if (manifestObject.version !== currentVersion) {
+  if (_.isUndefined(manifestObject.version) || _.isUndefined(manifestObject.platforms)) {
+    updateChecker.checked = true;
+    return;
+  }
+
+  if (isVersionNewer(currentVersion, manifestObject.version) === true) {
+    console.log("updateChecker: UPDATE FOUND, currentVersion: " + currentVersion + " manifestVersion: " + manifestObject.version);
     if (_.isUndefined(manifestObject.platforms[process.platform]) === false) {
 
       // found update for specific platform
 
       updateChecker.updateObj = {
         version: manifestObject.version,
-        link: manifestObject.platforms[process.platform]
+        link: manifestObject.platforms[process.platform],
+        changes: _.isUndefined(manifestObject.changes) ? "" : manifestObject.changes
       };
 
       updateChecker.emit("updateFound", updateChecker.updateObj);
-
+      console.log("updateChecker: emitting update for platform " + process.platform);
     } else {
-      if (_isUndefined(manifestObject.generic) === false) {
+      if (_.isUndefined(manifestObject.allReleases) === false) {
 
         // found update push link to generic release page
 
         updateChecker.updateObj = {
           version: manifestObject.version,
-          link: manifestObject.allReleases
+          link: manifestObject.allReleases,
+          changes: _.isUndefined(manifestObject.changes) ? "" : manifestObject.changes
         };
 
         updateChecker.emit("updateFound", updateChecker.updateObj);
+        console.log("updateChecker: emitting update to RELEASEPAGE (platform not found)");
       }
     }
+  } else {
+    console.log("updateChecker: NO UPDATE FOUND, currentVersion: " + currentVersion + " manifestVersion: " + manifestObject.version);
   }
 
   updateChecker.checked = true;
+}
+
+function isVersionNewer(appVersion, manifestVersion) {
+  var appVersionArr = appVersion.split(".");
+  var manifestVersionArr = manifestVersion.split(".");
+
+  if (appVersionArr.length !== 3 || manifestVersionArr.length !== 3) {
+    // version formats are inproper formed!
+    return false;
+  }
+
+  var i = 0,
+    len = manifestVersionArr.length;
+  for (i; i < len; i += 1) {
+    try {
+      if (parseInt(appVersionArr[i]) < parseInt(manifestVersionArr[i])) {
+        return true;
+      }
+      if (parseInt(appVersionArr[i]) > parseInt(manifestVersionArr[i])) {
+        return false;
+      }
+    } catch (e) {
+      // error while comparing version delimiters (not an int?), no update!
+      return false;
+    }
+  }
+
+  return false;
+
 }
 
 var updateChecker = new UpdateChecker();
