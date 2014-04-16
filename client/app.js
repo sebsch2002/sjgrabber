@@ -65,7 +65,6 @@
     document.getElementById("app").innerHTML = NWAPP.Templates.app({
       name: gui.App.manifest.name,
       version: gui.App.manifest.version,
-      btc: gui.App.manifest.NWAPP_CONST.btc,
       platform: {
         win: (process.platform === "win32") ? true : false,
         mac: (process.platform === "darwin") ? true : false,
@@ -509,7 +508,6 @@
 
   NWAPP.printSettings = function(config) {
     config.appName = gui.App.manifest.name;
-    config.btc = gui.App.manifest.NWAPP_CONST.btc;
     config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
     document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
   };
@@ -706,7 +704,8 @@
         appName: gui.App.manifest.name,
         license: gui.App.manifest.license,
         licenseURL: gui.App.manifest.NWAPP_CONST.licenseURL,
-        githubURL: gui.App.manifest.NWAPP_CONST.githubURL
+        githubURL: gui.App.manifest.NWAPP_CONST.githubURL,
+        homepageURL: gui.App.manifest.NWAPP_CONST.homepageURL
       }),
       dismissText: "NO I DO NOT AGREE (quit)",
       agreeText: "YES I UNDERSTAND & AGREE (continue)",
