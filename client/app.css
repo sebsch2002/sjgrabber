@@ -49,27 +49,6 @@ a {
 }
 
 /* -----------------------------------------------------------------------------
-font styles
------------------------------------------------------------------------------ */
-
-body {
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.lead {
-  font-weight: 300 !important;
-}
-
-.jumbotron p {
-  font-weight: 300 !important;
-}
-
-small, .small {
-  
-  color: #aaa;
-}
-
-/* -----------------------------------------------------------------------------
 wrap maincontent and set a fixed height footer
 ----------------------------------------------------------------------------- */
 
@@ -83,7 +62,7 @@ wrap maincontent and set a fixed height footer
   height: 100%;
   color: #eee;
   font-size: 11px;
-  font-weight: 400;
+  /*font-weight: 400;*/
 }
 
 #wrap {

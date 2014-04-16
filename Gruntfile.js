@@ -30,7 +30,6 @@ module.exports = function(grunt) {
           "bower_components/bootstrap/dist/css/bootstrap-theme.css",
           "bower_components/nprogress/nprogress.css",
           "bower_components/font-awesome/css/font-awesome.css",
-          "client/webfonts/css/fonts.css",
           "client/app.css"
         ],
         dest: "build/css/app.min.css"
@@ -52,14 +51,6 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: "bower_components/font-awesome/fonts/",
-          src: ["*"],
-          dest: "build/fonts/"
-        }]
-      },
-      "client_fonts": {
-        files: [{
-          expand: true,
-          cwd: "client/webfonts/fonts/",
           src: ["*"],
           dest: "build/fonts/"
         }]
@@ -274,7 +265,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask("default", ["clean:pre", "handlebars", "htmlmin", "cssmin",
     "uglify:clientjs", "install-dependencies",
-    "copy:build-templates", "copy:bower_fonts", "copy:client_fonts", "copy:assets",
+    "copy:build-templates", "copy:bower_fonts", "copy:assets",
     "uglify:daemonjs", "nodewebkit", "copy:licenses", "compress", "clean:post"
   ]);
 };
