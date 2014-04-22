@@ -56,6 +56,7 @@
     }
 
     paintApplication();
+    //paintTray();
   }());
 
 
@@ -81,6 +82,68 @@
     document.getElementById("settings").innerHTML = compiledLoadingTemplate;
     setDynamicStyles();
   }
+
+  // var tray;
+
+  // function paintTray() {
+
+  //   var menu = new gui.Menu();
+
+  //   var hideMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Hide',
+  //     enabled: true,
+  //     click: function() {
+  //       showMenuItem.enabled = true;
+  //       this.enabled = false;
+  //       win.hide();
+  //     }
+  //   });
+
+  //   var showMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Show',
+  //     enabled: false,
+  //     click: function() {
+  //       hideMenuItem.enabled = true;
+  //       this.enabled = false;
+  //       win.show();
+  //     }
+  //   });
+
+  //   var refetchMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Refetch',
+  //     click: function() {
+  //       process.mainModule.exports.runFetchCycleNow();
+  //     }
+  //   });
+
+  //   var quitMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Quit',
+  //     click: function() {
+  //       win.close();
+  //     }
+  //   });
+
+  //   tray = new gui.Tray({
+  //     icon: 'assets/SJ_logo_tray.png'
+  //   });
+
+  //   menu.append(refetchMenuItem);
+  //   menu.append(new gui.MenuItem({
+  //     type: 'separator'
+  //   }));
+  //   menu.append(showMenuItem);
+  //   menu.append(hideMenuItem);
+  //   menu.append(new gui.MenuItem({
+  //     type: 'separator'
+  //   }));
+  //   menu.append(quitMenuItem);
+
+  //   tray.menu = menu;
+  // }
 
   // ---------------------------------------------------------------------------
   // window NW listener
@@ -153,7 +216,7 @@
       if ($(event.currentTarget.parentNode).hasClass("active") === false &&
         $(event.currentTarget).hasClass("removeKeyword") === false) {
 
-        console.log(event);
+        //console.log(event);
 
         // show in ui that it will be selected...
         $(".keyword_link_li").removeClass("active"); // remove old active states

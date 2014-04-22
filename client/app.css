@@ -266,6 +266,10 @@ nav and titlebar
   float: initial !important;
 }
 
+.windowTitlePicture {
+  vertical-align: text-top;
+}
+
 /* -----------------------------------------------------------------------------
 remove responsive support from a few navbar items
 ----------------------------------------------------------------------------- */
