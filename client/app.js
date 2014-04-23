@@ -51,7 +51,9 @@
 
   (function clientStartup() {
     // are we running in debug mode?
-    if (NWAPP_DEBUG === true) {
+
+    if (gui.App.manifest.NWAPP_DEBUG === true) {
+      NWAPP_DEBUG = true; // ATTENTION GLOBAL GETS SET!
       win.showDevTools();
     }
 
@@ -205,8 +207,9 @@
 
     $(".items_link_external").off();
     $(".items_link_external").on("click", function(event) {
+      console.log(event);
       event.preventDefault();
-      gui.Shell.openExternal(event.target.href);
+      gui.Shell.openExternal(event.currentTarget.href);
     });
 
     $(".keyword_link").off();
@@ -572,6 +575,7 @@
   NWAPP.printSettings = function(config) {
     config.appName = gui.App.manifest.name;
     config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
+    config.homepageURL = gui.App.manifest.NWAPP_CONST.homepageURL;
     document.getElementById("settings").innerHTML = NWAPP.Templates.settings(config);
   };
 
