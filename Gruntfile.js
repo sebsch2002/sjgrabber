@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         linux64: true,
         version: nwBuildVersion,
         zip: true,
-        keep_nw: false,
+        keep_nw: true,
         mac_icns: "assets/SJ_logo_mac.icns"
       },
       src: ['build/**/*'] // source
@@ -184,18 +184,18 @@ module.exports = function(grunt) {
           dest: '',
         }]
       },
-      // nw: {
-      //   options: {
-      //     archive: "dist/" + pkgJSON.name + "_nw_v" + pkgJSON.version + ".zip",
-      //     mode: 'zip'
-      //   },
-      //   files: [{
-      //     expand: true,
-      //     cwd: 'release/releases/' + pkgJSON.name + '/',
-      //     src: ['*'],
-      //     dest: '',
-      //   }]
-      // },
+      nw: {
+        options: {
+          archive: "dist/" + pkgJSON.name + "_nw_v" + pkgJSON.version + ".zip",
+          mode: 'zip'
+        },
+        files: [{
+          expand: true,
+          cwd: 'release/releases/' + pkgJSON.name + '/',
+          src: ['*'],
+          dest: '',
+        }]
+      },
       linux32: {
         options: {
           archive: "dist/" + pkgJSON.name + "_linux32_v" + pkgJSON.version + ".zip",
@@ -252,6 +252,7 @@ module.exports = function(grunt) {
     }
   });
 
+  // PLUGINS
   grunt.loadNpmTasks("grunt-node-webkit-builder");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-cssmin");
@@ -263,9 +264,22 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask("default", ["clean:pre", "handlebars", "htmlmin", "cssmin",
+  // MAIN STEP
+  grunt.registerTask("default", ["build", "release"]);
+  
+  // SEPARATED BUILD STEPS
+  grunt.registerTask("build", ["clean:pre", "build-generic", "build-nw"]);
+  grunt.registerTask("release", ["compress", "clean:post"]);
+
+  // HELPER STEPS
+  grunt.registerTask("build-generic", ["handlebars", "htmlmin", "cssmin",
     "uglify:clientjs", "install-dependencies",
     "copy:build-templates", "copy:bower_fonts", "copy:assets",
-    "uglify:daemonjs", "nodewebkit", "copy:licenses", "compress", "clean:post"
+    "uglify:daemonjs"
   ]);
+  grunt.registerTask("build-nw", ["nodewebkit", "copy:licenses"]);
+  
+  // MAINTENANCE
+  grunt.registerTask("clear", ["clean"]);
+
 };
