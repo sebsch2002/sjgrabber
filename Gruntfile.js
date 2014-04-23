@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: "build-templates/",
-          src: ["**", "!*.html"],
+          src: ["**", "!*.html", "!win32/**"],
           dest: "build/"
         }]
       },
@@ -61,6 +61,14 @@ module.exports = function(grunt) {
           cwd: "assets/",
           src: ["**", "!dev/**"],
           dest: "build/assets/"
+        }]
+      },
+      "shortcuts": {
+        files: [{
+          src: ["*.exe"],
+          cwd: "build-templates/win32/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/win/' + pkgJSON.name
         }]
       },
       "licenses": {
@@ -277,7 +285,7 @@ module.exports = function(grunt) {
     "copy:build-templates", "copy:bower_fonts", "copy:assets",
     "uglify:daemonjs"
   ]);
-  grunt.registerTask("build-nw", ["nodewebkit", "copy:licenses"]);
+  grunt.registerTask("build-nw", ["nodewebkit", "copy:licenses", "copy:shortcuts"]);
   
   // MAINTENANCE
   grunt.registerTask("clear", ["clean"]);
