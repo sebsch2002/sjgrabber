@@ -42,7 +42,7 @@
     "height": 480,
     "min_width": 640,
     "min_height": 480,
-    "icon": "assets/SJ_logo.png"
+    "icon": "assets/SJ_logo_512x512x32.png"
   },
   "chromium-args": "--enable-direct-write",
   "private": true,

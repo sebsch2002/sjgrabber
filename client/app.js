@@ -130,7 +130,7 @@
   //   });
 
   //   tray = new gui.Tray({
-  //     icon: 'assets/SJ_logo_tray.png'
+  //     icon: 'assets/SJ_logo_16x16x32.png'
   //   });
 
   //   menu.append(refetchMenuItem);
