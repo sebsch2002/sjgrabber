@@ -380,6 +380,10 @@
     $("#addkeyword_button").tooltip({
       container: 'body'
     });
+
+    $(".updateAvailable").on("click", function() {
+      displayModalHowToUpdate();
+    });
   };
 
   // ---------------------------------------------------------------------------
@@ -758,6 +762,25 @@
       $('#currentModal').modal("hide");
       addCurrentQueryAsKeyword(true);
     });
+
+    $('#currentModal').modal("show");
+  }
+
+  function displayModalHowToUpdate() {
+
+    document.getElementById("modalContainer").innerHTML = NWAPP.Templates.modal({
+      title: "<i class='fa fa-download'></i> How to update?",
+      content: NWAPP.Templates["modalContent/howToUpdate"]({
+        appName: gui.App.manifest.name
+      }),
+      dismissText: "cancel",
+      agreeText: "proceed",
+      dismissable: true,
+      noDecision: true,
+      large: true
+    });
+
+    configureModel(true);
 
     $('#currentModal').modal("show");
   }

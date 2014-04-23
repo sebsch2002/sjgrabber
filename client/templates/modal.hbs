@@ -9,8 +9,12 @@
         {{{content}}}
       </div>
       <div class="modal-footer">
-        <button id="modal_button_dismiss" type="button" class="btn btn-danger" {{#if dismissable}}data-dismiss="modal"{{/if}}><i class="fa fa-times"></i> {{dismissText}}</button>
-        <button id="modal_button_agree" type="button" class="btn btn-primary"><i class="fa fa-check"></i> {{agreeText}}</button>
+        {{#if noDecision}}
+          <button id="modal_button_close" type="button" class="btn btn-default" data-dismiss="modal">continue</button>
+        {{else}}
+          <button id="modal_button_dismiss" type="button" class="btn btn-danger" {{#if dismissable}}data-dismiss="modal"{{/if}}><i class="fa fa-times"></i> {{dismissText}}</button>
+          <button id="modal_button_agree" type="button" class="btn btn-primary"><i class="fa fa-check"></i> {{agreeText}}</button>
+        {{/if}}
       </div>
     </div>
   </div>
