@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     },
     clean: {
       pre: ["build", "dist"],
-      post: ["build", "release/releases", "tmp"],
+      post: ["build", "release/releases"],
       "build-deps": ["build-templates/node_modules"]
     },
     cssmin: {
@@ -71,10 +71,10 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/win/' + pkgJSON.name
         }]
       },
-      "licenses": {
+      "support": {
         files: [{ // LINUX32
           src: ["*"],
-          cwd: "tmp/",
+          cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, {
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, { // LINUX64
           src: ["*"],
-          cwd: "tmp/",
+          cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, {
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, { // MAC
           src: ["*"],
-          cwd: "tmp/",
+          cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, { // WIN
           src: ["*"],
-          cwd: "tmp/",
+          cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/'
         }, {
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/win/'
         }, { // NW
           src: ["*"],
-          cwd: "tmp/",
+          cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/'
         }]
@@ -274,15 +274,15 @@ module.exports = function(grunt) {
           expand: true,
           cwd: '.',
           src: ['*.md'],
-          dest: 'tmp',
+          dest: 'client/support',
           ext: '.html'
         }]
       }
     },
     watch: {
       templates: {
-        files: 'client/templates/**/*.hbs',
-        tasks: ['handlebars'],
+        files: ['client/templates/**/*.hbs', '*.md'],
+        tasks: ['build-static'],
         options: {
           interrupt: true,
         }
@@ -307,16 +307,19 @@ module.exports = function(grunt) {
   grunt.registerTask("default", ["build", "release"]);
 
   // SEPARATED BUILD STEPS
-  grunt.registerTask("build", ["clean:pre", "build-generic", "build-nw"]);
+  grunt.registerTask("build", ["clean:pre", "build-static", "build-js", "build-nw"]);
   grunt.registerTask("release", ["compress", "clean:post"]);
 
-  // HELPER STEPS
-  grunt.registerTask("build-generic", ["handlebars", "htmlmin", "cssmin",
+  // HELPER STEPS for each build step
+  grunt.registerTask("build-static", ["handlebars", "md2html"]); // also used by watch task!
+
+  grunt.registerTask("build-js", ["htmlmin", "cssmin",
     "uglify:clientjs", "install-dependencies",
     "copy:build-templates", "copy:bower_fonts", "copy:assets",
     "uglify:daemonjs"
   ]);
-  grunt.registerTask("build-nw", ["nodewebkit", "md2html", "copy:licenses", "copy:shortcuts"]);
+  
+  grunt.registerTask("build-nw", ["nodewebkit", "copy:support", "copy:shortcuts"]);
 
   // MAINTENANCE
   grunt.registerTask("clear", ["clean"]);

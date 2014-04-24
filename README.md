@@ -52,6 +52,7 @@ git clone https://github.com/majodev/sjgrabber.git
 cd sjgrabber
 npm install -d
 bower install -d
+grunt build-static
 ```
 
 ### Debugging

@@ -45,6 +45,8 @@
 
   var COUNT_MAX_LINKS_WO_WARNING = 50;
 
+  var popupWin = null;
+
   // ---------------------------------------------------------------------------
   // startup and main app painting
   // ---------------------------------------------------------------------------
@@ -159,6 +161,12 @@
 
   NWAPP.closeApplicationNow = function() {
     console.log("closeApplicationNow - FORCE QUIT!");
+
+    // If the popupWin is still open then close it.
+    if (popupWin !== null) {
+      popupWin.close(true);
+    }
+
     win.close(true);
   };
 
@@ -822,6 +830,27 @@
     });
 
     $('#currentModal').modal("show");
+  };
+
+  // ---------------------------------------------------------------------------
+  // POPUP window
+  // ---------------------------------------------------------------------------
+
+
+  NWAPP.popup = function(url) {
+    popupWin = gui.Window.get(
+      gui.Window.open(url, {
+        "position": "center",
+        "focus": true,
+        "toolbar": false,
+        "frame": true,
+        "nodejs": false
+      })
+    );
+
+    popupWin.on('closed', function() {
+      popupWin = null;
+    });
   };
 
 
