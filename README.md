@@ -66,10 +66,9 @@ The default `grunt` task builds, bundles and compresses win32, mac, linux32, lin
 * [Nicole Eibel](http://nicoleeibel.at/) (brand/logo design)
 
 ## License
-SJgrabber is licensed under the MIT License (MIT)
-
+SJgrabber is licensed under the MIT License  
 Copyright (c) 2014 Mario Ranftl ([@majodev](https://twitter.com/majodev))
 
-see LICENSE.md/LICENSE.html for SJgrabber specific licenses
+See **LICENSE.md** (or **LICENSE.html** within distributed apps) for more detailed license info and 3rd party licenses.
 
-see credits.html for [node-webkit](https://github.com/rogerwang/node-webkit) redistributable licenses (platform dependent, this file ONLY ships with SJgrabber binaries)
+See **credits.html** for [node-webkit](https://github.com/rogerwang/node-webkit) redistributable licenses (platform dependent, this file ONLY ships with SJgrabber binaries).
