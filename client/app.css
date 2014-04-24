@@ -78,6 +78,11 @@ wrap maincontent and set a fixed height footer
   background-image: linear-gradient(to bottom, #3c3c3c 0%, #222 100%);
 }
 
+.footerHolder {
+  margin-left: -5px;
+  margin-right: -5px;
+}
+
 /* -----------------------------------------------------------------------------
 fixed positioning + scrolling (attention top gets dynamically set!)
 ----------------------------------------------------------------------------- */
