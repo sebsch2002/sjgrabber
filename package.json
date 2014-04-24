@@ -27,7 +27,8 @@
     "grunt-install-dependencies": "^0.1.0",
     "grunt-contrib-compress": "^0.7.0",
     "grunt-contrib-handlebars": "^0.7.0",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-md2html": "^0.1.7"
   },
   "main": "index.html",
   "node-main": "daemon/controller.js",

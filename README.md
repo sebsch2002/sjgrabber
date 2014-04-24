@@ -19,8 +19,8 @@ SJgrabber soon became quite polished, hence it was time to publish it, and here 
 Get SJgrabber for your platform from https://github.com/majodev/sjgrabber/releases
 
 ## Installing
-There is no need to explicitly install SJgrabber. Unzip, move it anywhere you want and run it.
-Heads up linux users: You have to manually set the executable flag of the SJgrabber binary!
+There is no need to explicitly install SJgrabber. Unzip, move it anywhere you want and run it.  
+**Heads up linux users:** You have to manually set the executable flag of the SJgrabber binary!
 
 ## Upgrading
 Your current configuration, fetched favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
@@ -60,6 +60,6 @@ SJgrabber is licensed under the MIT License (MIT)
 
 Copyright (c) 2014 Mario Ranftl (@majodev)
 
-see LICENSE.txt for SJgrabber specific licenses
+see LICENSE.md/LICENSE.html for SJgrabber specific licenses
 
 see credits.html for node-webkit redistributable licenses (platform dependent, this file ONLY ships with SJgrabber binaries)

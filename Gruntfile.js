@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     },
     clean: {
       pre: ["build", "dist"],
-      post: ["build", "release/releases"],
+      post: ["build", "release/releases", "tmp"],
       "build-deps": ["build-templates/node_modules"]
     },
     cssmin: {
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: "build-templates/",
-          src: ["**", "!*.html", "!win32/**"],
+          src: ["**", "!*.html", "!support/**"],
           dest: "build/"
         }]
       },
@@ -66,44 +66,57 @@ module.exports = function(grunt) {
       "shortcuts": {
         files: [{
           src: ["*.exe"],
-          cwd: "build-templates/win32/",
+          cwd: "build-templates/support/win32/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/' + pkgJSON.name
         }]
       },
       "licenses": {
-        files: [{
-          src: ["README.md", "LICENSE.md"],
+        files: [{ // LINUX32
+          src: ["*"],
+          cwd: "tmp/",
+          expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, {
           src: ["*.html"],
           cwd: "release/cache/linux32/" + nwBuildVersion + "/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
-        }, {
-          src: ["README.md", "LICENSE.md"],
+        }, { // LINUX64
+          src: ["*"],
+          cwd: "tmp/",
+          expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, {
           src: ["*.html"],
           cwd: "release/cache/linux64/" + nwBuildVersion + "/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
-        }, {
-          src: ["README.md", "LICENSE.md"],
+        }, { // MAC
+          src: ["*"],
+          cwd: "tmp/",
+          expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, {
           src: ["*.html"],
           cwd: "release/cache/mac/" + nwBuildVersion + "/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
-        }, {
-          src: ["README.md", "LICENSE.md"],
+        }, { // WIN
+          src: ["*"],
+          cwd: "tmp/",
+          expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/'
         }, {
           src: ["*.html"],
           cwd: "release/cache/win/" + nwBuildVersion + "/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/'
+        }, { // NW
+          src: ["*"],
+          cwd: "tmp/",
+          expand: true,
+          dest: 'release/releases/' + pkgJSON.name + '/'
         }]
       }
     },
@@ -249,6 +262,23 @@ module.exports = function(grunt) {
         }
       }
     },
+    md2html: {
+      compileSupportFiles: {
+        options: {
+          layout: 'build-templates/support/supportLayout.html',
+          markedOptions: {
+            gfm: true
+          }
+        },
+        files: [{
+          expand: true,
+          cwd: '.',
+          src: ['*.md'],
+          dest: 'tmp',
+          ext: '.html'
+        }]
+      }
+    },
     watch: {
       templates: {
         files: 'client/templates/**/*.hbs',
@@ -270,11 +300,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-install-dependencies');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-handlebars');
+  grunt.loadNpmTasks('grunt-md2html');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // MAIN STEP
   grunt.registerTask("default", ["build", "release"]);
-  
+
   // SEPARATED BUILD STEPS
   grunt.registerTask("build", ["clean:pre", "build-generic", "build-nw"]);
   grunt.registerTask("release", ["compress", "clean:post"]);
@@ -285,8 +316,8 @@ module.exports = function(grunt) {
     "copy:build-templates", "copy:bower_fonts", "copy:assets",
     "uglify:daemonjs"
   ]);
-  grunt.registerTask("build-nw", ["nodewebkit", "copy:licenses", "copy:shortcuts"]);
-  
+  grunt.registerTask("build-nw", ["nodewebkit", "md2html", "copy:licenses", "copy:shortcuts"]);
+
   // MAINTENANCE
   grunt.registerTask("clear", ["clean"]);
 

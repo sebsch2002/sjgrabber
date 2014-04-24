@@ -1,4 +1,4 @@
-# License
+# SJgrabber License
 
 SJgrabber is licensed under the MIT License (MIT)  
 Copyright (c) 2014 Mario Ranftl (@majodev)

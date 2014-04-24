@@ -7,3 +7,4 @@ bower_components
 dist
 build-templates/node_modules
 client/templates.js
+tmp
