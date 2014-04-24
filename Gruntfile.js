@@ -71,7 +71,15 @@ module.exports = function(grunt) {
           dest: 'release/releases/' + pkgJSON.name + '/win/' + pkgJSON.name
         }]
       },
-      "support": {
+      "support-client": {
+        files: [{ // LINUX32
+          src: ["*"],
+          cwd: "client/support/",
+          expand: true,
+          dest: 'build/client/support/'
+        }]
+      },
+      "support-distribution": {
         files: [{ // LINUX32
           src: ["*"],
           cwd: "client/support/",
@@ -313,13 +321,13 @@ module.exports = function(grunt) {
   // HELPER STEPS for each build step
   grunt.registerTask("build-static", ["handlebars", "md2html"]); // also used by watch task!
 
-  grunt.registerTask("build-js", ["htmlmin", "cssmin",
+  grunt.registerTask("build-js", ["copy:support-client", "htmlmin", "cssmin",
     "uglify:clientjs", "install-dependencies",
     "copy:build-templates", "copy:bower_fonts", "copy:assets",
     "uglify:daemonjs"
   ]);
   
-  grunt.registerTask("build-nw", ["nodewebkit", "copy:support", "copy:shortcuts"]);
+  grunt.registerTask("build-nw", ["nodewebkit", "copy:support-distribution", "copy:shortcuts"]);
 
   // MAINTENANCE
   grunt.registerTask("clear", ["clean"]);
