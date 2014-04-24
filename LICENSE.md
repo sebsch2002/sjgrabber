@@ -1,4 +1,6 @@
-SJgrabber is licensed under the MIT License (MIT)
+# License
+
+SJgrabber is licensed under the MIT License (MIT)  
 Copyright (c) 2014 Mario Ranftl (@majodev)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,59 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+# 3rd party licenses
+SJgrabber uses several 3rd party libaries to function as intended!
 
-################################################################################
-################################################################################
-################################################################################
-####                                                                        ####
-#### YOU HAVE TO READ AND AGREE TO THE NODE-WEBKIT REDISTRIBUTABLE LICENSES ####
-####          WHICH COME PACKAGED WITH EVERY COMPILED APPLICATION!          ####
-####                            SEE credits.html                            ####
-####                                                                        ####
-################################################################################
-####                                                                        ####
-####               3rd PARTY LIBARIES MAY USE DIFFENT LICENSES              ####
-####                           READ THIS DOCUMENT!                          ####
-####                                                                        ####
-################################################################################
-################################################################################
-################################################################################
+## Overview of 3rd party licenses
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-3rd party licenses (quick overview)
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### node-webkit
+* node-webkit: MIT License *AND OTHER LICENSES WHEN REDISTRIBUTED* (see credits.html)
 
-(node-webkit)
-node-webkit: MIT License AND OTHER LICENSES WHEN REDISTRIBUTED (credits.html)
+** ATTENTION YOU HAVE TO READ AND AGREE TO THE NODE-WEBKIT REDISTRIBUTABLE LICENSES WHICH COME PACKAGED WITH EVERY COMPILED APPLICATION!**
 
-(client)
-bootstrap: MIT License
-font awesome: SIL OFL 1.1 (fonts) / MIT License (css) / CC BY 3.0 License (docs)
-handlebars: MIT License
-jquery: MIT License
-nprogress: MIT License
-iso-country-flags-svg-collection (2 flag images in assets): Public Domain
+**SEE credits.html** (included in every *platform* release)
 
-(daemon)
-async: MIT License
-backbone: MIT License
-cheerio: MIT License
-feedparser: MIT License
-lodash: MIT License
-moment: MIT License
-request: Apache License, Version 2.0
+### clientside (via bower)
+* bootstrap: MIT License
+* font awesome: SIL OFL 1.1 (fonts) / MIT License (css) / CC BY 3.0 License (docs)
+* handlebars: MIT License
+* jquery: MIT License
+* nprogress: MIT License
+* iso-country-flags-svg-collection (2 flag images in assets): Public Domain
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-bootstrap
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### daemon (via npm)
+* async: MIT License
+* backbone: MIT License
+* cheerio: MIT License
+* feedparser: MIT License
+* lodash: MIT License
+* moment: MIT License
+* request: Apache License, Version 2.0
+
+## Detailed 3rd party licenses
+
+###bootstrap
 
 The MIT License (MIT)
 
@@ -95,29 +76,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-font awesome
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+###font awesome
 
-Font Awesome by Dave Gandy - http://fontawesome.io
-http://fontawesome.io/license/
-Font License: http://scripts.sil.org/OFL
-Code License: http://opensource.org/licenses/mit-license.html
-Documentation License: http://creativecommons.org/licenses/by/3.0/
-Brand Icons: All brand icons are trademarks of their respective owners.
+
+Font Awesome by Dave Gandy - http://fontawesome.io  
+please see http://fontawesome.io/license/  
+* Font License: http://scripts.sil.org/OFL  
+* Code License: http://opensource.org/licenses/mit-license.html  
+* Documentation License: http://creativecommons.org/licenses/by/3.0/  
+* Brand Icons: All brand icons are trademarks of their respective owners.
+
 The use of these trademarks does not indicate endorsement of the trademark holder by Font Awesome, nor vice versa.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-handlebars
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+
+### handlebars
 
 Copyright (C) 2011-2014 by Yehuda Katz
 
@@ -139,13 +111,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-jquery
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+
+### jquery
 
 Copyright 2014 jQuery Foundation and other contributors
 http://jquery.com/
@@ -169,13 +136,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-nprogress
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### nprogress
 
 Copyright (c) 2013 Rico Sta. Cruz
 
@@ -197,26 +158,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-iso-country-flags-svg-collection
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### iso-country-flags-svg-collection
 
-Public Domain - Jakob Flierl
-license description: http://en.wikipedia.org/wiki/Public_domain
-github repository: https://github.com/koppi/iso-country-flags-svg-collection
+Public Domain - Jakob Flierl  
+* license description: http://en.wikipedia.org/wiki/Public_domain  
+* github repository: https://github.com/koppi/iso-country-flags-svg-collection
 
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-async
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### async
 
 Copyright (c) 2010-2014 Caolan McMahon
 
@@ -238,13 +186,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-backbone
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### backbone
 
 Copyright (c) 2010-2014 Jeremy Ashkenas, DocumentCloud
 
@@ -269,13 +211,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-cheerio
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### cheerio
 
 (The MIT License)
 
@@ -300,13 +236,7 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-feedparser
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### feedparser
 
 node-feedparser is released under the MIT License
 Copyright (c) 2011, 2012, 2013 Dan MacTough and contributors
@@ -332,13 +262,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-lodash
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### lodash
 
 Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
 Based on Underscore.js 1.5.2, copyright 2009-2013 Jeremy Ashkenas,
@@ -363,13 +287,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-moment
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### moment
 
 Copyright (c) 2011-2013 Tim Wood, Iskren Chernev, Moment.js contributors
 
@@ -394,13 +312,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-request
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### request
 
 Apache License
 
@@ -458,13 +370,7 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-node-webkit
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+### node-webkit
 
 Copyright (c) 2012-2014 Intel Corp
 Copyright (c) 2012-2014 The Chromium Authors

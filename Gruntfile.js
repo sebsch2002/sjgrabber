@@ -73,7 +73,7 @@ module.exports = function(grunt) {
       },
       "licenses": {
         files: [{
-          src: ["README.txt", "LICENSE.txt"],
+          src: ["README.md", "LICENSE.md"],
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, {
           src: ["*.html"],
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, {
-          src: ["README.txt", "LICENSE.txt"],
+          src: ["README.md", "LICENSE.md"],
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, {
           src: ["*.html"],
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, {
-          src: ["README.txt", "LICENSE.txt"],
+          src: ["README.md", "LICENSE.md"],
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, {
           src: ["*.html"],
@@ -97,7 +97,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, {
-          src: ["README.txt", "LICENSE.txt"],
+          src: ["README.md", "LICENSE.md"],
           dest: 'release/releases/' + pkgJSON.name + '/win/'
         }, {
           src: ["*.html"],
