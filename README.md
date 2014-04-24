@@ -22,26 +22,28 @@ There is no need to explicitly install SJgrabber. Unzip, move it anywhere you wa
 ## Upgrading
 Your current configuration, fetched favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
 
-## Genesis
-Several 'friends of mine' were *sick* of skimming serienjunkies.org **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
+## Support
+Please feel free to donate a beer via bitcoins `1KaeuK2WpwkhK9T3eURK7uxB3frgD8Z4HV`, via <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mario%2eranftl%40gmail%2ecom&lc=AT&item_name=a fresh and cold SJgrabber thank you beer&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">paypal</a> or via <a href="https://www.gittip.com/majodev/">gittip</a>.  
+Thank you VERY VERY much!
 
-SJgrabber soon became quite polished, hence it was time to publish it and that's it (anyways, feel free to spot evil intentions...).
+I'm also accepting nice words on twitter [@majodev](https://twitter.com/majodev), thx!
 
 ## Bugs, feature requests and disgust
 Open an issue on GitHub!
 
-## Support
-Please feel free to donate a bitcoin-beer to `1KaeuK2WpwkhK9T3eURK7uxB3frgD8Z4HV`.  
-Thank you VERY VERY much!
+## Genesis
+Several 'friends of mine' were *sick* of skimming serienjunkies.org **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
 
-I'm also accepting nice words on twitter [@majodev](https://twitter.com/majodev), thx!
+SJgrabber soon became quite polished, hence it was time to publish it and that's it (anyways, feel free to spot evil intentions...).
 
 ## Tech
 SJgrabber is powered by [node-webkit](https://github.com/rogerwang/node-webkit) and distributed as self-contained app for each platform.  
 It's really just HTML/CSS/JS!
 
 ## Building
-Wanna build SJgrabber yourself?
+> Only for the brave and nerdy!
+
+### Prerequisites
 * get [node.js](http://nodejs.org/), install it and make yourself comfortable with [npm](https://www.npmjs.org/)
 * install [grunt](http://gruntjs.com/) globally
 * install [bower](http://bower.io/) globally
@@ -56,12 +58,19 @@ grunt build-static
 ```
 
 ### Debugging
-While developing it's better to run the SJgrabber straight with node-webkit and devtools enabled (the flag `NWAPP_DEBUG` in `package.json` handles setting the debug environment). Get going by executing `nw .` within your working directory (put the [node-webkit](https://github.com/rogerwang/node-webkit) executable into your `PATH`).
+While developing it's better to run SJgrabber straight with node-webkit and devtools enabled (the flag `NWAPP_DEBUG` in `package.json` handles setting up a debug environment). Get going by executing `nw .` within your working directory (put the [node-webkit](https://github.com/rogerwang/node-webkit) executable into your `PATH`). 
+
+**Important**: SJgrabber reads and saves your data to separate `localStorage` fields during debug-sessions, so developing and enhancing doesn't interfere with your productive use of SJgrabber. Feel free to wipe fetched releases and favourites as you please.
 
 ### Tasks
-If you plan to make changes to the handlebars templates in `client/templates`, the `watch` task might become handy, as it automatically compiles to `client/templates.js` every time you make changes there.
+If you plan to make changes to any handlebars template in `/client/templates` or `LICENSE.md` and `README.md`, the `watch` task might become handy, as it automatically executes `build-static` after modifications.
 
-The default `grunt` task builds, bundles and compresses win32, mac, linux32, linux64 and nw releases into `/dist`. If you have come this far, you'll have the same release-ready builds which I'm distributing here!
+The **default** `grunt` task builds, bundles and compresses win32, mac, linux32, linux64 and nw releases into `/dist`. If you have come this far, you'll have the same release-ready builds which I'm distributing here! It executes the following tasks:
+* `build` (with 3 essential sub-tasks)
+  - `build-static`: template and support file compilation
+  - `build-js`: minification (HTML, CSS), uglyfication (JS), dependency retrieval (npm packages without dev-only) and copying `/build-templates`
+  - `build-nw`: node-webkit packaging
+* `release`: compressing to `/dist` and cleanup
 
 ## Contributors
 * [Nicole Eibel](http://nicoleeibel.at/) (brand/logo design)

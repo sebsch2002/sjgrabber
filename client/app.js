@@ -87,68 +87,6 @@
     setDynamicStyles();
   }
 
-  // var tray;
-
-  // function paintTray() {
-
-  //   var menu = new gui.Menu();
-
-  //   var hideMenuItem = new gui.MenuItem({
-  //     type: 'normal',
-  //     label: 'Hide',
-  //     enabled: true,
-  //     click: function() {
-  //       showMenuItem.enabled = true;
-  //       this.enabled = false;
-  //       win.hide();
-  //     }
-  //   });
-
-  //   var showMenuItem = new gui.MenuItem({
-  //     type: 'normal',
-  //     label: 'Show',
-  //     enabled: false,
-  //     click: function() {
-  //       hideMenuItem.enabled = true;
-  //       this.enabled = false;
-  //       win.show();
-  //     }
-  //   });
-
-  //   var refetchMenuItem = new gui.MenuItem({
-  //     type: 'normal',
-  //     label: 'Refetch',
-  //     click: function() {
-  //       process.mainModule.exports.runFetchCycleNow();
-  //     }
-  //   });
-
-  //   var quitMenuItem = new gui.MenuItem({
-  //     type: 'normal',
-  //     label: 'Quit',
-  //     click: function() {
-  //       win.close();
-  //     }
-  //   });
-
-  //   tray = new gui.Tray({
-  //     icon: 'assets/SJ_logo_16x16x32.png'
-  //   });
-
-  //   menu.append(refetchMenuItem);
-  //   menu.append(new gui.MenuItem({
-  //     type: 'separator'
-  //   }));
-  //   menu.append(showMenuItem);
-  //   menu.append(hideMenuItem);
-  //   menu.append(new gui.MenuItem({
-  //     type: 'separator'
-  //   }));
-  //   menu.append(quitMenuItem);
-
-  //   tray.menu = menu;
-  // }
-
   // ---------------------------------------------------------------------------
   // window NW listener
   // ---------------------------------------------------------------------------
@@ -218,6 +156,13 @@
       console.log(event);
       event.preventDefault();
       gui.Shell.openExternal(event.currentTarget.href);
+    });
+
+    $(".popupLink").off();
+    $(".popupLink").on("click", function(event) {
+      console.log(event);
+      event.preventDefault();
+      popupLink(event.currentTarget.href);
     });
 
     $(".keyword_link").off();
@@ -692,6 +637,9 @@
         keyboard: false
       });
     }
+
+    // and also set the dynamic bindings new!
+    NWAPP.hookDynamicBindings();
   }
 
   function displayModalWarningRemoveKeyword(keyword) {
@@ -803,7 +751,8 @@
         license: gui.App.manifest.license,
         licenseURL: gui.App.manifest.NWAPP_CONST.licenseURL,
         githubURL: gui.App.manifest.NWAPP_CONST.githubURL,
-        homepageURL: gui.App.manifest.NWAPP_CONST.homepageURL
+        homepageURL: gui.App.manifest.NWAPP_CONST.homepageURL,
+        author: gui.App.manifest.author
       }),
       dismissText: "NO I DO NOT AGREE (quit)",
       agreeText: "YES I UNDERSTAND & AGREE (continue)",
@@ -823,12 +772,6 @@
       $('#currentModal').modal("hide");
     });
 
-    $(".items_link_external").off();
-    $(".items_link_external").on("click", function(event) {
-      event.preventDefault();
-      gui.Shell.openExternal(event.target.href);
-    });
-
     $('#currentModal').modal("show");
   };
 
@@ -837,7 +780,7 @@
   // ---------------------------------------------------------------------------
 
 
-  NWAPP.popup = function(url) {
+  function popupLink(url) {
     popupWin = gui.Window.get(
       gui.Window.open(url, {
         "position": "center",
@@ -851,7 +794,73 @@
     popupWin.on('closed', function() {
       popupWin = null;
     });
-  };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Tray icon test (not used currently)
+  // ---------------------------------------------------------------------------
+  
+  // var tray;
+
+  // function paintTray() {
+
+  //   var menu = new gui.Menu();
+
+  //   var hideMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Hide',
+  //     enabled: true,
+  //     click: function() {
+  //       showMenuItem.enabled = true;
+  //       this.enabled = false;
+  //       win.hide();
+  //     }
+  //   });
+
+  //   var showMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Show',
+  //     enabled: false,
+  //     click: function() {
+  //       hideMenuItem.enabled = true;
+  //       this.enabled = false;
+  //       win.show();
+  //     }
+  //   });
+
+  //   var refetchMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Refetch',
+  //     click: function() {
+  //       process.mainModule.exports.runFetchCycleNow();
+  //     }
+  //   });
+
+  //   var quitMenuItem = new gui.MenuItem({
+  //     type: 'normal',
+  //     label: 'Quit',
+  //     click: function() {
+  //       win.close();
+  //     }
+  //   });
+
+  //   tray = new gui.Tray({
+  //     icon: 'assets/SJ_logo_16x16x32.png'
+  //   });
+
+  //   menu.append(refetchMenuItem);
+  //   menu.append(new gui.MenuItem({
+  //     type: 'separator'
+  //   }));
+  //   menu.append(showMenuItem);
+  //   menu.append(hideMenuItem);
+  //   menu.append(new gui.MenuItem({
+  //     type: 'separator'
+  //   }));
+  //   menu.append(quitMenuItem);
+
+  //   tray.menu = menu;
+  // }
 
 
   // ---------------------------------------------------------------------------

@@ -520,6 +520,10 @@ helper stylings
   color: #d9534f;
 }
 
+.biggerText {
+  font-size: 130%;
+}
+
 .btcText {
   color: #ed9c28;
 }
