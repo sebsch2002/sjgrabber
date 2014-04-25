@@ -81,7 +81,7 @@ module.exports = function(grunt) {
       },
       "support-distribution": {
         files: [{ // LINUX32
-          src: ["*"],
+          src: ["*.html"],
           cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux32/'
         }, { // LINUX64
-          src: ["*"],
+          src: ["*.html"],
           cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
@@ -101,7 +101,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/linux64/'
         }, { // MAC
-          src: ["*"],
+          src: ["*.html"],
           cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/mac/'
         }, { // WIN
-          src: ["*"],
+          src: ["*.html"],
           cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/'
@@ -121,7 +121,7 @@ module.exports = function(grunt) {
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/win/'
         }, { // NW
-          src: ["*"],
+          src: ["*.html"],
           cwd: "client/support/",
           expand: true,
           dest: 'release/releases/' + pkgJSON.name + '/'

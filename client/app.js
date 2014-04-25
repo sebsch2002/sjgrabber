@@ -781,19 +781,27 @@
 
 
   function popupLink(url) {
-    popupWin = gui.Window.get(
-      gui.Window.open(url, {
-        "position": "center",
-        "focus": true,
-        "toolbar": true,
-        "frame": true,
-        "nodejs": false,
-        "icon": "../assets/SJ_logo_512x512x32.png"
-      })
-    );
 
-    popupWin.on('closed', function() {
-      popupWin = null;
+    var popupWindow = gui.Window.open(url, {
+      "position": "mouse",
+      "focus": true,
+      "toolbar": false,
+      "frame": true,
+      "icon": gui.App.manifest.window.icon,
+      "always-on-top": true,
+      "title": gui.App.manifest.name + " browser",
+      "width": 800,
+      "height": 600,
+      "inject-js-end": "client/support/inject.js"
+    });
+
+    popupWindow.on('closed', function() {
+      popupWindow = null;
+    });
+
+    popupWindow.on('new-win-policy', function(frame, url, policy) {
+      console.log("popupWindow: new-win-policy catched!");
+      policy.ignore();
     });
   }
 
