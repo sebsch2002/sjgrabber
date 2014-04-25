@@ -9,25 +9,32 @@
   var win = gui.Window.get();
 
   // ---------------------------------------------------------------------------
-  // namespace and runtime variables
+  // namespace, const and runtime variables
   // ---------------------------------------------------------------------------
 
+  // application NAMESPACE (open interface to controller.js (daemon))
   var NWAPP = window.NWAPP || {};
+
+  // CONST count when to show warning on query add item fetch count
+  var COUNT_MAX_LINKS_WO_WARNING = 50;
+
+  // CONST pagination defaults
+  var PAGINATION_DEFAULTS = {
+    page: 1,
+    limit: 250
+  };
 
   // fasted way to make loading available
   var compiledLoadingTemplate = NWAPP.Templates.loading();
+
+  // holds all ever launched popupWindowItems or a nullified item if already closed
+  var popupWindows = [];
 
   // hold current input in search box
   var currentSearchInput = "";
 
   // holds current button cycle state
   var buttonStateLoading = false;
-
-  // pagination default constants
-  var PAGINATION_DEFAULTS = {
-    page: 1,
-    limit: 250
-  };
 
   // holds dynamic items and favourites and pagination information
   var paginationStore = {
@@ -42,10 +49,6 @@
       cachedItems: []
     }
   };
-
-  var COUNT_MAX_LINKS_WO_WARNING = 50;
-
-  var popupWindows = [];
 
   // ---------------------------------------------------------------------------
   // startup and main app painting
@@ -102,16 +105,13 @@
 
     var i = 0,
       len = popupWindows.length;
+
+    // close remaining open popups
     for (i; i < len; i += 1) {
       if (popupWindows[i] !== null) {
         popupWindows[i].close(true);
       }
     }
-
-    // If the popupWin is still open then close it.
-    // if (popupWin !== null) {
-    //   popupWin.close(true);
-    // }
 
     win.close(true);
   };
