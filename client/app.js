@@ -45,7 +45,7 @@
 
   var COUNT_MAX_LINKS_WO_WARNING = 50;
 
-  var popupWin = null;
+  var popupWindows = [];
 
   // ---------------------------------------------------------------------------
   // startup and main app painting
@@ -100,10 +100,18 @@
   NWAPP.closeApplicationNow = function() {
     console.log("closeApplicationNow - FORCE QUIT!");
 
-    // If the popupWin is still open then close it.
-    if (popupWin !== null) {
-      popupWin.close(true);
+    var i = 0,
+      len = popupWindows.length;
+    for (i; i < len; i += 1) {
+      if (popupWindows[i] !== null) {
+        popupWindows[i].close(true);
+      }
     }
+
+    // If the popupWin is still open then close it.
+    // if (popupWin !== null) {
+    //   popupWin.close(true);
+    // }
 
     win.close(true);
   };
@@ -795,7 +803,11 @@
       "inject-js-end": "client/support/inject.js"
     });
 
+    popupWindow.POPUP_WINDOW_INDEX = popupWindows.length;
+    popupWindows.push(popupWindow);
+
     popupWindow.on('closed', function() {
+      popupWindows[this.POPUP_WINDOW_INDEX] = null;
       popupWindow = null;
     });
 
