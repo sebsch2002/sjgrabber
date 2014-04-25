@@ -159,8 +159,8 @@
         dataset.href);
     });
 
-    $(".items_link_external").off();
-    $(".items_link_external").on("click", function(event) {
+    $(".openLinkInBrowser").off();
+    $(".openLinkInBrowser").on("click", function(event) {
       console.log(event);
       event.preventDefault();
       gui.Shell.openExternal(event.currentTarget.href);
