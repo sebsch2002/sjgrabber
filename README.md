@@ -1,6 +1,6 @@
 # SJgrabber
 
-> *your* favourite releases from serienjunkies.org!  
+> *your* favourite releases from [serienjunkies.org](http://serienjunkies.org/)!  
 > http://majodev.github.io/sjgrabber
 
 ## About
@@ -8,16 +8,35 @@ SJgrabber parses RSS feeds and HTML pages from [serienjunkies.org](http://serien
 It assists you to **grab links** from **the latest episodes** for your **favourite** TV shows.
 
 ## Warning
-**SJgrabber is only an indexing service and therefore legal, but downloading copyrighted material isn't!** For the record, I'm neither cooperating with serienjunkies.org nor responsible for any content that is hosted/uploaded on serienjunkies.org or gets downloaded from there.  
+**SJgrabber is only an indexing service and therefore legal, but downloading copyrighted material isn't!** For the record, I'm neither cooperating with [serienjunkies.org](http://serienjunkies.org/) nor responsible for any content that is hosted/uploaded on [serienjunkies.org](http://serienjunkies.org/) or gets downloaded from there.  
 
 **Respect copyright law and their holders!**
 
 ## Downloading
-Get SJgrabber for your platform from [GitHub Releases](https://github.com/majodev/sjgrabber/releases)
+Get SJgrabber for your platform from **[GitHub Releases](https://github.com/majodev/sjgrabber/releases)**!
 
 ## Installing
-There is no need to explicitly install SJgrabber. Unzip, move it anywhere you want and run it.  
-**Heads up linux users:** You have to manually set the executable flag of the SJgrabber binary!
+There is no need to explicitly install SJgrabber. **Unzip**, move it anywhere you want and **run** it.
+
+### Windows
+Open `Start SJgrabber.exe` **or** `SJgrabber.exe` after unzipping.
+
+#### Why are there 2 executables in the Windows builds?
+One has the right icon, the other one doesn't. I did this to [tackle a current limitation in the automated build process of SJgrabber](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder).
+
+### Mac
+Open `SJgrabber.app` after unzipping. 
+
+#### Unidentified developer warning?
+**TL;DR**: *right click + open* **or** *hold control-key + double-click* to open SJgrabber for the first time.
+
+I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to [open apps from unidentified developers](http://support.apple.com/kb/PH14369).
+
+### Linux
+You will need to manually set the *executable flag* of the SJgrabber binary (`chmod +x SJgrabber`) after unzipping!
+
+### NW
+I also distribute NW builds (`SJgrabber.nw` after unzipping), however you need to download the most current version of [node-webkit](https://github.com/rogerwang/node-webkit) to run it!
 
 ## Upgrading
 Your current configuration, fetched favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
@@ -29,10 +48,10 @@ Thank you VERY VERY much!
 I'm also accepting nice words on twitter [@majodev](https://twitter.com/majodev), thx!
 
 ## Bugs, feature requests and disgust
-Open an issue on GitHub!
+Open an [issue on GitHub](https://github.com/majodev/sjgrabber/issues)!
 
 ## Genesis
-Several 'friends of mine' were *sick* of skimming serienjunkies.org **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
+Several 'friends of mine' were *sick* of skimming [serienjunkies.org](http://serienjunkies.org/) **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
 
 SJgrabber soon became quite polished, hence it was time to publish it and that's it (anyways, feel free to spot evil intentions...).
 
