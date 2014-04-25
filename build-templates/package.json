@@ -17,7 +17,9 @@
   "node-main": "daemon/controller.js",
   "window": {
     "title": "SJgrabber",
+    "focus": true,
     "show": true,
+    "show_in_taskbar": true,
     "toolbar": false,
     "frame": false,
     "position": "center",

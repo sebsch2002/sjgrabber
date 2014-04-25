@@ -785,9 +785,10 @@
       gui.Window.open(url, {
         "position": "center",
         "focus": true,
-        "toolbar": false,
+        "toolbar": true,
         "frame": true,
-        "nodejs": false
+        "nodejs": false,
+        "icon": "../assets/SJ_logo_512x512x32.png"
       })
     );
 
@@ -799,7 +800,7 @@
   // ---------------------------------------------------------------------------
   // Tray icon test (not used currently)
   // ---------------------------------------------------------------------------
-  
+
   // var tray;
 
   // function paintTray() {
