@@ -1,0 +1,11 @@
+{
+  "version": "0.3.0",
+  "allReleases": "https://github.com/majodev/sjgrabber/releases",
+  "changes": "First public release of SJgrabber",
+  "platforms": {
+    "darwin": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/SJgrabber_mac_v0.2.16.zip",
+    "win32": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/SJgrabber_win_v0.2.16.zip",
+    "linux_ia32": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/SJgrabber_linux32_v0.2.16.zip",
+    "linux_x64": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/SJgrabber_linux64_v0.2.16.zip"
+  }
+}
