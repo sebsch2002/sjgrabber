@@ -35,6 +35,6 @@
     "licenseURL": "https://github.com/majodev/sjgrabber/blob/master/LICENSE.md",
     "githubURL": "https://github.com/majodev/sjgrabber",
     "homepageURL": "http://majodev.github.io/sjgrabber",
-    "updateURL": "https://dl.dropboxusercontent.com/u/2624630/SJgrabber/update-manifest.json"
+    "updateURL": "http://majodev.github.io/sjgrabber/update-manifest.json"
   }
 }
