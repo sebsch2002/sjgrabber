@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sjgrabber by majodev</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Sjgrabber</h1>
+        <p>your favourite releases from serienjunkies.org</p>
+
+        <p class="view"><a href="https://github.com/majodev/sjgrabber">View the Project on GitHub <small>majodev/sjgrabber</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/majodev/sjgrabber/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/majodev/sjgrabber/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/majodev/sjgrabber">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="sjgrabber" class="anchor" href="#sjgrabber"><span class="octicon octicon-link"></span></a>SJgrabber</h1>
+
+<blockquote>
+<p><em>your</em> favourite releases from serienjunkies.org!<br><a href="http://majodev.github.io/sjgrabber">http://majodev.github.io/sjgrabber</a></p>
+</blockquote>
+
+<h2>
+<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h2>
+
+<p>SJgrabber assists you to <strong>grab links</strong> from <strong>the latest episodes</strong> for your <strong>favourite</strong> TV shows.<br>
+It grabs releases via RSS and their links (e.g. uploaded.to, share-online.biz, ...) by parsing HTML pages from <a href="http://serienjunkies.org/">serienjunkies.org</a>. </p>
+
+<h2>
+<a name="warning" class="anchor" href="#warning"><span class="octicon octicon-link"></span></a>Warning</h2>
+
+<p><strong>SJgrabber is only an indexing service and therefore legal, but downloading copyrighted material isn't!</strong> For the record, I'm neither cooperating with <a href="http://serienjunkies.org/">serienjunkies.org</a> nor responsible for any content that is hosted/uploaded on <a href="http://serienjunkies.org/">serienjunkies.org</a> or gets downloaded from there.  </p>
+
+<p><strong>Respect copyright law and their holders!</strong></p>
+
+<h2>
+<a name="downloading" class="anchor" href="#downloading"><span class="octicon octicon-link"></span></a>Downloading</h2>
+
+<p>Get SJgrabber for your platform from <strong><a href="https://github.com/majodev/sjgrabber/releases">GitHub Releases</a></strong>!</p>
+
+<h2>
+<a name="installing" class="anchor" href="#installing"><span class="octicon octicon-link"></span></a>Installing</h2>
+
+<p>There is no need to explicitly install SJgrabber. <strong>Unzip</strong>, move it anywhere you want and <strong>run</strong> it.</p>
+
+<h3>
+<a name="windows" class="anchor" href="#windows"><span class="octicon octicon-link"></span></a>Windows</h3>
+
+<p>Open <code>Start SJgrabber.exe</code> <strong>or</strong> <code>SJgrabber.exe</code> after unzipping.</p>
+
+<h3>
+<a name="mac" class="anchor" href="#mac"><span class="octicon octicon-link"></span></a>Mac</h3>
+
+<p>Open <code>SJgrabber.app</code> after unzipping. </p>
+
+<h3>
+<a name="linux" class="anchor" href="#linux"><span class="octicon octicon-link"></span></a>Linux</h3>
+
+<p>You will need to manually set the <em>executable flag</em> of the SJgrabber binary (<code>chmod +x SJgrabber</code>) after unzipping!</p>
+
+<h3>
+<a name="nw" class="anchor" href="#nw"><span class="octicon octicon-link"></span></a>NW</h3>
+
+<p><em>Attention, NW builds are untested!</em><br>
+I also distribute NW builds (<code>SJgrabber.nw</code> after unzipping), but you'll need to download the most current version of <a href="https://github.com/rogerwang/node-webkit">node-webkit</a> to run it.</p>
+
+<h2>
+<a name="faq" class="anchor" href="#faq"><span class="octicon octicon-link"></span></a>FAQ</h2>
+
+<h3>
+<a name="how-to-upgrade" class="anchor" href="#how-to-upgrade"><span class="octicon octicon-link"></span></a>How to upgrade?</h3>
+
+<p>Your current configuration, grabbed favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!</p>
+
+<h3>
+<a name="why-do-i-get-an-unverified-developer-warning-mac" class="anchor" href="#why-do-i-get-an-unverified-developer-warning-mac"><span class="octicon octicon-link"></span></a>Why do I get an <em>'unverified developer'</em> warning (mac)?</h3>
+
+<p><strong>TL;DR</strong>: <em>right click + open</em> <strong>or</strong> <em>hold control-key + double-click</em> to open SJgrabber for the first time.</p>
+
+<p>I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to open SJgrabber for the first time on Mac OS X &gt;=10.7. Follow <a href="http://support.apple.com/kb/PH14369">these steps (detailed explanation)</a> to open SJgrabber.</p>
+
+<h3>
+<a name="why-are-there-2-executables-windows" class="anchor" href="#why-are-there-2-executables-windows"><span class="octicon octicon-link"></span></a>Why are there 2 executables (windows)?</h3>
+
+<p>One has the right icon (<code>Start SJgrabber.exe</code>), the other one (<code>SJgrabber.exe</code>) doesn't. I did this to <a href="https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78">tackle a limitation in the automated build process</a> using <a href="https://www.npmjs.org/package/grunt-node-webkit-builder">grunt-node-webkit-builder</a>.</p>
+
+<h3>
+<a name="why-develop-such-a-controversial-app-genesis" class="anchor" href="#why-develop-such-a-controversial-app-genesis"><span class="octicon octicon-link"></span></a>Why develop such a controversial app (genesis)?</h3>
+
+<p>I like to make things that are handy and fun to use! Several 'friends of mine' were <em>sick</em> of skimming <a href="http://serienjunkies.org/">serienjunkies.org</a> <strong>each and every day</strong> for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to <strong>assist</strong> them. </p>
+
+<p>SJgrabber soon became quite polished, hence it was time to publish it and that's it (anyways, feel free to spot evil intentions...).</p>
+
+<h3>
+<a name="whats-the-tech-behind" class="anchor" href="#whats-the-tech-behind"><span class="octicon octicon-link"></span></a>What's the tech behind?</h3>
+
+<p>SJgrabber is powered by <a href="https://github.com/rogerwang/node-webkit">node-webkit</a> and distributed as self-contained app for each platform.<br>
+It's really just HTML/CSS/JS!</p>
+
+<h2>
+<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h2>
+
+<p>Please feel free to donate a beer via bitcoins <code>1KaeuK2WpwkhK9T3eURK7uxB3frgD8Z4HV</code>, via <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=mario%2eranftl%40gmail%2ecom&amp;lc=AT&amp;item_name=a%20fresh%20and%20cold%20SJgrabber%20thank%20you%20beer&amp;currency_code=EUR&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">paypal</a> or via <a href="https://www.gittip.com/majodev/">gittip</a>.<br>
+Thank you VERY VERY much!</p>
+
+<p>I'm also accepting nice words on twitter <a href="https://twitter.com/majodev">@majodev</a>, thx!</p>
+
+<h2>
+<a name="bugs-feature-requests-and-disgust" class="anchor" href="#bugs-feature-requests-and-disgust"><span class="octicon octicon-link"></span></a>Bugs, feature requests and disgust</h2>
+
+<p>Open an <a href="https://github.com/majodev/sjgrabber/issues">issue on GitHub</a>!</p>
+
+<h2>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h2>
+
+<blockquote>
+<p>Only for the brave and nerdy!</p>
+</blockquote>
+
+<h3>
+<a name="prerequisites" class="anchor" href="#prerequisites"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
+
+<ul>
+<li>get <a href="http://nodejs.org/">node.js</a>, install it and make yourself comfortable with <a href="https://www.npmjs.org/">npm</a>
+</li>
+<li>install <a href="http://gruntjs.com/">grunt</a> globally</li>
+<li>install <a href="http://bower.io/">bower</a> globally</li>
+</ul><h3>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h3>
+
+<div class="highlight highlight-bash"><pre>git clone https://github.com/majodev/sjgrabber.git
+<span class="nb">cd </span>sjgrabber
+npm install -d
+bower install -d
+grunt build-static
+</pre></div>
+
+<h3>
+<a name="debugging" class="anchor" href="#debugging"><span class="octicon octicon-link"></span></a>Debugging</h3>
+
+<p>While developing it's better to run SJgrabber straight with node-webkit and devtools enabled (the flag <code>NWAPP_DEBUG</code> in <code>package.json</code> handles setting up a debug environment). Get going by executing <code>nw .</code> within your working directory (put the <a href="https://github.com/rogerwang/node-webkit">node-webkit</a> executable into your <code>PATH</code>). </p>
+
+<p><strong>Important</strong>: SJgrabber reads and saves your data to separate <code>localStorage</code> fields during debug-sessions, so developing and enhancing doesn't interfere with your productive use of SJgrabber. Feel free to wipe grabbed releases and favourites as you please.</p>
+
+<h3>
+<a name="tasks" class="anchor" href="#tasks"><span class="octicon octicon-link"></span></a>Tasks</h3>
+
+<p>If you plan to make changes to any handlebars template in <code>/client/templates</code> or <code>LICENSE.md</code> and <code>README.md</code>, the <code>watch</code> task might become handy, as it automatically executes <code>build-static</code> after modifications.</p>
+
+<p>The <strong>default</strong> <code>grunt</code> task builds, bundles and compresses win32, mac, linux32, linux64 and nw releases into <code>/dist</code>. If you have come this far, you'll have the same release-ready builds which I'm distributing here! It executes the following tasks:</p>
+
+<ul>
+<li>
+<code>build</code> (with 3 essential sub-tasks)
+
+<ul>
+<li>
+<code>build-static</code>: template and support file compilation</li>
+<li>
+<code>build-js</code>: minification (HTML, CSS), uglyfication (JS), dependency retrieval (npm packages without dev-only) and copying <code>/build-templates</code>
+</li>
+<li>
+<code>build-nw</code>: node-webkit packaging</li>
+</ul>
+</li>
+<li>
+<code>release</code>: compressing to <code>/dist</code> and cleanup</li>
+</ul><h2>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
+
+<ul>
+<li>
+<a href="http://nicoleeibel.at/">Nicole Eibel</a> (SJgrabber brand/logo design)</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>SJgrabber is licensed under the MIT License<br>
+Copyright (c) 2014 Mario Ranftl (<a href="https://twitter.com/majodev">@majodev</a>)</p>
+
+<p>SJgrabber brand/logo is licensed under the <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 License</a><br>
+Copyright (c) 2014 Nicole Eibel (<a href="http://nicoleeibel.at/">homepage</a>)</p>
+
+<p>See <strong>LICENSE.md</strong> (or <strong>LICENSE.html</strong> within distributed apps) for more detailed license info and 3rd party licenses.</p>
+
+<p>See <strong>credits.html</strong> for <a href="https://github.com/rogerwang/node-webkit">node-webkit</a> redistributable licenses (platform dependent, this file ONLY ships with SJgrabber binaries).</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/majodev">majodev</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-42608142-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
