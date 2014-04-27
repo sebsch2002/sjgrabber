@@ -1,11 +1,11 @@
 # SJgrabber
 
-> *your* favourite releases from [serienjunkies.org](http://serienjunkies.org/)!  
+> *your* favourite releases from serienjunkies.org!  
 > http://majodev.github.io/sjgrabber
 
 ## About
-SJgrabber parses RSS feeds and HTML pages from [serienjunkies.org](http://serienjunkies.org/). 
-It assists you to **grab links** from **the latest episodes** for your **favourite** TV shows.
+SJgrabber assists you to **grab links** from **the latest episodes** for your **favourite** TV shows.  
+It grabs releases via RSS and their links (e.g. uploaded.to, share-online.biz, ...) by parsing HTML pages from [serienjunkies.org](http://serienjunkies.org/). 
 
 ## Warning
 **SJgrabber is only an indexing service and therefore legal, but downloading copyrighted material isn't!** For the record, I'm neither cooperating with [serienjunkies.org](http://serienjunkies.org/) nor responsible for any content that is hosted/uploaded on [serienjunkies.org](http://serienjunkies.org/) or gets downloaded from there.  
@@ -28,7 +28,8 @@ Open `SJgrabber.app` after unzipping.
 You will need to manually set the *executable flag* of the SJgrabber binary (`chmod +x SJgrabber`) after unzipping!
 
 ### NW
-I also distribute NW builds (`SJgrabber.nw` after unzipping), however you need to download the most current version of [node-webkit](https://github.com/rogerwang/node-webkit) to run it!
+*Attention, NW builds are untested!*  
+I also distribute NW builds (`SJgrabber.nw` after unzipping), but you'll need to download the most current version of [node-webkit](https://github.com/rogerwang/node-webkit) to run it.
 
 ## FAQ
 
@@ -38,7 +39,7 @@ Your current configuration, grabbed favourites, releases and links are kept sepa
 ### Why do I get an *'unidentified developer'* warning (mac)?
 **TL;DR**: *right click + open* **or** *hold control-key + double-click* to open SJgrabber for the first time.
 
-I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to [open apps from unidentified developers](http://support.apple.com/kb/PH14369).
+I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to open SJgrabber for the first time on Mac OS X >=10.7. Follow [these steps (detailed explanation)](http://support.apple.com/kb/PH14369) to open SJgrabber.
 
 ### Why are there 2 executables (windows)?
 One has the right icon (`Start SJgrabber.exe`), the other one (`SJgrabber.exe`) doesn't. I did this to [tackle a limitation in the automated build process](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder).

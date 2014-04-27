@@ -1,6 +1,6 @@
 {
   "name": "SJgrabber",
-  "version": "0.2.16",
+  "version": "0.3.0",
   "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "author": "majodev",
   "license": "MIT",
