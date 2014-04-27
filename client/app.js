@@ -229,7 +229,7 @@
     process.mainModule.exports.clearCacheReset();
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
     clearSearchInputValue();
-    $("#status_left").text("never fetched");
+    $("#status_left").text("never grabbed");
   }
 
   // ---------------------------------------------------------------------------
@@ -386,19 +386,23 @@
     clearErrorMessage();
     NProgress.start();
     NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-    $("#status_left").text("fetching in progress...");
+    $("#status_left").html("grabbing <i class='fa fa-rss'></i> (0%)...");
   };
 
   NWAPP.endCycle = function(fetchedDateString) {
     NProgress.done();
     NWAPP.toggleButtonsAvailableWithinFetchCycle(true);
-    $("#status_left").text("last fetched at " + fetchedDateString);
+    $("#status_left").text("last grabbed " + fetchedDateString);
   };
 
   NWAPP.updateProgress = function(progressCount) {
     NProgress.set(progressCount);
     NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-    $("#status_left").text("fetching in progress... (" + parseInt(progressCount * 100) + "%)");
+    if(progressCount < 0.5) {
+      $("#status_left").html("grabbing <i class='fa fa-rss'></i> (" + parseInt(progressCount * 100) + "%)...");
+    } else {
+      $("#status_left").html("grabbing <i class='fa fa-link'></i> (" + parseInt(progressCount * 100) + "%)...");
+    }
   };
 
   NWAPP.toggleButtonsAvailableWithinFetchCycle = function(available) {
