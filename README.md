@@ -36,7 +36,7 @@ I also distribute NW builds (`SJgrabber.nw` after unzipping), but you'll need to
 ### How to upgrade?
 Your current configuration, grabbed favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
 
-### Why do I get an *'unidentified developer'* warning (mac)?
+### Why do I get an *'unverified developer'* warning (mac)?
 **TL;DR**: *right click + open* **or** *hold control-key + double-click* to open SJgrabber for the first time.
 
 I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to open SJgrabber for the first time on Mac OS X >=10.7. Follow [these steps (detailed explanation)](http://support.apple.com/kb/PH14369) to open SJgrabber.
