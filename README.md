@@ -35,13 +35,13 @@ I also distribute NW builds (`SJgrabber.nw` after unzipping), however you need t
 ### How to upgrade?
 Your current configuration, grabbed favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
 
-### Unidentified developer warning (mac only)?
+### Why do I get an *'unidentified developer'* warning (mac)?
 **TL;DR**: *right click + open* **or** *hold control-key + double-click* to open SJgrabber for the first time.
 
 I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to [open apps from unidentified developers](http://support.apple.com/kb/PH14369).
 
-### Why are there 2 executables (windows only)?
-One has the right icon, the other one doesn't. I did this to [tackle a limitation in the automated build process](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder) on a Mac.
+### Why are there 2 executables (windows)?
+One has the right icon (`Start SJgrabber.exe`), the other one (`SJgrabber.exe`) doesn't. I did this to [tackle a limitation in the automated build process](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder).
 
 ### Why develop such a controversial app (genesis)?
 I like to make things that are handy and fun to use! Several 'friends of mine' were *sick* of skimming [serienjunkies.org](http://serienjunkies.org/) **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
@@ -94,11 +94,14 @@ The **default** `grunt` task builds, bundles and compresses win32, mac, linux32,
 * `release`: compressing to `/dist` and cleanup
 
 ## Contributors
-* [Nicole Eibel](http://nicoleeibel.at/) (brand/logo design)
+* [Nicole Eibel](http://nicoleeibel.at/) (SJgrabber brand/logo design)
 
 ## License
 SJgrabber is licensed under the MIT License  
 Copyright (c) 2014 Mario Ranftl ([@majodev](https://twitter.com/majodev))
+
+SJgrabber brand/logo is licensed under the [CC BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/)  
+Copyright (c) 2014 Nicole Eibel ([homepage](http://nicoleeibel.at/))
 
 See **LICENSE.md** (or **LICENSE.html** within distributed apps) for more detailed license info and 3rd party licenses.
 

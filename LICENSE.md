@@ -21,38 +21,64 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+# SJgrabber logo/brand license
+
+SJgrabber brand/logo is licensed under the [CC BY-NC-SA 4.0 License](http://creativecommons.org/licenses/by-nc-sa/4.0/)  
+Copyright (c) 2014 Nicole Eibel ([homepage](http://nicoleeibel.at/))
+
 # 3rd party licenses
-SJgrabber uses several 3rd party libaries to function as intended!
+SJgrabber uses several 3rd party libaries to function as intended.
 
 ## Overview of 3rd party licenses
 
 ### node-webkit
-* node-webkit: MIT License *AND OTHER LICENSES WHEN REDISTRIBUTED* (see credits.html)
+* [node-webkit](https://github.com/rogerwang/node-webkit): MIT License *AND OTHER LICENSES WHEN REDISTRIBUTED* (see credits.html)
 
-** ATTENTION YOU HAVE TO READ AND AGREE TO THE NODE-WEBKIT REDISTRIBUTABLE LICENSES WHICH COME PACKAGED WITH EVERY COMPILED APPLICATION!**
-
-**SEE credits.html** (included in every *platform* release)
+**ATTENTION**: *YOU HAVE TO READ AND AGREE TO THE NODE-WEBKIT REDISTRIBUTABLE LICENSES WHICH COME PACKAGED WITH EVERY COMPILED APPLICATION!*  
+**see credits.html** (included in every *platform* release)
 
 ### clientside (via bower)
-* bootstrap: MIT License
-* font awesome: SIL OFL 1.1 (fonts) / MIT License (css) / CC BY 3.0 License (docs)
-* handlebars: MIT License
-* jquery: MIT License
-* nprogress: MIT License
-* iso-country-flags-svg-collection (2 flag images in assets): Public Domain
+* [bootstrap](http://getbootstrap.com/): MIT License
+* [font awesome](http://fortawesome.github.io/Font-Awesome/): SIL OFL 1.1 (fonts) / MIT License (css) / CC BY 3.0 License (docs)
+* [handlebars](http://handlebarsjs.com/): MIT License
+* [jquery](http://jquery.com/): MIT License
+* [nprogress](http://ricostacruz.com/nprogress/): MIT License
+* [iso-country-flags-svg-collection](https://github.com/koppi/iso-country-flags-svg-collection) (2 flag images in assets): Public Domain
 
 ### daemon (via npm)
-* async: MIT License
-* backbone: MIT License
-* cheerio: MIT License
-* feedparser: MIT License
-* lodash: MIT License
-* moment: MIT License
-* request: Apache License, Version 2.0
+* [async](https://github.com/caolan/async): MIT License
+* [backbone](http://backbonejs.org/): MIT License
+* [cheerio](https://github.com/cheeriojs/cheerio): MIT License
+* [feedparser](https://github.com/danmactough/node-feedparser): MIT License
+* [lodash](http://lodash.com/): MIT License
+* [moment](http://momentjs.com/): MIT License
+* [request](https://github.com/mikeal/request): Apache License, Version 2.0
 
 ## Detailed 3rd party licenses
 
-###bootstrap
+### node-webkit
+
+Copyright (c) 2012-2014 Intel Corp
+Copyright (c) 2012-2014 The Chromium Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software and associated documentation files (the "Software"), to deal in th
+e Software without restriction, including without limitation the rights to use, 
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+Software, and to permit persons to whom the Software is furnished to do so, subj
+ect to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all c
+opies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
+ED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR 
+A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYR
+IGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WIT
+H THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+### bootstrap
 
 The MIT License (MIT)
 
@@ -76,7 +102,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-###font awesome
+### font awesome
 
 
 Font Awesome by Dave Gandy - http://fontawesome.io  
@@ -369,25 +395,3 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
-
-### node-webkit
-
-Copyright (c) 2012-2014 Intel Corp
-Copyright (c) 2012-2014 The Chromium Authors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
-this software and associated documentation files (the "Software"), to deal in th
-e Software without restriction, including without limitation the rights to use, 
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is furnished to do so, subj
-ect to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all c
-opies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
-ED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR 
-A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYR
-IGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WIT
-H THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

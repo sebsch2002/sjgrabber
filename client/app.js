@@ -386,7 +386,7 @@
     clearErrorMessage();
     NProgress.start();
     NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
-    $("#status_left").html("grabbing <i class='fa fa-rss'></i> (0%)...");
+    $("#status_left").html("<i class='fa fa-rss'></i> grabbing... (0%)");
   };
 
   NWAPP.endCycle = function(fetchedDateString) {
@@ -399,9 +399,9 @@
     NProgress.set(progressCount);
     NWAPP.toggleButtonsAvailableWithinFetchCycle(false);
     if(progressCount < 0.5) {
-      $("#status_left").html("grabbing <i class='fa fa-rss'></i> (" + parseInt(progressCount * 100) + "%)...");
+      $("#status_left").html("<i class='fa fa-rss'></i> grabbing... (" + parseInt(progressCount * 100) + "%)");
     } else {
-      $("#status_left").html("grabbing <i class='fa fa-link'></i> (" + parseInt(progressCount * 100) + "%)...");
+      $("#status_left").html("<i class='fa fa-link'></i> grabbing... (" + parseInt(progressCount * 100) + "%)");
     }
   };
 
