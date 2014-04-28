@@ -24,7 +24,7 @@ body, h1, h2, h3, h4, h5, h6 {
 	background-image: linear-gradient(to bottom, #fff 0%, rgb(47,160,251) 60%);
 	background: #222;*/
 
-	background: url(../img/5.jpg) no-repeat center center;
+	background: url(../img/background.jpg) no-repeat center center;
 	background-size: cover;
 	text-align: center;
 }
