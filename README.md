@@ -33,6 +33,11 @@ I also distribute NW builds (`SJgrabber.nw` after unzipping), but you'll need to
 
 ## FAQ
 
+### How does it work?
+By starting SJgrabber for the first time and agreeing to the license and usage terms, you will be left at an empty `favourites` *(starred)* tab. **Click** on the `search` tab and **input** your desired query to search through all releases (grabbed via RSS).  
+
+When you are happy with your query results, **star your query** *(via the blue button on the right side of the search box)* to add it to your `favourites` *(starred)*. Links from all releases that match your query will be grabbed and are available (and automatically updated later on) within this `favourites` *(starred)* tab.
+
 ### How to upgrade?
 Your current configuration, grabbed favourites, releases and links are kept separately, just launch a newer version of SJgrabber and you are set (feel free to delete previous versions of SJgrabber without any consequences)!
 
