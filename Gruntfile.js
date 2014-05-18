@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         linux32: true,
         linux64: true,
         version: nwBuildVersion,
-        zip: true,
+        zip: false,
         keep_nw: true,
         mac_icns: "assets/dev/logo/SJ_logo_mac.icns"
       },
