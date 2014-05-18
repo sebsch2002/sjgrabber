@@ -60,17 +60,13 @@
     if (gui.App.manifest.NWAPP_DEBUG === true) {
       NWAPP_DEBUG = true; // ATTENTION GLOBAL GETS SET!
       win.showDevTools();
-    } else {
-      NWAPP_DEBUG = false; // ATTENTION GLOBAL GETS SET!
     }
 
     paintApplication();
     //paintTray();
   }());
 
-
   function paintApplication() {
-
     // add compile app template into app and settings div
     document.getElementById("app").innerHTML = NWAPP.Templates.app({
       name: gui.App.manifest.name,
@@ -365,6 +361,8 @@
       dimensions.width !== null || dimensions.height !== null) {
       win.moveTo(dimensions.x, dimensions.y);
       win.resizeTo(dimensions.width, dimensions.height);
+
+      setDynamicStyles();
     }
   };
 
