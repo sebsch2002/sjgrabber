@@ -57,7 +57,7 @@ CacheHandler.prototype.load = function() {
   return;
 };
 
-CacheHandler.prototype.save = function() {
+CacheHandler.prototype.save = function(configOnly) {
   console.log("cacheHandler:save");
 
   var that = this;
@@ -73,6 +73,11 @@ CacheHandler.prototype.save = function() {
 
     // save CONFIG to localStorage...
     this.localStorage[activeLocalStorageTarget.config] = JSON.stringify(config.toJSON());
+
+    if (configOnly === true) { // return immediately if only CONFIG needs to be saved!
+      that.emit("saved");
+      return;
+    }
 
     // save ITEMS to localStorage...
     this.localStorage[activeLocalStorageTarget.items] = JSON.stringify(savedItems.toJSON());
@@ -121,7 +126,7 @@ function loadConfig(data) {
   var dataObject = parseJSONObject(data);
 
   if (_.isUndefined(dataObject) === false) {
-    _.each(_.keys(dataObject), function (key) {
+    _.each(_.keys(dataObject), function(key) {
       config.set(key, dataObject[key]);
     });
   }

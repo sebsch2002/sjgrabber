@@ -162,8 +162,14 @@ var hookNWListeners = _.once(function() {
   rssHandler.on("error", cycleErrorNW);
   cacheHandler.on("error", cycleErrorNW);
 
+  cacheHandler.on("loaded", cacheHasLoadedSuccessfully);
   cacheHandler.load(); // start cacheing now that localStorage is available.
 });
+
+function cacheHasLoadedSuccessfully() {
+  // apply saved main window dimensions...
+  applySavedMainWindowDimensions();
+}
 
 // restricted to run only once.
 var checkUpdates = _.once(function() {
@@ -213,6 +219,19 @@ function cycleProgressNWUpdateUI(processCount) {
 }
 
 
+
+// -----------------------------------------------------------------------------
+// NODE-WEBKIT SPECIFIC: WINDOW DIMENSION SAVE API
+// -----------------------------------------------------------------------------
+
+module.exports.NWsaveMainWindowDimensions = function(dimensions) {
+  config.set("window", dimensions);
+  cacheHandler.save(true);
+};
+
+function applySavedMainWindowDimensions() {
+  NWAPP.setInitialMainWindowDimension(config.get("window"));
+}
 
 // -----------------------------------------------------------------------------
 // NODE-WEBKIT SPECIFIC: Available API interfaces

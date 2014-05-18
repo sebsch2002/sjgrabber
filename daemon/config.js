@@ -29,7 +29,13 @@ var ConfigModel = Backbone.Model.extend({
       clock: "HH:mm:ss",
       date: "DD.MM.YYYY"
     },
-    agreedToLicenseAndUsageTerms: false
+    agreedToLicenseAndUsageTerms: false,
+    window: { // remember previous window coordinates and apply (-1===neverset)
+      x: null,
+      y: null,
+      width: null,
+      height: null
+    }
   }
 });
 
