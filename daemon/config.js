@@ -30,7 +30,7 @@ var ConfigModel = Backbone.Model.extend({
       date: "DD.MM.YYYY"
     },
     agreedToLicenseAndUsageTerms: false,
-    window: { // remember previous window coordinates and apply (-1===neverset)
+    window: { // remember previous window coordinates and apply (null===neverset)
       x: null,
       y: null,
       width: null,

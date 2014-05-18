@@ -180,11 +180,11 @@ nav and titlebar
 ----------------------------------------------------------------------------- */
 
 .navbar .navbar-nav > li > a.nav_exit {
-  color: #ac2925;
+  color: #d9534f;
 } 
 
 .navbar .navbar-nav > li > a.nav_exit:hover {
-  color: #d9534f; 
+  color: #ff736f; 
 }
 
 .navbar .navbar-nav > li > a.nav_minimize {
@@ -192,7 +192,7 @@ nav and titlebar
 } 
 
 .navbar .navbar-nav > li > a.nav_minimize:hover {
-  color: #FFE600;
+  color: #FFE616;
 }
 
 .navbar .navbar-nav > li > a.nav_maximize {
