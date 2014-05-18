@@ -60,6 +60,10 @@
     if (gui.App.manifest.NWAPP_DEBUG === true) {
       NWAPP_DEBUG = true; // ATTENTION GLOBAL GETS SET!
       win.showDevTools();
+    } else {
+      if (typeof NWAPP_DEBUG === 'undefined') {
+        NWAPP_DEBUG = false; // ATTENTION GLOBAL GETS SET!
+      }
     }
 
     paintApplication();
