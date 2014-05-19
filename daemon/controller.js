@@ -9,6 +9,7 @@ var config = require("./config");
 var savedItems = require("./savedItems");
 var favourites = require("./favourites");
 var updateChecker = require("./updateChecker");
+var tracker = require("./tracker");
 
 // runtime variables managing state
 
@@ -168,10 +169,23 @@ var hookNWListeners = _.once(function() {
   cacheHandler.load(); // start cacheing now that localStorage is available.
 });
 
+
+// -----------------------------------------------------------------------------
+// NODE-WEBKIT SPECIFIC: config loaded from cache
+// -----------------------------------------------------------------------------
+
 function cacheHasLoadedSuccessfully() {
   // apply saved main window dimensions...
   applySavedMainWindowDimensions();
+
+  // start tracker...
+  tracker.init();
 }
+
+
+// -----------------------------------------------------------------------------
+// NODE-WEBKIT SPECIFIC: check updates handling
+// -----------------------------------------------------------------------------
 
 // restricted to run only once.
 var checkUpdates = _.once(function() {
@@ -190,6 +204,10 @@ var checkUpdates = _.once(function() {
     console.log("error with checkUpdates");
   }
 });
+
+// -----------------------------------------------------------------------------
+// NODE-WEBKIT SPECIFIC: cycle progress updates
+// -----------------------------------------------------------------------------
 
 function cycleStartsNW() {
   nextFetchTime = false;
@@ -220,10 +238,8 @@ function cycleProgressNWUpdateUI(processCount) {
   printDynamicContentNW(true);
 }
 
-
-
 // -----------------------------------------------------------------------------
-// NODE-WEBKIT SPECIFIC: WINDOW DIMENSION SAVE API
+// NODE-WEBKIT SPECIFIC: main window dimensions
 // -----------------------------------------------------------------------------
 
 module.exports.NWsaveMainWindowDimensions = function(dimensions) {
@@ -334,12 +350,21 @@ module.exports.NWmarkItemAsDownloaded = function(uuid, url) {
 
 // settings, reset everything.
 module.exports.clearCacheReset = function() {
+
+  // keep uuid
+  var oldUUID = _.clone(config.get("userUUID"));
   cacheHandler.clear();
 
   // reset config model to its defaults!
   _.each(_.keys(config.defaults), function(key) {
     config.set(key, config.defaults[key]);
   });
+
+  // but keep old uuid!
+  config.set("userUUID", oldUUID);
+
+  // only save config...
+  cacheHandler.save(true);
 
   savedItems.reset();
   favourites.reset();

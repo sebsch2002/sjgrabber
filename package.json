@@ -14,7 +14,9 @@
     "cheerio": "^0.13.1",
     "backbone": "^1.1.2",
     "moment": "^2.5.1",
-    "async": "^0.7.0"
+    "async": "^0.7.0",
+    "universal-analytics": "^0.3.4",
+    "node-uuid": "^1.4.1"
   },
   "devDependencies": {
     "grunt": "^0.4.4",
