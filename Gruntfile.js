@@ -139,7 +139,6 @@ module.exports = function(grunt) {
             "client/hbhelpers.js",
             "client/templates.js",
             "client/contextMenu.js",
-            "client/analytics.js",
             "client/app.js"
           ]
         },
