@@ -5,7 +5,10 @@ var ConfigModel = Backbone.Model.extend({
     fetchOnlyFavourites: true,
     requestTimeoutMS: 7000,
     maxLinkRefetchRetrys: 1337,
-    rssUrl: "http://serienjunkies.org/xml/feeds/episoden.xml",
+    rss: {
+      episodes: "http://serienjunkies.org/xml/feeds/episoden.xml",
+      seasons: "http://serienjunkies.org/xml/feeds/staffeln.xml"
+    },
     cache: {
       enabled: true,
       localStorageTargets: {

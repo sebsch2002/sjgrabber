@@ -73,7 +73,9 @@ function startCycle() {
   if (config.get("agreedToLicenseAndUsageTerms") === true) {
     hookCycleListeners();
     cycleRunning = true;
-    rssHandler.fetch();
+    rssHandler.fetch({
+      uri: config.get("rss").episodes
+    });
   } else {
     NWAPP.displayLicenseAndUsageTerms();
   }

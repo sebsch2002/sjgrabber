@@ -50,13 +50,16 @@
     }
   };
 
+  // tracking initialized?
+  var gaTrackingInitialized = false;
+
   // ---------------------------------------------------------------------------
   // startup and main app painting
   // ---------------------------------------------------------------------------
 
   (function clientStartup() {
-    // are we running in debug mode?
 
+    // are we running in debug mode?
     if (gui.App.manifest.NWAPP_DEBUG === true) {
       NWAPP_DEBUG = true; // ATTENTION GLOBAL GETS SET!
       win.showDevTools();
@@ -66,8 +69,13 @@
       }
     }
 
+    // paint Application (initial structure with loading icons)
     paintApplication();
-    //paintTray();
+
+    // analytics init and update
+    initGATracking();
+    updateGATracking("clientStartup");
+
   }());
 
   function paintApplication() {
@@ -97,6 +105,7 @@
   // ---------------------------------------------------------------------------
 
   win.on("close", function() {
+    updateGATracking("close");
     this.hide(); // Pretend to be closed already
     console.log("window closes, informing daemon...");
     process.mainModule.exports.NWapplicationCloses();
@@ -159,6 +168,8 @@
       // notify daemon that it was clicked!
       process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid,
         dataset.href);
+
+      updateGATracking("copyLinkToClipboard");
     });
 
     $(".openLinkInBrowser").off();
@@ -166,6 +177,8 @@
       console.log(event);
       event.preventDefault();
       gui.Shell.openExternal(event.currentTarget.href);
+
+      updateGATracking("openLinkInBrowser");
     });
 
     $(".popupLink").off();
@@ -173,6 +186,8 @@
       console.log(event);
       event.preventDefault();
       popupLink(event.currentTarget.href);
+
+      updateGATracking("popupSupportDocs");
     });
 
     $(".keyword_link").off();
@@ -190,6 +205,8 @@
 
         process.mainModule.exports.NWupdateKeywordString(
           trimWhiteSpace(event.currentTarget.dataset.keyword));
+
+        updateGATracking("selectKeyword");
       }
     });
 
@@ -203,6 +220,7 @@
     $(".removeKeyword").click(function(event) {
       event.preventDefault();
       displayModalWarningRemoveKeyword(event.target.parentElement.dataset.keyword);
+      updateGATracking("removeKeyword");
     });
 
     $(".alert").off();
@@ -232,6 +250,7 @@
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
     clearSearchInputValue();
     $("#status_left").text("never grabbed");
+    updateGATracking("resetApplication");
   }
 
   // ---------------------------------------------------------------------------
@@ -249,6 +268,8 @@
     // refetch.click button bindings
     $("#refetch_button").click(function() {
       process.mainModule.exports.runFetchCycleNow();
+
+      updateGATracking("runFetchCycleNow");
     });
 
     $("#addkeyword_button").click(function() {
@@ -286,10 +307,17 @@
       $("#search_input").focus();
       // HACK HACK HACK
       $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+      updateGATracking("showTabSearch");
     });
+
     $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
       // HACK HACK HACK
       $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
+      updateGATracking("showTabStarred");
+    });
+
+    $('#appNavigationTab a[href="#settings_tab"]').on('shown.bs.tab', function(event) {
+      updateGATracking("showTabSettings");
     });
 
     // set dynamic styles on resize change
@@ -388,6 +416,9 @@
 
       process.mainModule.exports.NWaddCurrentKeyword();
       $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
+
+      updateGATracking("addCurrentQueryAsKeyword");
+
     } else {
       // display warning model with proceed, many links to fetch!
       displayModalWarningManyLinksToFetch();
@@ -582,6 +613,7 @@
 
   NWAPP.printErrorMessage = function(error) {
     document.getElementById("errorContainer").innerHTML = NWAPP.Templates.errorbox(error);
+    updateGATracking("error: " + error);
   };
 
   function clearErrorMessage() {
@@ -710,6 +742,8 @@
     });
 
     $('#currentModal').modal("show");
+
+    updateGATracking("displayModalWarningRemoveKeyword");
   }
 
   function displayModalWarningResetApplication() {
@@ -736,6 +770,8 @@
     });
 
     $('#currentModal').modal("show");
+
+    updateGATracking("displayModalWarningResetApplication");
   }
 
   function displayModalWarningManyLinksToFetch() {
@@ -764,6 +800,8 @@
     });
 
     $('#currentModal').modal("show");
+
+    updateGATracking("displayModalWarningManyLinksToFetch");
   }
 
   function displayModalHowToUpdate() {
@@ -783,6 +821,8 @@
     configureModel(true);
 
     $('#currentModal').modal("show");
+
+    updateGATracking("displayModalHowToUpdate");
   }
 
   NWAPP.displayLicenseAndUsageTerms = function() {
@@ -817,12 +857,13 @@
     });
 
     $('#currentModal').modal("show");
+
+    updateGATracking("displayLicenseAndUsageTerms");
   };
 
   // ---------------------------------------------------------------------------
   // POPUP window
   // ---------------------------------------------------------------------------
-
 
   function popupLink(url) {
 
@@ -852,6 +893,7 @@
       policy.ignore();
     });
   }
+
 
   // ---------------------------------------------------------------------------
   // Tray icon test (not used currently)
@@ -919,6 +961,35 @@
   //   tray.menu = menu;
   // }
 
+  // ---------------------------------------------------------------------------
+  // Google Analytics
+  // ---------------------------------------------------------------------------
+
+  function initGATracking() {
+    // ga('create', 'UA-42608142-4', {
+    //   'storage': 'none',
+    //   'clientId': '92beX4a5-20e5-4181-9778-2835f28c52d8'
+    // });
+
+    ga('create', 'UA-42608142-4');
+    gaTrackingInitialized = true;
+  }
+
+  function updateGATracking(page) {
+    if (gaTrackingInitialized === true) {
+
+      if (NWAPP_DEBUG === true) {
+        ga('send', 'pageview', {
+          'page': "DEBUG v" + gui.App.manifest.version + " " + page
+        });
+        return;
+      }
+
+      ga('send', 'pageview', {
+        'page': "v" + gui.App.manifest.version + " " + page
+      });
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // EXPORT to window

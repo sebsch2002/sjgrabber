@@ -20,9 +20,9 @@ var RSSHandler = function() {
 
 util.inherits(RSSHandler, EventEmitter);
 
-RSSHandler.prototype.fetch = function() {
+RSSHandler.prototype.fetch = function(options) {
   var req = request({
-    uri: config.get("rssUrl"),
+    uri: options.uri,
     timeout: config.get("requestTimeoutMS")
   });
   var feedparser = new FeedParser({
