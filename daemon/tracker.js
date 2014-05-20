@@ -9,8 +9,6 @@ var favourites = require("./favourites");
 var UA_TRACKING_ID = "UA-42608142-4";
 var DEFAULT_PAGE = "global";
 
-// runtime variables...
-
 // tracking prefix to distinguish between tracked version of app
 var trackingPrefix = "NO TRACKING PREFIX SUPPLIED";
 
