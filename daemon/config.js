@@ -2,10 +2,13 @@ var Backbone = require("backbone");
 
 var ConfigModel = Backbone.Model.extend({
   defaults: {
-    userUUID: null,
     fetchOnlyFavourites: true,
     requestTimeoutMS: 7000,
     maxLinkRefetchRetrys: 1337,
+    tracking: {
+      allowed: true,
+      userUUID: null
+    },
     rss: {
       episodes: "http://serienjunkies.org/xml/feeds/episoden.xml",
       seasons: "http://serienjunkies.org/xml/feeds/staffeln.xml"

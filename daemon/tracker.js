@@ -4,27 +4,32 @@ var _ = require("lodash");
 
 var cacheHandler = require("./cacheHandler");
 var config = require("./config");
+var favourites = require("./favourites");
 
 var UA_TRACKING_ID = "UA-42608142-4";
+var DEFAULT_PAGE = "global";
 
-// tracking prefixes for categories...
-var trackingPrefix = "UNKNOWN APP";
-var CATEGORY_NOTIFICATION = " notification";
-var CATEGORY_ERROR = " error";
+// runtime variables...
+
+// tracking prefix to distinguish between tracked version of app
+var trackingPrefix = "NO TRACKING PREFIX SUPPLIED";
 
 var Tracker = function() {
   this.visitor = null;
+  this.userUUID = null;
 };
 
 Tracker.prototype.init = function() {
-  var userUUID = config.get("userUUID");
+  var trackingConfig = config.get("tracking");
   var newUser = false;
 
+  this.userUUID = trackingConfig.userUUID;
+
   // already initialized?
-  if (this.visitor === null) {
+  if (this.visitor === null && trackingConfig.allowed === true) {
 
     try {
-      console.log("Tracker: parsing package.json...");
+      // console.log("Tracker: parsing package.json...");
 
       var pjson = require("../package.json");
 
@@ -34,48 +39,63 @@ Tracker.prototype.init = function() {
         trackingPrefix = "DEBUG v" + pjson.version;
       }
 
-      console.log("Tracker: got prefix = " + trackingPrefix);
+      // console.log("Tracker: got prefix = " + trackingPrefix);
 
     } catch (e) {
       console.log("Tracker: problem parsing package.json");
     }
 
-    if (userUUID === null) {
+    if (this.userUUID === null) {
       // generate a new uuid and save it.
-      userUUID = uuid.v4();
-      config.set("userUUID", userUUID);
+      this.userUUID = uuid.v4();
+      trackingConfig.userUUID = this.userUUID;
+      config.set("tracking", trackingConfig);
       cacheHandler.save(true);
       newUser = true;
     }
 
-    console.log("Tracker: userUUID=" + userUUID);
+    console.log("Tracker: userUUID=" + this.userUUID);
+    this.visitor = ua(UA_TRACKING_ID, this.userUUID);
 
-    this.visitor = ua(UA_TRACKING_ID, userUUID);
-
-    // this.visitor.event({
-    //   ec: (trackingPrefix + CATEGORY_NOTIFICATION),
-    //   ea: "new_user",
-    //   el: "uuid",
-    //   ev: userUUID, // attention, only really accepts values!!!!
-    //   dp: "/init"
-    // }).send();
-
-    if (newUser === true) {
-      this.visitor.event({
-        ec: (trackingPrefix + CATEGORY_NOTIFICATION),
-        ea: "new_user",
-        dp: "/init"
-      }).send();
-    } else {
-      this.visitor.event({
-        ec: (trackingPrefix + CATEGORY_NOTIFICATION),
-        ea: "returning_user",
-        dp: "/init"
-      }).send();
-    }
+    // event to analytics...
+    this.event({
+      msg: (newUser === true) ? "new_user" : "returning_user",
+      label: "platform=" + process.platform + " arch=" + process.arch,
+      page: "init",
+      value: favourites.length
+    });
 
   } else {
-    console.error("Tracker already initialized!");
+    console.warn("Tracker already initialized!");
+  }
+};
+
+Tracker.prototype.event = function(options) {
+
+  // options: {
+  //   msg: "", // mandatory String
+  //   page: "", // optional String
+  //   label: "", // optional String
+  //   value: "", // optional Number
+  // }
+
+  if (_.isUndefined(options.msg) === true) {
+    console.error("Tracker: event - no msg supplied, aborting...");
+    return;
+  }
+
+  if (this.visitor !== null && config.get("tracking").allowed === true) {
+    this.visitor.event({
+      ec: trackingPrefix,
+      ea: options.msg,
+      el: (_.isUndefined(options.label) ? "" : options.label),
+      ev: (_.isNumber(options.value) ? options.value : 0),
+      dp: "/" + (_.isUndefined(options.page) ? DEFAULT_PAGE : options.page)
+    }, function(err) {
+      if (err) {
+        console.error("Tracker: event - unable to send msg=" + options.msg + " error=" + err);
+      }
+    }).send();
   }
 };
 

@@ -351,8 +351,8 @@ module.exports.NWmarkItemAsDownloaded = function(uuid, url) {
 // settings, reset everything.
 module.exports.clearCacheReset = function() {
 
-  // keep uuid
-  var oldUUID = _.clone(config.get("userUUID"));
+  // keep tracking settings
+  var oldTrackingInfo = _.clone(config.get("tracking"));
   cacheHandler.clear();
 
   // reset config model to its defaults!
@@ -360,8 +360,8 @@ module.exports.clearCacheReset = function() {
     config.set(key, config.defaults[key]);
   });
 
-  // but keep old uuid!
-  config.set("userUUID", oldUUID);
+  // set old tracking settings
+  config.set("tracking", oldTrackingInfo);
 
   // only save config...
   cacheHandler.save(true);
