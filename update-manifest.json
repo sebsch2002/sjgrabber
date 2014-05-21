@@ -1,11 +1,11 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "allReleases": "https://github.com/majodev/sjgrabber/releases",
-  "changes": "First public release of SJgrabber",
+  "changes": "[all] Previous window position/dimension is now saved and restored on startup\n[all] FAQ updated, welcome screen/icons improved (THX felsi)\n[all] Changelog added (ships with releases)\n[all] Added error reporting to universal analytics\n[mac] Startup-time improvement by using uncompressed app_files (but size increase)\n[win] Injected proper main application icon into nw.exe via batch-script (removed separate launcher.exe)",
   "platforms": {
-    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.0/SJgrabber_mac_v0.3.0.zip",
-    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.0/SJgrabber_win_v0.3.0.zip",
-    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.0/SJgrabber_linux32_v0.3.0.zip",
-    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.0/SJgrabber_linux64_v0.3.0.zip"
+    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_mac_v0.3.1.zip",
+    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_win_v0.3.1.zip",
+    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_linux32_v0.3.1.zip",
+    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_linux64_v0.3.1.zip"
   }
 }
