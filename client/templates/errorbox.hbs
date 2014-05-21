@@ -1,6 +1,6 @@
 <div class="alert alert-danger fade in">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
   <p class="lead">
-    <i class="fa fa-exclamation-circle"></i> <strong>error</strong> {{#unless suppressDefault}}while <i class='fa fa-refresh'></i> (check your connection). {{/unless}}<small><em>{{errorMessage}}</em></small>
+    <i class="fa fa-exclamation-circle"></i> <strong>error</strong>{{#unless suppressDefault}} (no internet connection){{/unless}}: <small><em>{{errorMessage}}</em></small>
   </p>
 </div>
