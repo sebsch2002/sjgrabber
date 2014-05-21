@@ -542,7 +542,13 @@ helper animations
 }
 
 @-webkit-keyframes starEnabled {
-  0% {color:#fff;}
-  50% {color:rgb(47,160,251);}
-  100% {color:#fff;}
+  0% {
+    color:#fff;
+  }
+  50% {
+    color:rgb(47,160,251);
+  }
+  100% {
+    color:#fff;
+  }
 }
