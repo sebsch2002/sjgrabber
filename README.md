@@ -101,6 +101,9 @@ The **default** `grunt` task builds, bundles and compresses win32, mac, linux32,
   - `build-nw`: node-webkit packaging
 * `release`: compressing to `/dist` and cleanup
 
+### Injecting proper icon (windows)
+Follow the steps in `/build-templates/support/win32/README.md`.
+
 ## Contributors
 * [Nicole Eibel](http://nicoleeibel.at/) (SJgrabber brand/logo design)
 

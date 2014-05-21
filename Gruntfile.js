@@ -319,7 +319,7 @@ module.exports = function(grunt) {
     "uglify:daemonjs"
   ]);
   
-  grunt.registerTask("build-nw", ["nodewebkit", "copy:support-distribution", "copy:shortcuts"]);
+  grunt.registerTask("build-nw", ["nodewebkit", "copy:support-distribution"]);
 
   // MAINTENANCE
   grunt.registerTask("clear", ["clean"]);
