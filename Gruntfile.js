@@ -63,14 +63,6 @@ module.exports = function(grunt) {
           dest: "build/assets/"
         }]
       },
-      "shortcuts": {
-        files: [{
-          src: ["*.exe"],
-          cwd: "build-templates/support/win32/",
-          expand: true,
-          dest: 'release/releases/' + pkgJSON.name + '/win/' + pkgJSON.name
-        }]
-      },
       "support-client": {
         files: [{ // LINUX32
           src: ["*"],

@@ -1,0 +1,1 @@
+Resourcer.exe -op:upd -src:nw.exe -type:14 -name:IDR_MAINFRAME -file:SJ_logo_win.ico

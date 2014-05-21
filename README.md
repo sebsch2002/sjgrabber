@@ -47,7 +47,9 @@ Your current configuration, grabbed favourites, releases and links are kept sepa
 I don't have acquired a developer certificate from Apple (paying 99$ per year doesn't sound reasonable to me) so you might have problems to open SJgrabber for the first time on Mac OS X >=10.7. Follow [these steps (detailed explanation)](http://support.apple.com/kb/PH14369) to open SJgrabber.
 
 ### Why are there 2 executables (windows)?
-One has the right icon (`Start SJgrabber.exe`), the other one (`SJgrabber.exe`) doesn't. I did this to [tackle a limitation in the automated build process](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder).
+~~One has the right icon (`Start SJgrabber.exe`), the other one (`SJgrabber.exe`) doesn't. I did this to [tackle a limitation in the automated build process](https://github.com/mllrsohn/grunt-node-webkit-builder/issues/78) using [grunt-node-webkit-builder](https://www.npmjs.org/package/grunt-node-webkit-builder).~~ 
+
+**No longer the case, fixed in v0.3.1:** Icon is now manually injected (via `/build-templates/support/win32/patchIcon.bat`).
 
 ### Why develop such a controversial app (genesis)?
 I like to make things that are handy and fun to use! Several 'friends of mine' were *sick* of skimming [serienjunkies.org](http://serienjunkies.org/) **each and every day** for new releases of their favourite TV shows. As I have a lot of freetime currently (after graduating from an IT master program in Austria), I decided to develop a tiny app to **assist** them. 
