@@ -245,6 +245,10 @@
     $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
     clearSearchInputValue();
     $("#status_left").text("never grabbed");
+
+    // disable keyword add button graphix
+    $("#addkeyword_button").addClass("disabled");
+    $("#addkeyword_button_star").removeClass("enableStarAnimation");
   }
 
   // ---------------------------------------------------------------------------
@@ -428,9 +432,11 @@
 
     if (concatWhiteSpace !== "" && concatWhiteSpace.length >= 3) {
       $("#addkeyword_button").removeClass("disabled");
+      $("#addkeyword_button_star").addClass("enableStarAnimation");
       return true;
     } else {
       $("#addkeyword_button").addClass("disabled");
+      $("#addkeyword_button_star").removeClass("enableStarAnimation");
       return false;
     }
   }

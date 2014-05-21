@@ -531,3 +531,18 @@ helper stylings
 .blueFontSymbol {
   color: #2d6ca2;
 }
+
+/* -----------------------------------------------------------------------------
+helper animations
+----------------------------------------------------------------------------- */
+
+.enableStarAnimation {
+  animation:myfirst 0.5s;
+  -webkit-animation:starEnabled 1s infinite;
+}
+
+@-webkit-keyframes starEnabled {
+  0% {color:#fff;}
+  50% {color:rgb(47,160,251);}
+  100% {color:#fff;}
+}
