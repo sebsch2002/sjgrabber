@@ -244,7 +244,9 @@ function cycleProgressNWUpdateUI(processCount) {
 
 module.exports.NWsaveMainWindowDimensions = function(dimensions) {
   config.set("window", dimensions);
-  cacheHandler.save(true);
+  if (cacheHandler.lastLoaded !== false) {
+    cacheHandler.save(true);
+  }
 };
 
 function applySavedMainWindowDimensions() {
