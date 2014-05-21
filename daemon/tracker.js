@@ -7,7 +7,9 @@ var config = require("./config");
 var favourites = require("./favourites");
 
 var UA_TRACKING_ID = "UA-42608142-4";
-var DEFAULT_PAGE = "global";
+var PAGE_DEFAULT = "global";
+var PAGE_INIT = "init";
+var PAGE_ERROR = "error";
 
 // tracking prefix to distinguish between tracked version of app
 var trackingPrefix = "NO TRACKING PREFIX SUPPLIED";
@@ -55,11 +57,11 @@ Tracker.prototype.init = function() {
     console.log("Tracker: userUUID=" + this.userUUID);
     this.visitor = ua(UA_TRACKING_ID, this.userUUID);
 
-    // event to analytics...
+    // init event to analytics...
     this.event({
       msg: (newUser === true) ? "new_user" : "returning_user",
-      label: "platform=" + process.platform + " arch=" + process.arch,
-      page: "init",
+      label: "platform=" + process.platform + ", arch=" + process.arch,
+      page: PAGE_INIT,
       value: favourites.length
     });
 
@@ -88,13 +90,21 @@ Tracker.prototype.event = function(options) {
       ea: options.msg,
       el: (_.isUndefined(options.label) ? "" : options.label),
       ev: (_.isNumber(options.value) ? options.value : 0),
-      dp: "/" + (_.isUndefined(options.page) ? DEFAULT_PAGE : options.page)
+      dp: "/" + (_.isUndefined(options.page) ? PAGE_DEFAULT : options.page)
     }, function(err) {
       if (err) {
         console.error("Tracker: event - unable to send msg=" + options.msg + " error=" + err);
       }
     }).send();
   }
+};
+
+Tracker.prototype.error = function(errorMsg) {
+  this.event({
+    msg: "error",
+    label: "error=" + errorMsg + ", platform=" + process.platform + ", arch=" + process.arch,
+    page: PAGE_ERROR
+  });
 };
 
 var tracker = new Tracker();

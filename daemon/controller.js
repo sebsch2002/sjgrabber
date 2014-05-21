@@ -35,12 +35,14 @@ var hookCycleListeners = _.once(function() {
   rssHandler.on("error", function(err) {
     // stop cycle immediately?
     console.error("controller:hookCycleListeners got rssHandler error: " + err);
+    tracker.error("controller:hookCycleListeners got rssHandler error: " + err);
     cycleRunning = false;
   });
 
   linkParser.on("error", function(err) {
     // stop cycle immediately?
     console.error("controller:hookCycleListeners got linkParser error: " + err);
+    tracker.error("controller:hookCycleListeners got linkParser error: " + err);
     cycleRunning = false;
   });
 });
@@ -65,6 +67,7 @@ var hookCycleListeners = _.once(function() {
   cacheHandler.on("error", function(err) {
     // cacheHandler error? what to do?
     console.error("controller:startup got cacheHandler error: " + err);
+    tracker.error("controller:startup got cacheHandler error: " + err);
   });
 
 }());
