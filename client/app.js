@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
   // ---------------------------------------------------------------------------
   // node-webkit
@@ -164,7 +164,7 @@
       process.mainModule.exports.NWmarkItemAsDownloaded(dataset.uuid,
         dataset.href);
 
- 
+
     });
 
     $(".openLinkInBrowser").off();
@@ -173,7 +173,7 @@
       event.preventDefault();
       gui.Shell.openExternal(event.currentTarget.href);
 
- 
+
     });
 
     $(".popupLink").off();
@@ -182,7 +182,7 @@
       event.preventDefault();
       popupLink(event.currentTarget.href);
 
- 
+
     });
 
     $(".keyword_link").off();
@@ -201,7 +201,7 @@
         process.mainModule.exports.NWupdateKeywordString(
           trimWhiteSpace(event.currentTarget.dataset.keyword));
 
-   
+
       }
     });
 
@@ -215,7 +215,7 @@
     $(".removeKeyword").click(function(event) {
       event.preventDefault();
       displayModalWarningRemoveKeyword(event.target.parentElement.dataset.keyword);
- 
+
     });
 
     $(".alert").off();
@@ -267,7 +267,7 @@
     $("#refetch_button").click(function() {
       process.mainModule.exports.runFetchCycleNow();
 
- 
+
     });
 
     $("#addkeyword_button").click(function() {
@@ -305,17 +305,17 @@
       $("#search_input").focus();
       // HACK HACK HACK
       $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
- 
+
     });
 
     $('#appNavigationTab a[href="#favourites_tab"]').on('shown.bs.tab', function(event) {
       // HACK HACK HACK
       $("#all_items").click(); // BUG HACK affix fix so it recalculates after init
- 
+
     });
 
     $('#appNavigationTab a[href="#settings_tab"]').on('shown.bs.tab', function(event) {
- 
+
     });
 
     // set dynamic styles on resize change
@@ -389,10 +389,23 @@
   NWAPP.setInitialMainWindowDimension = function(dimensions) {
     if (dimensions.x !== null || dimensions.y !== null ||
       dimensions.width !== null || dimensions.height !== null) {
+      
+      // only apply dimension if visible within current screen (width)
+      if ((dimensions.x + dimensions.width) > window.screen.width || (dimensions.x + dimensions.width) < 0) {
+        console.log("setInitialMainWindowDimension: NO APPLY - Window outside width!");
+        return;
+      }
+
+      // only apply dimension if visible within current screen (height)
+      if ((dimensions.y + dimensions.height) > window.screen.height || (dimensions.y + dimensions.height) < 0) {
+        console.log("setInitialMainWindowDimension: NO APPLY - Window outside height!");
+        return;
+      }
+
       win.moveTo(dimensions.x, dimensions.y);
       win.resizeTo(dimensions.width, dimensions.height);
-
       setDynamicStyles();
+
     }
   };
 
@@ -415,7 +428,7 @@
       process.mainModule.exports.NWaddCurrentKeyword();
       $('#appNavigationTab a[href="#favourites_tab"]').tab('show');
 
- 
+
 
     } else {
       // display warning model with proceed, many links to fetch!
@@ -963,4 +976,4 @@
 
   win.show();
 
-}());
+// }());
