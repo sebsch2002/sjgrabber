@@ -1,11 +1,11 @@
 {
-  "version": "0.3.1",
+  "version": "0.3.2",
   "allReleases": "https://github.com/majodev/sjgrabber/releases",
-  "changes": "[all] Previous window position/dimension is now saved and restored on startup\n[all] FAQ updated, welcome screen/icons improved (THX felsi)\n[all] Changelog added (ships with releases)\n[all] Added error reporting to universal analytics\n[mac] Startup-time improvement by using uncompressed app_files (but size increase)\n[win] Injected proper main application icon into nw.exe via batch-script (removed separate launcher.exe)",
+  "changes": "[all] LocalStorage limit upped from 5MB to 500MB (+ catching QuotaExceededError)\n[all] bad status code and unable to find link errors now never raise an errorbox\n[all] window no longer restores dimensions if outside of available screen",
   "platforms": {
-    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_mac_v0.3.1.zip",
-    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_win_v0.3.1.zip",
-    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_linux32_v0.3.1.zip",
-    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.1/SJgrabber_linux64_v0.3.1.zip"
+    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.2/SJgrabber_mac_v0.3.2.zip",
+    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.2/SJgrabber_win_v0.3.2.zip",
+    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.2/SJgrabber_linux32_v0.3.2.zip",
+    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.2/SJgrabber_linux64_v0.3.2.zip"
   }
 }
