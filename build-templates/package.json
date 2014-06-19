@@ -33,6 +33,7 @@
   },
   "chromium-args": "--enable-direct-write",
   "private": true,
+  "dom_storage_quota": 500,
   "NWAPP_CONST": {
     "licenseURL": "https://github.com/majodev/sjgrabber/blob/master/LICENSE.md",
     "githubURL": "https://github.com/majodev/sjgrabber",

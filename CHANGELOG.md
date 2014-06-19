@@ -2,6 +2,9 @@
 
 Rough overview of main changes between versions.
 
+## 0.3.2
+* `[all]` LocalStorage limit upped from 5MB to 500MB (+ catching `QuotaExceededError`)
+
 ## 0.3.1
 * `[all]` Previous window position/dimension is now saved and restored on startup
 * `[all]` FAQ updated, welcome screen/icons improved ([THX felsi](http://board.serienjunkies.org/index.php?page=Thread&threadID=73239))

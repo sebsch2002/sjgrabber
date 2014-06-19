@@ -72,7 +72,8 @@ CacheHandler.prototype.save = function(configOnly) {
   } else {
 
     // save CONFIG to localStorage...
-    this.localStorage[activeLocalStorageTarget.config] = JSON.stringify(config.toJSON());
+    //this.localStorage[activeLocalStorageTarget.config] = JSON.stringify(config.toJSON());
+    this.saveHash(activeLocalStorageTarget.config, JSON.stringify(config.toJSON()));
 
     if (configOnly === true) { // return immediately if only CONFIG needs to be saved!
       that.emit("saved");
@@ -80,15 +81,29 @@ CacheHandler.prototype.save = function(configOnly) {
     }
 
     // save ITEMS to localStorage...
-    this.localStorage[activeLocalStorageTarget.items] = JSON.stringify(savedItems.toJSON());
+    //this.localStorage[activeLocalStorageTarget.items] = JSON.stringify(savedItems.toJSON());
+    this.saveHash(activeLocalStorageTarget.items, JSON.stringify(savedItems.toJSON()));
 
     // save FAVOURITES to localStorage...
-    this.localStorage[activeLocalStorageTarget.favourites] = JSON.stringify(favourites.toJSON());
+    //this.localStorage[activeLocalStorageTarget.favourites] = JSON.stringify(favourites.toJSON());
+    this.saveHash(activeLocalStorageTarget.favourites, JSON.stringify(favourites.toJSON()));
 
     that.lastSaved = new Date();
     that.emit("saved");
   }
   return;
+};
+
+CacheHandler.prototype.saveHash = function(key, value) {
+  try {
+    this.localStorage[key] = value;
+  } catch (e) {
+    if (e.name === 'QUOTA_EXCEEDED_ERR') {
+      this.emit("error", "No more storage available locally, QUOTA_EXCEEDED_ERR, you'll need to wipe/reset this application! error: " + e);
+    } else {
+      this.emit("error", "Cannot save data error: " + e);
+    }
+  }
 };
 
 CacheHandler.prototype.linkLocalStorage = function(localStorage) {
