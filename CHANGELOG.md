@@ -4,6 +4,7 @@ Rough overview of main changes between versions.
 
 ## 0.3.2
 * `[all]` LocalStorage limit upped from 5MB to 500MB (+ catching `QuotaExceededError`)
+* `[all]` `bad status code` and `unable to find link` errors now never raise an errorbox
 
 ## 0.3.1
 * `[all]` Previous window position/dimension is now saved and restored on startup

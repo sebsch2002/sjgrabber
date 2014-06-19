@@ -120,13 +120,13 @@ function parseURLForULLinks() {
     }, function(error, response, body) {
 
       if (error) {
-        linkParser.emit("error", "ERROR parsing @" + link + " - " + error);
+        // linkParser.emit("error", "ERROR parsing @" + link + " - " + error);
         linkParser.nextULParse();
         return;
       }
 
       if (response.statusCode !== 200) {
-        linkParser.emit("error", "ERROR parsing @" + link + " - bad status code " + response.statusCode);
+        // linkParser.emit("error", "ERROR parsing @" + link + " - bad status code " + response.statusCode);
         linkParser.nextULParse();
         return;
       }
