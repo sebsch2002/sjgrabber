@@ -83,9 +83,9 @@
 
             {{/each}}
 
-            {{#unless filehosterLinks}}
+            {{#unless filehosterLinks}} 
               {{#if filehosterFetchPreviouslyFailed}}
-                <div class="items_link_group disallowHighlighting"><p class="items_fetchFail"><a class="openLinkInBrowser" href="{{link}}" data-uuid="{{uuid}}">open in browser</a></p></div>
+                <div class="items_link_group disallowHighlighting"><p class="items_fetchFail"><small>grab failed {{filehosterLinksRefetchCount}}x</small>&nbsp;<a class="openLinkInBrowser" href="{{link}}" data-uuid="{{uuid}}">open in browser</a></p></div>
               {{/if}}
             {{/unless}}
           </div>

@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var config = require("./config");
 
 var favourites = require("./favourites.js");
 
@@ -90,14 +91,20 @@ function checkSavedItemJSONIsFavourite(JSONitem) {
 }
 
 function checkSavedItemJSONIsFavouriteLinkMissing(JSONitem) {
-  if (checkSavedItemJSONLinkMissing(JSONitem) && checkTitleIsFavourite(JSONitem.title)) {
+  if (checkSavedItemJSONMaxLinkRefetchAllowed(JSONitem) &&
+    checkSavedItemJSONLinkMissing(JSONitem) && 
+    checkTitleIsFavourite(JSONitem.title)) {
     return true;
   }
   return false;
 }
 
 function checkSavedItemJSONLinkMissing(JSONitem) {
-  return JSONitem.filehosterLinksFetched === false;
+  return checkSavedItemJSONMaxLinkRefetchAllowed(JSONitem) && JSONitem.filehosterLinksFetched === false;
+}
+
+function checkSavedItemJSONMaxLinkRefetchAllowed(JSONitem) {
+  return JSONitem.filehosterLinksRefetchCount <= config.get("maxLinkRefetchRetrys");
 }
 
 function replaceAll(find, replace, str) {

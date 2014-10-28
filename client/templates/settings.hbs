@@ -13,6 +13,39 @@
     <p class="text-center"><i class='fa fa-refresh'></i> <small class="greyedout"><em>(grabbing)</em></small> takes place <strong>now</strong>!</p>
   {{/if}}
 
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="radio">
+        <label>
+          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+          Don't filter global items! Total items: <span class="badge">42</span>
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+          Filter via inclusion <small>(matching one or more globally included keywords)</small>! Included items: <span class="badge">42</span>
+          <input type="text" class="form-control input-sm" id="includedKeywordsInput" placeholder="Globally INCLUDED keywords (separated by space)">
+        </label>
+      </div>
+      <div class="radio disabled">
+        <label>
+          <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+          Filter via exclusion <small>(matching one or more globally excluded keywords)</small>! Excluded items: <span class="badge">42</span>
+          <input type="text" class="form-control input-sm" id="excludeKeywordsInput" placeholder="Globally EXCLUDED keywords (separated by space)">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  {{!-- <ul class="list-unstyled text-center well">
+    <li>Don't filter global items! Total items: <span class="badge">42</span></li>
+    <li>Filter via inclusion <small>(matching one or more globally included keywords)</small>: <span class="badge">42</span></li>
+    <li class="row"><div class="col-xs-6 col-xs-offset-3"><input type="text" class="form-control input-sm" id="includedKeywordsInput" placeholder="Globally INCLUDED keywords (separated by space)"></div></li>
+    <li>Filter via exclusion <small>(matching one or more globally excluded keywords)</small>: <span class="badge">42</span></li>
+    <li class="row"><div class="col-xs-6 col-xs-offset-3"><input type="text" class="form-control input-sm" id="excludeKeywordsInput" placeholder="Globally EXCLUDED keywords (separated by space)"></div></li>
+  </ul> --}}
+
   <p class="text-center">problems with <i class="fa fa-bug"></i> <small class="greyedout"><em>(bugs)</em></small>? <button type="button" id="clearreset_button" data-loading-text="erase data and reset {{appName}}" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset {{appName}}</button></p>
 
   {{!-- <p class="text-center"><small>data (favourites &amp; releases) is kept separately in your USERDIR.<br /><strong>upgrading to newer versions will preserve all data!</strong></small></p> --}}

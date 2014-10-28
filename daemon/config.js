@@ -4,7 +4,7 @@ var ConfigModel = Backbone.Model.extend({
   defaults: {
     fetchOnlyFavourites: true,
     requestTimeoutMS: 7000,
-    maxLinkRefetchRetrys: 1337,
+    maxLinkRefetchRetrys: 5,
     tracking: {
       allowed: true,
       userUUID: null

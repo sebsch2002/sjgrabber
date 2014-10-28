@@ -40,6 +40,7 @@ CacheHandler.prototype.load = function() {
 
     // migration script for items
     that.migrateBefore_v0_2_3();
+    that.migrateBefore_v0_3_3();
 
     // load ITEMS from localStorage...
     if (_.isUndefined(this.localStorage[activeLocalStorageTarget.items]) === false) {
@@ -224,6 +225,16 @@ CacheHandler.prototype.migrateBefore_v0_2_3 = function() {
   }
 };
 
+
+CacheHandler.prototype.migrateBefore_v0_3_3 = function() {
+
+  // reset maxLinkRefetchRetrys from 1337 to 5, as this is way to high.
+
+  if (config.get("maxLinkRefetchRetrys") > 5) {
+    config.set("maxLinkRefetchRetrys", 5);
+  }
+
+};
 
 
 var cacheHandler = new CacheHandler();

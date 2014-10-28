@@ -38,7 +38,8 @@ var SavedItemModel = Backbone.Model.extend({
       filehosterLinks: this.get("filehosterLinks"),
       filehosterLinksFetched: this.get("filehosterLinksFetched"),
       userClickedFilehosterLink: this.get("userClickedFilehosterLink"),
-      filehosterFetchPreviouslyFailed: (this.get("filehosterLinksRefetchCount") > 0) ? true : false
+      filehosterFetchPreviouslyFailed: (this.get("filehosterLinksRefetchCount") > 0) ? true : false,
+      filehosterLinksRefetchCount: this.get("filehosterLinksRefetchCount")
     };
   },
   getTitleWithoutTag: function() {
