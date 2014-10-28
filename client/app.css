@@ -83,6 +83,28 @@ wrap maincontent and set a fixed height footer
   margin-right: -5px;
 }
 
+.footer-a-list a {
+  color: #999;
+}
+
+.footer-a-list a:hover {
+  color: #eee;
+  text-decoration: none;
+}
+
+#status_left, #status_right {
+  padding-top: 2px;
+}
+
+#status_left {
+  padding-left: 5px;
+}
+
+#status_right {
+  padding-right: 0px;
+}
+
+
 /* -----------------------------------------------------------------------------
 fixed positioning + scrolling (attention top gets dynamically set!)
 ----------------------------------------------------------------------------- */

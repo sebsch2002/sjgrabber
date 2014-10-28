@@ -40,7 +40,7 @@
     "show": false,
     "show_in_taskbar": true,
     "toolbar": false,
-    "frame": false,
+    "frame": true,
     "position": "center",
     "width": 640,
     "height": 480,

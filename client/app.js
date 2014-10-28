@@ -1,4 +1,4 @@
-// (function() {
+(function() {
 
   // ---------------------------------------------------------------------------
   // node-webkit
@@ -75,6 +75,15 @@
   }());
 
   function paintApplication() {
+
+    var windowTitle = gui.App.manifest.name + " v" + gui.App.manifest.version;
+
+    if (NWAPP_DEBUG) {
+      windowTitle += " (debug)";
+    }
+
+    win.title = windowTitle;
+
     // add compile app template into app and settings div
     document.getElementById("app").innerHTML = NWAPP.Templates.app({
       name: gui.App.manifest.name,
@@ -389,7 +398,7 @@
   NWAPP.setInitialMainWindowDimension = function(dimensions) {
     if (dimensions.x !== null || dimensions.y !== null ||
       dimensions.width !== null || dimensions.height !== null) {
-      
+
       // only apply dimension if visible within current screen (width)
       if ((dimensions.x + dimensions.width) > window.screen.width || (dimensions.x + dimensions.width) < 0) {
         console.log("setInitialMainWindowDimension: NO APPLY - Window outside width!");
@@ -563,13 +572,8 @@
   NWAPP.updateIsAvailable = function(updateObj) {
     $("#updateAppLink").removeClass("hidden");
 
-    if (process.platform === "darwin") {
-      $("#updateAppLink").append("v" +
-        updateObj.version + " available <i class='fa fa-download'></i>");
-    } else {
-      $("#updateAppLink").append("<i class='fa fa-download'></i> v" +
-        updateObj.version + " available");
-    }
+    $("#updateAppLink").append("<i class='fa fa-download'></i> v" +
+      updateObj.version + " available");
 
     $("#updateAppLink").attr("href", updateObj.link);
 
@@ -976,4 +980,4 @@
 
   win.show();
 
-// }());
+}());

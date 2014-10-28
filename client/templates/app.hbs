@@ -1,6 +1,6 @@
 <!-- set up borders around the application -->
-<div id="app-border-top" class="windowBorder"></div><div id="app-border-bottom" class="windowBorder"></div>
-<div id="app-border-left" class="windowBorder"></div><div id="app-border-right" class="windowBorder"></div>
+{{!-- <div id="app-border-top" class="windowBorder"></div><div id="app-border-bottom" class="windowBorder"></div>
+<div id="app-border-left" class="windowBorder"></div><div id="app-border-right" class="windowBorder"></div> --}}
 
 <div id="wrap">
 
@@ -15,11 +15,11 @@
           Window title bar
           ------------------------------------------------------------------------
         --}}
-        <div class="row windowBar">
+       {{!--  <div class="row windowBar">
 
           <div class="col-xs-4 windowBarLeftCol">
             {{#if platform.mac}}
-              {{!-- NW_controls: System MAC --}}
+              <!-- NW_controls: System MAC -->
               <form class="navbar-left">
                 <ul class="nav nav-pills navbar-nav">
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_exit dismissLinkAction"><i class="fa fa-times-circle"></i></a></li>
@@ -28,19 +28,19 @@
                 </ul>
               </form>
             {{else}}
-              {{!-- NW_controls: WIN or LINUX extra top controls --}}
+              <!-- NW_controls: WIN or LINUX extra top controls -->
               <form class="navbar-left">
                 <ul class="nav nav-pills navbar-nav">
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_fullscreen dismissLinkAction" data-windowed-text="<i class='fa fa-expand'></i>" data-fullscreen-text="<i class='fa fa-compress'></i>"><i class="fa fa-expand"></i></a></li>
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_welcome dismissLinkAction"><i class='fa fa-info-circle'></i></a></li>
-                  <li><a id="updateAppLink" href="" class="defaultCursorNoDrag nwapp_menu_controls hidden updateAvailable" data-toggle="tooltip" data-placement="bottom"></a></li>
+                  <li><a id="updateAppLink" href="" class="defaultCursorNoDrag nwapp_menu_controls updateAvailable" data-toggle="tooltip" data-placement="bottom">v1000 available <i class='fa fa-download'></i></a></li>
                 </ul>
               </form>
             {{/if}}
           </div>
 
           <div class="col-xs-4 windowBarMiddleCol">
-            {{!-- Titlebar --}}
+            <!-- Titlebar -->
             {{#if debugmode}}
               <p class="windowtitle text-center disabled"><img class="windowTitlePicture" src="assets/SJ_logo_16x16x32.png" width="16px" height="16px" /> {{name}} v{{version}} <small>(debug)</small></p>
             {{else}}
@@ -50,16 +50,16 @@
 
           <div class="col-xs-4 windowBarRightCol">
             {{#if platform.mac}}
-              {{!-- NW_controls: MAC extra top controls --}}
+              <!-- NW_controls: MAC extra top controls -->
               <form class="navbar-right">
                 <ul class="nav nav-pills navbar-nav">
-                  <li><a id="updateAppLink" href="" class="defaultCursorNoDrag nwapp_menu_controls hidden updateAvailable" data-toggle="tooltip" data-placement="bottom"></a></li>
+                  <li><a id="updateAppLink" href="" class="defaultCursorNoDrag nwapp_menu_controls updateAvailable" data-toggle="tooltip" data-placement="bottom">v1000 available <i class='fa fa-download'></i></a></li>
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_welcome dismissLinkAction"><i class='fa fa-info-circle'></i></a></li>
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_fullscreen dismissLinkAction" data-windowed-text="<i class='fa fa-expand'></i>" data-fullscreen-text="<i class='fa fa-compress'></i>"><i class="fa fa-expand"></i></a></li>
                 </ul>
               </form>
             {{else}}
-              {{!-- NW_controls: System WIN or LINUX --}}
+              <!-- NW_controls: System WIN or LINUX -->
               <form class="navbar-right">
                 <ul class="nav nav-pills navbar-nav">
                   <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_minimize dismissLinkAction"><i class="fa fa-minus-circle"></i></a></li>
@@ -70,7 +70,7 @@
             {{/if}}
           </div>
 
-        </div>
+        </div> --}}
         
         {{!-- 
           ------------------------------------------------------------------------
@@ -157,9 +157,18 @@
 
 <div id="footer">
   <div class="container-fluid">
-    <p class="footerHolder">
+    {{!-- <p class="footerHolder">
       <span id="status_left" class="footerText pull-left disallowHighlighting">never grabbed</span>
       <span id="status_right" class="footerText pull-right text-right disallowHighlighting"><i class="fa fa-heart"></i> it? {{> btc}} | {{> paypal}} | {{> gittip}} | {{> shareTwitter}}</span>
-    </p>
+    </p> --}}
+    <div class="row">
+      <p id="status_left" class="footerText col-xs-6 disallowHighlighting">never grabbed</p>
+      <div id="status_right" class="footerText col-xs-6 disallowHighlighting text-right">
+        <ul class="list-inline footer-a-list">
+          <li><a id="updateAppLink" href="" class="defaultCursorNoDrag nwapp_menu_controls updateAvailable hidden" data-toggle="tooltip" data-placement="top"></a></li>
+          <li><a href="" class="defaultCursorNoDrag nwapp_menu_controls nav_welcome dismissLinkAction"><i class='fa fa-info-circle'></i> legal</a></li>
+        </ul>
+        </div>
+    </div>
   </div>
 </div>
