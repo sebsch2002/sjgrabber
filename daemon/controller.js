@@ -333,6 +333,20 @@ module.exports.NWremoveKeyword = function(keyword) {
   printDynamicContentNW();
 };
 
+module.exports.NWupdateFilter = function(filterMethod, includeKeywordsArr, excludeKeywordsArr) {
+  var filterConfig = {
+    allow: filterMethod,
+    includeKeywords: includeKeywordsArr,
+    excludeKeywords: excludeKeywordsArr
+  };
+
+  config.set("globalFilter", filterConfig);
+  // save because config was updated.
+  cacheHandler.save();
+
+  printDynamicContentNW();
+};
+
 module.exports.NWmarkItemAsDownloaded = function(uuid, url) {
   var updateItem = savedItems.findWhere({
     uuid: uuid
@@ -415,6 +429,13 @@ function printDynamicContentNW(suppressLoading) {
   var totalCount = 0;
   var queueIndex;
 
+  var filterConfigObject = config.get("globalFilter");
+  var activeFilter = filterConfigObject.allow;
+  var activeFilterIncludeArr = filterConfigObject.includeKeywords;
+  var activeFilterExcludeArr = filterConfigObject.excludeKeywords;
+
+  var filteredExcludedCount = 0;
+
   abortAllPrintQueueOperations();
   queueIndex = getNewPrintQueueIndex();
 
@@ -431,12 +452,37 @@ function printDynamicContentNW(suppressLoading) {
         _.defer(function(callback) {
           favourites.each(function(fav) {
             var favCount = 0;
-            savedItems.each(function(item) {
-              if (item.stringMatchesTitle(fav.get("keyword"))) {
-                favCount += 1;
-                totalCount += 1; // TODO: fail should not count to total as the item could already be added to a previous favourite!
+            if (activeFilter === "all") {
+              savedItems.each(function(item) {
+                if (item.stringMatchesTitle(fav.get("keyword"))) {
+                  favCount += 1;
+                  totalCount += 1; // TODO: fail should not count to total as the item could already be added to a previous favourite!
+                }
+              });
+            } else {
+
+              if (activeFilter === "include") {
+                savedItems.each(function(item) {
+                  if (item.stringMatchesTitle(fav.get("keyword"))) {
+                    if (item.isFiltered(activeFilterIncludeArr, false) === true) {
+                      favCount += 1;
+                      totalCount += 1; // TODO: fail should not count to total as the item could already be added to a previous favourite!
+                    }
+                  }
+                });
               }
-            });
+
+              if (activeFilter === "exclude") {
+                savedItems.each(function(item) {
+                  if (item.stringMatchesTitle(fav.get("keyword"))) {
+                    if (item.isFiltered(activeFilterExcludeArr, true) === false) {
+                      favCount += 1;
+                      totalCount += 1; // TODO: fail should not count to total as the item could already be added to a previous favourite!
+                    }
+                  }
+                });
+              }
+            }
             favouriteKeywords.push({
               keyword: fav.get("keyword"),
               count: favCount,
@@ -464,14 +510,49 @@ function printDynamicContentNW(suppressLoading) {
       },
       computeItems: function(callback) {
         _.defer(function(callback) {
-          savedItems.each(function(item) {
-            if (item.stringMatchesTitle(searchString)) {
-              allItems.push(item.getPrintable(searchString));
+          if (activeFilter === "all") {
+            savedItems.each(function(item) {
+              if (item.stringMatchesTitle(searchString)) {
+                allItems.push(item.getPrintable(searchString));
+              }
+              if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+                favouriteItems.push(item.getPrintable(keywordString));
+              }
+            });
+          } else {
+            if (activeFilter === "include") {
+              savedItems.each(function(item) {
+                if (item.isFiltered(activeFilterIncludeArr, false) === true) {
+                  if (item.stringMatchesTitle(searchString)) {
+                    allItems.push(item.getPrintable(searchString));
+                  }
+                  if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+                    favouriteItems.push(item.getPrintable(keywordString));
+                  }
+                } else {
+                  // not allowed to include this item, its filtered by include!
+                  filteredExcludedCount += 1;
+                }
+              });
             }
-            if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
-              favouriteItems.push(item.getPrintable(keywordString));
+
+            if (activeFilter === "exclude") {
+              savedItems.each(function(item) {
+                if (item.isFiltered(activeFilterExcludeArr, true) === false) {
+                  if (item.stringMatchesTitle(searchString)) {
+                    allItems.push(item.getPrintable(searchString));
+                  }
+                  if (item.isFavourite() === true && item.stringMatchesTitle(keywordString)) {
+                    favouriteItems.push(item.getPrintable(keywordString));
+                  }
+                } else {
+                  // not allowed to include this item, its filtered by exclude! 
+                  filteredExcludedCount += 1;
+                }
+              });
             }
-          });
+          }
+
           callback(checkPrintQueueAbort(queueIndex));
         }, callback);
       },
@@ -498,7 +579,17 @@ function printDynamicContentNW(suppressLoading) {
             interval: config.get("rescheduleMS") / 1000 / 60,
             fetchOnlyFavourites: config.get("fetchOnlyFavourites"),
             maxLinkRefetchRetrys: config.get("maxLinkRefetchRetrys"),
-            requestTimeoutSec: config.get("requestTimeoutMS") / 1000
+            requestTimeoutSec: config.get("requestTimeoutMS") / 1000,
+            itemCount: filteredExcludedCount + allItems.length,
+            excludedCount: filteredExcludedCount,
+            includedCount: allItems.length,
+            filter: {
+              all: filterConfigObject.allow === "all" ? true : false,
+              include: filterConfigObject.allow === "include" ? true : false,
+              exclude: filterConfigObject.allow === "exclude" ? true : false,
+              includeKeywords: filterConfigObject.includeKeywords.join(" "),
+              excludeKeywords: filterConfigObject.excludeKeywords.join(" ")
+            }
           });
           callback(checkPrintQueueAbort(queueIndex));
         }, callback);

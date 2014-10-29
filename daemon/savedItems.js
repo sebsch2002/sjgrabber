@@ -52,6 +52,13 @@ var SavedItemModel = Backbone.Model.extend({
       return helper.titleKeywordComparator(this.get("title"), str);
     }
   },
+  isFiltered: function(filterKeywords, singleMatch) {
+    if (singleMatch) {
+      return helper.titleWithinFilterOnce(this.get("title"), filterKeywords);
+    } else {
+      return helper.titleWithinFilterAll(this.get("title"), filterKeywords);
+    }
+  },
   getTagObject: function() {
     var tags = {
       german: false,
@@ -122,6 +129,27 @@ function convertDate(inputFormat) {
   var d = new Date(inputFormat);
   return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('.');
 }
+
+// config listeners
+// var currentFilter = config.get("globalFilter").allow;
+// config.on("change:globalFilter", function(model, globalFilter) {
+//   console.log("changed globalFiltering=" + globalFilter);
+//   if (currentFilter === globalFilter.allow) {
+//     // same filtering method as previous
+//     if (currentFilter === "all") {
+//       // do nothing, no filter but changed keywords, processing is unnesseccary
+//     } else {
+//       // keywords changed while filter stayed the same (and isn't all)
+//     }
+//   } else {
+//     // filter method changed
+//     if (globalFilter.allow === "all") {
+//       // filter disabled - everything must get unhidden again
+//     } else {
+//       // filter changed (exclude or include?)
+//     }
+//   }
+// });
 
 // Export
 module.exports = savedItems;

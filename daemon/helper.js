@@ -30,6 +30,34 @@ function titleKeywordComparator(title, keyword) {
   return true;
 }
 
+function titleWithinFilterOnce(title, filter) {
+  var titleDotsReplaced = replaceAll(".", " ", title).toLowerCase();
+
+  var i = 0,
+    len = filter.length;
+  for (i; i < len; i += 1) {
+    if (titleDotsReplaced.indexOf(filter[i]) !== -1) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function titleWithinFilterAll(title, filter) {
+  var titleDotsReplaced = replaceAll(".", " ", title).toLowerCase();
+
+  var i = 0,
+    len = filter.length;
+  for (i; i < len; i += 1) {
+    if (titleDotsReplaced.indexOf(filter[i]) === -1) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function getHighlightedTitle(title, keyword) {
 
   var HIGHLIGHT_BEFORE = "<span class='highlight_keyword'>";
@@ -92,7 +120,7 @@ function checkSavedItemJSONIsFavourite(JSONitem) {
 
 function checkSavedItemJSONIsFavouriteLinkMissing(JSONitem) {
   if (checkSavedItemJSONMaxLinkRefetchAllowed(JSONitem) &&
-    checkSavedItemJSONLinkMissing(JSONitem) && 
+    checkSavedItemJSONLinkMissing(JSONitem) &&
     checkTitleIsFavourite(JSONitem.title)) {
     return true;
   }
@@ -104,7 +132,7 @@ function checkSavedItemJSONLinkMissing(JSONitem) {
 }
 
 function checkSavedItemJSONMaxLinkRefetchAllowed(JSONitem) {
-  return JSONitem.filehosterLinksRefetchCount <= config.get("maxLinkRefetchRetrys");
+  return JSONitem.filehosterLinksRefetchCount < config.get("maxLinkRefetchRetrys");
 }
 
 function replaceAll(find, replace, str) {
@@ -123,5 +151,7 @@ module.exports = {
   checkSavedItemJSONLinkMissing: checkSavedItemJSONLinkMissing,
   replaceAll: replaceAll,
   titleKeywordComparator: titleKeywordComparator,
-  getHighlightedTitle: getHighlightedTitle
+  getHighlightedTitle: getHighlightedTitle,
+  titleWithinFilterOnce: titleWithinFilterOnce,
+  titleWithinFilterAll: titleWithinFilterAll
 };

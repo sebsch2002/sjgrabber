@@ -166,6 +166,10 @@
 
       var dataset = event.currentTarget.dataset;
 
+      //console.log();
+
+      $(this).html("<i class='fa fa-check'></i> " + $(this).text().trim());
+
       // add to clipboard
       clipboard.set(dataset.href, "text");
 
@@ -240,6 +244,64 @@
     // attach tooltips to copy link buttons
     $(".items_link").tooltip({
       container: 'body'
+    });
+
+    $(".settings_filter_change_listener").off();
+    $(".settings_filter_change_listener").on("change keyup", function() {
+
+      // apply button becomes clickable.
+      $("#settings_apply_filter_button").removeAttr("disabled");
+
+      // enable filter keywords text input based on radio value
+      if ($("#settings_filter_include_radio:checked").val() == "include") {
+        $("#settings_filter_include_keywords").removeAttr("disabled");
+        $("#settings_filter_exclude_keywords").prop("disabled", true);
+      } else {
+        if ($("#settings_filter_exclude_radio:checked").val() == "exclude") {
+          $("#settings_filter_exclude_keywords").removeAttr("disabled");
+          $("#settings_filter_include_keywords").prop("disabled", true);
+        } else {
+          $("#settings_filter_exclude_keywords").prop("disabled", true);
+          $("#settings_filter_include_keywords").prop("disabled", true);
+        }
+      }
+    });
+
+    $("#settings_apply_filter_button").off();
+    $("#settings_apply_filter_button").on("click", function() {
+      // apply filter settings.
+      console.log("apply filter settings...");
+
+      var filterMethod = "all";
+      var includeKeywordsSafe = trimWhiteSpace($("#settings_filter_include_keywords").val()).toLowerCase().trim();
+      var excludeKeywordsSafe = trimWhiteSpace($("#settings_filter_exclude_keywords").val()).toLowerCase().trim();
+
+      var includeKeywordsArr = [];
+      var excludeKeywordsArr = [];
+
+      if (includeKeywordsSafe !== "") {
+        includeKeywordsArr = includeKeywordsSafe.split(" ");
+      }
+
+      if (excludeKeywordsSafe !== "") {
+        excludeKeywordsArr = excludeKeywordsSafe.split(" ");
+      }
+
+      if ($("#settings_filter_include_radio:checked").val() == "include") {
+        filterMethod = "include";
+      }
+      if ($("#settings_filter_exclude_radio:checked").val() == "exclude") {
+        filterMethod = "exclude";
+      }
+
+      console.log("filter:" + filterMethod);
+      console.log(includeKeywordsArr);
+      console.log(excludeKeywordsArr);
+
+
+      process.mainModule.exports.NWupdateFilter(filterMethod, includeKeywordsArr, excludeKeywordsArr);
+
+
     });
 
     setDynamicStyles();
@@ -622,6 +684,7 @@
   };
 
   NWAPP.printSettings = function(config) {
+    // console.log(config);
     config.appName = gui.App.manifest.name;
     config.githubURL = gui.App.manifest.NWAPP_CONST.githubURL;
     config.homepageURL = gui.App.manifest.NWAPP_CONST.homepageURL;

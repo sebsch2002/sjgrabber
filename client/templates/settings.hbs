@@ -13,30 +13,40 @@
     <p class="text-center"><i class='fa fa-refresh'></i> <small class="greyedout"><em>(grabbing)</em></small> takes place <strong>now</strong>!</p>
   {{/if}}
 
+  <p class="text-center disallowHighlighting no-margin no-padding"><strong>filter it</strong></p>
+
+  <ul class="list-inline text-center">
+    <li>Total releases: <span class="badge">{{itemCount}}</span></li>
+    <li>Included releases: <span class="badge">{{includedCount}}</span></li>
+    <li>Excluded releases: <span class="badge">{{excludedCount}}</span></li>
+  </ul>
+
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
       <div class="radio">
         <label>
-          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-          Don't filter global items! Total items: <span class="badge">42</span>
+          <input type="radio" name="optionsRadios" id="settings_filter_all_radio" value="all" class="settings_filter_change_listener" {{#if filter.all}}checked{{/if}}>
+          <strong>Don't apply filtering to releases!</strong> (default)
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-          Filter via inclusion <small>(matching one or more globally included keywords)</small>! Included items: <span class="badge">42</span>
-          <input type="text" class="form-control input-sm" id="includedKeywordsInput" placeholder="Globally INCLUDED keywords (separated by space)">
+          <input type="radio" name="optionsRadios" id="settings_filter_include_radio" value="include" class="settings_filter_change_listener" {{#if filter.include}}checked{{/if}}>
+          <strong>Include</strong> filter: <u><strong>show releases</strong></u> that match <strong>all</strong> included global keywords!
+          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_include_keywords" placeholder="INCLUDED global keywords e.g. 'title format release-group language'" {{#unless filter.include}}disabled{{/unless}} value="{{filter.includeKeywords}}">
         </label>
       </div>
-      <div class="radio disabled">
+      <div class="radio">
         <label>
-          <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-          Filter via exclusion <small>(matching one or more globally excluded keywords)</small>! Excluded items: <span class="badge">42</span>
-          <input type="text" class="form-control input-sm" id="excludeKeywordsInput" placeholder="Globally EXCLUDED keywords (separated by space)">
+          <input type="radio" name="optionsRadios" id="settings_filter_exclude_radio" value="exclude" class="settings_filter_change_listener" {{#if filter.exclude}}checked{{/if}}>
+          <strong>Exclude</strong> filter: <u><strong>hide releases</strong></u> that match <strong>at least one</strong> excluded global keyword!
+          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_exclude_keywords" placeholder="EXCLUDED global keywords e.g. 'title format release-group language'" {{#unless filter.exclude}}disabled{{/unless}} value="{{filter.excludeKeywords}}">
         </label>
       </div>
     </div>
   </div>
+
+  <p class="text-center"><button type="button" id="settings_apply_filter_button" class="btn btn-sm btn-primary defaultCursorNoDrag" disabled>save and apply global filter</button><br /></p>
 
   {{!-- <ul class="list-unstyled text-center well">
     <li>Don't filter global items! Total items: <span class="badge">42</span></li>
@@ -46,18 +56,18 @@
     <li class="row"><div class="col-xs-6 col-xs-offset-3"><input type="text" class="form-control input-sm" id="excludeKeywordsInput" placeholder="Globally EXCLUDED keywords (separated by space)"></div></li>
   </ul> --}}
 
-  <p class="text-center">problems with <i class="fa fa-bug"></i> <small class="greyedout"><em>(bugs)</em></small>? <button type="button" id="clearreset_button" data-loading-text="erase data and reset {{appName}}" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset {{appName}}</button></p>
-
   {{!-- <p class="text-center"><small>data (favourites &amp; releases) is kept separately in your USERDIR.<br /><strong>upgrading to newer versions will preserve all data!</strong></small></p> --}}
 
 </div>
 
 <div class="settings_contact settings_item jumbotron">
 
-  <p class="text-center disallowHighlighting"><strong>no f**king ads!</strong> <i class="fa fa-heart"></i> <small class="greyedout"><em>(love)</em></small> it? please {{> shareTwitter}} your thoughts!</p>
+  <p class="text-center disallowHighlighting">{{!-- <strong>no f**king ads!</strong> <i class="fa fa-heart"></i> <small class="greyedout"><em>(love)</em></small> it? please  --}}<strong>share it</strong><br />{{> shareTwitter}}</p>
 
-  <p class="text-center disallowHighlighting"><strong>wanna support?</strong> donate a <i class="fa fa-beer"></i> <small class="greyedout"><em>(beer)</em></small><br />{{> btc}}<br />{{> paypal}}<br />{{> gittip}}</p>
+  <p class="text-center disallowHighlighting"><strong>hate it</strong><br/>issues on <a class="openLinkInBrowser" href="{{githubURL}}"><i class="fa fa-github"></i> GitHub</a></p>
 
-  <p class="text-center disallowHighlighting"><strong>requests, bugs or disgust?</strong> open an issue on <a class="openLinkInBrowser" href="{{githubURL}}"><i class="fa fa-github"></i> GitHub</a>!</p>
+  <p class="text-center disallowHighlighting">{{!-- <strong>wanna support?</strong> --}}<strong>beer it</strong>{{!-- <i class="fa fa-beer"></i> <small class="greyedout"><em>(beer)</em></small> --}}<br />{{> btc}}<br />{{> paypal}}<br />{{> gittip}}</p>
+
+  <p class="text-center">{{!-- problems with <i class="fa fa-bug"></i> <small class="greyedout"><em>(bugs)</em></small>? --}}<strong>wipe it</strong><br/><button type="button" id="clearreset_button" data-loading-text="erase data and reset {{appName}}" class="btn btn-danger btn defaultCursorNoDrag">erase data and reset {{appName}}</button></p>
 
 </div>

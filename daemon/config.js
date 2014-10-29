@@ -42,6 +42,11 @@ var ConfigModel = Backbone.Model.extend({
       y: null,
       width: null,
       height: null
+    },
+    globalFilter: {
+      allow: "all", // all, include, exclude
+      includeKeywords: [],
+      excludeKeywords: []
     }
   }
 });
