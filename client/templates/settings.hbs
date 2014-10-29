@@ -13,7 +13,7 @@
     <p class="text-center"><i class='fa fa-refresh'></i> <small class="greyedout"><em>(grabbing)</em></small> takes place <strong>now</strong>!</p>
   {{/if}}
 
-  <p class="text-center disallowHighlighting no-margin no-padding"><strong>filter it</strong></p>
+  <p class="text-center disallowHighlighting no-margin no-padding"><strong>global filtering</strong></p>
 
   <ul class="list-inline text-center">
     <li>Total releases: <span class="badge">{{itemCount}}</span></li>
@@ -26,21 +26,27 @@
       <div class="radio">
         <label>
           <input type="radio" name="optionsRadios" id="settings_filter_all_radio" value="all" class="settings_filter_change_listener" {{#if filter.all}}checked{{/if}}>
-          <strong>Don't apply filtering to releases!</strong> (default)
+          <strong>Don't apply global filtering to all releases!</strong> (default)
         </label>
       </div>
       <div class="radio">
         <label>
           <input type="radio" name="optionsRadios" id="settings_filter_include_radio" value="include" class="settings_filter_change_listener" {{#if filter.include}}checked{{/if}}>
-          <strong>Include</strong> filter: <u><strong>show releases</strong></u> that match <strong>all</strong> included global keywords!
-          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_include_keywords" placeholder="INCLUDED global keywords e.g. 'title format release-group language'" {{#unless filter.include}}disabled{{/unless}} value="{{filter.includeKeywords}}">
+          <strong>Include</strong> filter: <u><strong>show releases</strong></u> that match <strong>all</strong> included global keywords
+          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_include_keywords" placeholder="INCLUDED global keywords e.g. 'title format release-group language'" {{#if filter.exclude}}disabled{{/if}}{{#if filter.all}}disabled{{/if}} value="{{filter.includeKeywords}}">
         </label>
       </div>
       <div class="radio">
         <label>
           <input type="radio" name="optionsRadios" id="settings_filter_exclude_radio" value="exclude" class="settings_filter_change_listener" {{#if filter.exclude}}checked{{/if}}>
-          <strong>Exclude</strong> filter: <u><strong>hide releases</strong></u> that match <strong>at least one</strong> excluded global keyword!
-          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_exclude_keywords" placeholder="EXCLUDED global keywords e.g. 'title format release-group language'" {{#unless filter.exclude}}disabled{{/unless}} value="{{filter.excludeKeywords}}">
+          <strong>Exclude</strong> filter: <u><strong>hide releases</strong></u> that match <strong>at least one</strong> keyword
+          <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_exclude_keywords" placeholder="EXCLUDED global keywords e.g. 'title format release-group language'" {{#if filter.include}}disabled{{/if}}{{#if filter.all}}disabled{{/if}} value="{{filter.excludeKeywords}}">
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="optionsRadios" id="settings_filter_both_radio" value="both" class="settings_filter_change_listener" {{#if filter.both}}checked{{/if}}>
+          <strong>Both</strong> filters: filter by <u><strong>exclude</strong></u> <small>(1. hide unwanted)</small> then <u><strong>include</strong></u> <small>(2. show needed)</small> in sequence
         </label>
       </div>
     </div>

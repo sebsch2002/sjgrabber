@@ -256,15 +256,23 @@
       if ($("#settings_filter_include_radio:checked").val() == "include") {
         $("#settings_filter_include_keywords").removeAttr("disabled");
         $("#settings_filter_exclude_keywords").prop("disabled", true);
-      } else {
-        if ($("#settings_filter_exclude_radio:checked").val() == "exclude") {
-          $("#settings_filter_exclude_keywords").removeAttr("disabled");
-          $("#settings_filter_include_keywords").prop("disabled", true);
-        } else {
-          $("#settings_filter_exclude_keywords").prop("disabled", true);
-          $("#settings_filter_include_keywords").prop("disabled", true);
-        }
       }
+
+      if ($("#settings_filter_exclude_radio:checked").val() == "exclude") {
+        $("#settings_filter_exclude_keywords").removeAttr("disabled");
+        $("#settings_filter_include_keywords").prop("disabled", true);
+      }
+
+      if ($("#settings_filter_both_radio:checked").val() == "both") {
+        $("#settings_filter_exclude_keywords").removeAttr("disabled");
+        $("#settings_filter_include_keywords").removeAttr("disabled");
+      }
+
+      if ($("#settings_filter_all_radio:checked").val() == "all") {
+        $("#settings_filter_exclude_keywords").prop("disabled", true);
+        $("#settings_filter_include_keywords").prop("disabled", true);
+      }
+
     });
 
     $("#settings_apply_filter_button").off();
@@ -292,6 +300,9 @@
       }
       if ($("#settings_filter_exclude_radio:checked").val() == "exclude") {
         filterMethod = "exclude";
+      }
+      if ($("#settings_filter_both_radio:checked").val() == "both") {
+        filterMethod = "both";
       }
 
       console.log("filter:" + filterMethod);
