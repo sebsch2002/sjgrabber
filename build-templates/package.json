@@ -1,6 +1,6 @@
 {
   "name": "SJgrabber",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "node-webkit app that fetches rss and links from serienjunkies.org",
   "author": "majodev",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "show": false,
     "show_in_taskbar": true,
     "toolbar": false,
-    "frame": false,
+    "frame": true,
     "position": "center",
     "width": 640,
     "height": 480,
