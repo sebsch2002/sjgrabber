@@ -50,13 +50,27 @@ function titleWithinFilterAll(title, filter) {
   var i = 0,
     len = filter.length;
   for (i; i < len; i += 1) {
-    if (titleDotsReplaced.indexOf(filter[i]) === -1) {
-      return false;
+    if (filter[i].indexOf("|") !== -1) {
+      // OR pattern detected, only one must match for it to continue
+      if (titleWithinFilterOnce(title, filter[i].split("|")) === false) {
+        return false;
+      }
+    } else {
+      if (titleDotsReplaced.indexOf(filter[i]) === -1) {
+        return false;
+      }
     }
   }
 
   return true;
 }
+
+// function testWithORPattern(title, pattern) {
+//   var keywords = pattern.split("|");
+//   for (var i = keywords.length - 1; i >= 0; i--) {
+//     keywords[i]
+//   }
+// }
 
 function getHighlightedTitle(title, keyword) {
 

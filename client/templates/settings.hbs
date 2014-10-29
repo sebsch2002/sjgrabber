@@ -32,7 +32,7 @@
       <div class="radio">
         <label>
           <input type="radio" name="optionsRadios" id="settings_filter_include_radio" value="include" class="settings_filter_change_listener" {{#if filter.include}}checked{{/if}}>
-          <strong>Include</strong> filter: <u><strong>show releases</strong></u> that match <strong>all</strong> included global keywords
+          <strong>Include</strong> filter: <u><strong>show releases</strong></u> that match <strong>all</strong> included global keywords <small>(OR test '<span class="allowHighlighting greyedout">|</span>')</small>
           <input type="text" class="form-control input-sm settings_filter_change_listener" id="settings_filter_include_keywords" placeholder="INCLUDED global keywords e.g. 'title format release-group language'" {{#if filter.exclude}}disabled{{/if}}{{#if filter.all}}disabled{{/if}} value="{{filter.includeKeywords}}">
         </label>
       </div>
@@ -53,6 +53,12 @@
   </div>
 
   <p class="text-center"><button type="button" id="settings_apply_filter_button" class="btn btn-sm btn-primary defaultCursorNoDrag" disabled>save and apply global filter</button><br /></p>
+
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <p class="settings_help_texts"><strong>Filter examples</strong><br />HD only: Add '<span class="allowHighlighting greyedout">1080p|1080i|720p</span>' <small>(pattern OR testing via '<span class="allowHighlighting greyedout">|</span>')</small> to the include filter.<br />English only: Add '<span class="allowHighlighting greyedout">[deutsch] [tv-film]</span>' to the exclude filter.<br />German only: Add '<span class="allowHighlighting greyedout">[englisch]</span>' to the exclude filter.<br />SD only: Add '<span class="allowHighlighting greyedout">1080p 1080i 720p</span>' to the exclude filter.<br /></p>
+    </div>
+  </div>
 
   {{!-- <ul class="list-unstyled text-center well">
     <li>Don't filter global items! Total items: <span class="badge">42</span></li>

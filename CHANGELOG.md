@@ -3,9 +3,9 @@
 Rough overview of main changes between versions.
 
 ## 0.3.3
-* `[all]` Added global filtering (include or exclude option within settings)
+* `[all]` Added global filtering (include, exclude or both option within settings)
 * `[all]` Retrying grabbing of download links is now limited to 5 times
-* `[all]` UI cleanup, native OS title bar is now used
+* `[all]` UI cleanup, texts changed, native OS title bar is now used
 * `[all]` Provide immediate feedback while copying links to clipboard 
 
 ## 0.3.2
