@@ -99,8 +99,11 @@ CacheHandler.prototype.saveHash = function(key, value) {
   try {
     this.localStorage[key] = value;
   } catch (e) {
-    if (e.name === 'QUOTA_EXCEEDED_ERR') {
-      this.emit("error", "No more storage available locally, QUOTA_EXCEEDED_ERR, you'll need to wipe/reset this application! error: " + e);
+
+    console.log(e);
+    if (e.name === 'QUOTA_EXCEEDED_ERR' || e.name === "QuotaExceededError") {
+      this.emit("error", "Sorry, Your previously grabbed releases were cleared!\n\nNo more free localStorage to cache releases was available, therefore all previously locally stored releases were auto-removed (however, your config was left intact).");
+      this.clearLocallyStoredDataWithoutConfig();
     } else {
       this.emit("error", "Cannot save data error: " + e);
     }
@@ -118,6 +121,15 @@ CacheHandler.prototype.linkLocalStorage = function(localStorage) {
 
 };
 
+CacheHandler.prototype.clearLocallyStoredDataWithoutConfig = function () {
+
+  console.log("attempting to clear items...");
+  this.localStorage.removeItem((activeLocalStorageTarget.items).toString());
+  savedItems.reset(); // reset the saved items collection...
+  this.emit("cleared");
+
+}
+
 CacheHandler.prototype.clear = function() {
   if (_.isUndefined(this.localStorage) === true) {
     this.emit("error", "cacheHandler:clear localStorage is not linked to cacheHandler!");
@@ -134,9 +146,9 @@ CacheHandler.prototype.clear = function() {
   }
 };
 
-// 
+//
 // helpers
-// 
+//
 
 function loadConfig(data) {
   var dataObject = parseJSONObject(data);
@@ -197,7 +209,7 @@ function parseJSONObject(data) {
 
 //
 // migration
-// 
+//
 
 // usage previous to v0.2.3 - migrate existing keywords
 CacheHandler.prototype.migrateBefore_v0_2_3 = function() {
