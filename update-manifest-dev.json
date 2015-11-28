@@ -1,11 +1,11 @@
 {
-  "version": "0.3.3",
+  "version": "0.3.4",
   "allReleases": "https://github.com/majodev/sjgrabber/releases",
-  "changes": "[all] Added global filtering (include, exclude or both option within settings)\n[all] Retrying grabbing of download links is now limited to 5 times\n[all] UI cleanup, texts changed, native OS title bar is now used\n[all] Provide immediate feedback while copying links to clipboard",
+  "changes": "[all] Quota-Exceeded-Error now automatically triggers removal of all cached releases (but keeps config intact)",
   "platforms": {
-    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.3/SJgrabber_mac_v0.3.3.zip",
-    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.3/SJgrabber_win_v0.3.3.zip",
-    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.3/SJgrabber_linux32_v0.3.3.zip",
-    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.3/SJgrabber_linux64_v0.3.3.zip"
+    "darwin": "https://github.com/majodev/sjgrabber/releases/download/v0.3.4/SJgrabber_mac_v0.3.4.zip",
+    "win32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.4/SJgrabber_win_v0.3.4.zip",
+    "linux_ia32": "https://github.com/majodev/sjgrabber/releases/download/v0.3.4/SJgrabber_linux32_v0.3.4.zip",
+    "linux_x64": "https://github.com/majodev/sjgrabber/releases/download/v0.3.4/SJgrabber_linux64_v0.3.4.zip"
   }
 }
